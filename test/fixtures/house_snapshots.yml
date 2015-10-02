@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  start_date: 2015-09-28
+  end_date: 2015-09-28
+  num_bedrooms: 1
+  weekly_rent: 9.99
+  agency_fees: 9.99
+  house_id: 
+
+two:
+  start_date: 2015-09-28
+  end_date: 2015-09-28
+  num_bedrooms: 1
+  weekly_rent: 9.99
+  agency_fees: 9.99
+  house_id: 

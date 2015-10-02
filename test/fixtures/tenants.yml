@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  payment_handle: MyString
+  phone_num: MyString
+  email: MyString
+  lease_start: 2015-09-28
+  lease_end: 2015-09-28
+  weekly_rent: 9.99
+  rent_frequency: 1
+
+two:
+  name: MyString
+  payment_handle: MyString
+  phone_num: MyString
+  email: MyString
+  lease_start: 2015-09-28
+  lease_end: 2015-09-28
+  weekly_rent: 9.99
+  rent_frequency: 1

@@ -1,0 +1,34 @@
+== README
+
+* Only parses Standard ASB Bank (NZ) CSV files at the moment
+
+(Future impementations: )
+
+* House and Tenant Snapshots are used to model changes to the Houses and Tenants over time. For example, when rent goes up or down, a new Tenant Snapshot will created so that a history of rent values is stored over time.
+
+This README would normally document whatever steps are necessary to get the
+application up and running.
+
+Things you may want to cover:
+
+* Ruby version
+
+* System dependencies
+
+* Configuration
+
+* Database creation
+
+* Database initialization
+
+* How to run the test suite
+
+* Services (job queues, cache servers, search engines, etc.)
+
+* Deployment instructions
+
+* ...
+
+
+Please feel free to use a different markup language if you do not plan to run
+<tt>rake doc:app</tt>.

@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  address: MyString
+  num_bedrooms: 1
+  weekly_rent: 9.99
+  agency_fees: 9.99
+
+two:
+  name: MyString
+  address: MyString
+  num_bedrooms: 1
+  weekly_rent: 9.99
+  agency_fees: 9.99
