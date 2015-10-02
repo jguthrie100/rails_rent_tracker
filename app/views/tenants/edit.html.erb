@@ -1,0 +1,65 @@
+<h3>Update Tenants</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Payment Handle</th>
+      <th>Phone Number</th>
+      <th>Email</th>
+      <th>House</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= form_for :tenant, :url => update_multiple_tenants_path, :method => "put" do |f| %>
+      <% @tenants.each do |t| %>
+        <% @tenant = t %>
+        <%= fields_for "tenants[]", t do |tf| %>
+          <% is_updated_id = "tenants_" + t.id.to_s + "_is_updated" %>
+          <%= tf.hidden_field(:is_updated, :value => 'false') %>
+          <tr>
+          <%# Consider replacing :onChange with data-update="true" javascript/coffeescript %>
+            <td><%= tf.text_field(:name, :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %></td>
+            <td><%= tf.text_field(:payment_handle, :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %></td>
+            <td><%= tf.text_field(:phone_num, :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %></td>
+            <td><%= tf.text_field(:email, :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %></td>
+            <td><%= tf.collection_select(:house_id, House.all, :id, :name, { include_blank: true}, :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'")
+              %></td>
+          </tr>
+        <% end %>
+      <% end %>
+      <tr>
+        <td colspan="5">
+          <%= submit_tag("Update Tenants") %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<br /><br /><br />
+<h3>Add new Tenant</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Payment Handle</th>
+      <th>Phone Number</th>
+      <th>Email</th>
+      <th>House</th>
+      <th />
+    </tr>
+  </thead>
+  <tbody>
+    <%# Create final row with a form to add a new Tenant to the inventory %>
+    <%= form_tag(tenants_path) do %>
+      <% @tenant = nil %>
+      <tr>
+        <td><%= text_field(:tenant, :name) %></td>
+        <td><%= text_field(:tenant, :payment_handle) %></td>
+        <td><%= text_field(:tenant, :phone_num) %></td>
+        <td><%= text_field(:tenant, :email) %></td>
+        <td><%= collection_select(:tenant, :house_id, House.all, :id, :name, {include_blank: true}) %></td>
+        <td><%= submit_tag("Add New Tenant") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

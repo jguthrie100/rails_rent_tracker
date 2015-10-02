@@ -1,0 +1,20 @@
+<h3>List of Houses</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Address</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @houses.each do |h| %>
+      <tr>
+        <td><%= h.name %></td>
+        <td><%= h.address %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<p>
+  <%= link_to "Add/Edit Houses", edit_houses_path %>
+</p>

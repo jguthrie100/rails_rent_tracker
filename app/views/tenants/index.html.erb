@@ -1,0 +1,26 @@
+<h3>List of Tenants</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Payment Handle</th>
+      <th>Phone Number</th>
+      <th>Email</th>
+      <th>House</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tenants.each do |t| %>
+      <tr>
+        <td><%= t.name %></td>
+        <td><%= t.payment_handle %></td>
+        <td><%= t.phone_num %></td>
+        <td><%= t.email %></td>
+        <td><%= t.house.name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<p>
+  <%= link_to "Add/Edit Tenants", edit_tenants_path %>
+</p>

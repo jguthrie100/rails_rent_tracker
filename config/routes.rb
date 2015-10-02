@@ -18,6 +18,21 @@ Rails.application.routes.draw do
     collection {
       post :import
       put :update_multiple
+      get :edit
+    }
+  end
+
+  resources :tenants do
+    collection {
+      put :update_multiple
+      get :edit
+    }
+  end
+
+  resources :houses do
+    collection {
+      put :update_multiple
+      get :edit
     }
   end
 
