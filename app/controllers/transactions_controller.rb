@@ -18,24 +18,27 @@ class TransactionsController < ApplicationController
     update_hash = params[:transactions]
 
     updated_rows = 0
+    error_str = ""
 
     # Loop through hash of transactions
-    update_hash.each do |t_id, values|
+    update_hash.each do |tr_id, values|
       # If the transaction has been tagged as being updated, then find the relevant Transaction and update it
       if values[:is_updated] == "true"
-        transaction = Transaction.find(t_id)
-        unless values[:tenant_id].blank?
-          tenant = Tenant.find(values[:tenant_id])
-        else
-          tenant = nil
-        end
-        transaction.tenant = tenant
-        if transaction.save
+        transaction = Transaction.find(tr_id)
+        if transaction.update_attributes(allowed_params(tr_id))
           updated_rows += 1
+        else
+          error_str += ": " + transaction.transaction_id + " - " + transaction.errors.full_messages.to_sentence
         end
       end
     end
 
-    redirect_to transactions_path, :notice => "Updated #{updated_rows} row(s)"
+    redirect_to transactions_path, :notice => "Updated #{updated_rows} row(s)" + error_str
+  end
+
+  # Private method that sets Strong Parameter permissions
+  private
+  def allowed_params(tr_id)
+    params.require(:transactions).require(tr_id).permit(:tenant_id)
   end
 end

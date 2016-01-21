@@ -1,0 +1,12 @@
+<h1>New Tenant Snapshot for <%= @tenant.name %></h1>
+
+<h3>Add new Snapshot</h3>
+<%= form_tag(tenant_tenant_snapshots_path) do %>
+  Start date: <%= date_field(:tenant_snapshot, :start_date) %><br />
+  End Date: <%= date_field(:tenant_snapshot, :end_date) %><br />
+  House: <%= collection_select(:tenant_snapshot, :house_id, House.all, :id, :name) %><br />
+  Weekly Rent (NZD$): <%= number_field(:tenant_snapshot, :weekly_rent, step: 5) %><br />
+  Rent Frequency: <%= number_field(:tenant_snapshot, :rent_frequency, in: 1..20, step: 1) %><br />
+  Rent paid by: <%= collection_select(:tenant_snapshot, :rent_paid_by, Tenant.all, :id, :name) %><br />
+  <%= submit_tag("Create New Snapshot") %>
+<% end %>

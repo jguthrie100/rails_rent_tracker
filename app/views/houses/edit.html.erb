@@ -16,7 +16,7 @@
           <tr>
           <%# Consider replacing :onChange with data-update="true" javascript/coffeescript %>
             <td><%= hf.text_field(:name, :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %></td>
-            <td><%= hf.text_field(:address, :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %></td>
+            <td><%= hf.text_field(:address, :size => 50, :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %></td>
           </tr>
         <% end %>
       <% end %>
@@ -44,7 +44,7 @@
       <% @house = nil %>
       <tr>
         <td><%= text_field(:house, :name) %></td>
-        <td><%= text_field(:house, :address) %></td>
+        <td><%= text_field(:house, :address, :size => 50) %></td>
         <td><%= submit_tag("Add New House") %></td>
       </tr>
     <% end %>

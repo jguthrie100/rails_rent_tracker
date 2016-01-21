@@ -17,6 +17,7 @@ class Transaction < ActiveRecord::Base
 
     # Open CSV file
     File.open(file.path) do |f|
+      # ASB CSV files must be preceeded by "asb_" to be recognised as being ASB bank
       if file.original_filename.include?("asb_") && file.content_type == "text/csv"
         f.gets  # burn 1st line
 

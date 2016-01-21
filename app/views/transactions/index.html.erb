@@ -1,11 +1,10 @@
 <h3>List of Transactions</h3>
-<%= flash[:notice] %>
 <table>
   <thead>
     <tr>
+      <th>Date</th>
       <th>Paid by</th>
       <th>Bank Acc Id</th>
-      <th>Date</th>
       <th>Transaction Id</th>
       <th>Transaction Type</th>
       <th>Cheque Number</th>
@@ -16,10 +15,17 @@
   </thead>
   <tbody>
     <% @transactions.each do |tr| %>
-      <tr>
-        <td><%= tr.tenant.nil? ? "" : tr.tenant.name %></td>
-        <td><%= tr.bank_account_id %></td>
+
+      <% if tr.id % 2 == 1 %>
+        <% bgcolor = "#ffffff" %>
+      <% else %>
+        <% bgcolor = "#f0f0f0" %>
+      <% end %>
+
+      <tr style="background-color:<%= bgcolor %>;">
         <td><%= tr.date %></td>
+        <td><%= tr.tenant.nil? ? "" : link_to(tr.tenant.name, tenant_path(tr.tenant)) %></td>
+        <td><%= tr.bank_account_id %></td>
         <td><%= tr.transaction_id %></td>
         <td><%= tr.transaction_type %></td>
         <td><%= tr.cheque_num %></td>

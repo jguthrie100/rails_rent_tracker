@@ -9,8 +9,8 @@
   <tbody>
     <% @houses.each do |h| %>
       <tr>
-        <td><%= h.name %></td>
-        <td><%= h.address %></td>
+        <td><%= link_to(h.name, house_path(h)) %></td>
+        <td><%= h.address %> - <%= link_to("[map]", "http://www.google.com/maps/search/#{h.address}", :target => "_blank") %></td>
       </tr>
     <% end %>
   </tbody>

@@ -5,4 +5,5 @@ class House < ActiveRecord::Base
 
   validates :name, :address, presence: true
   validates_length_of :name, :address, minimum: 6
+  validates_uniqueness_of :name, :address
 end

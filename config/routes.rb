@@ -1,9 +1,11 @@
 Rails.application.routes.draw do
+  get 'pages/index'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-   root 'transactions#index'
+   root 'pages#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
@@ -23,6 +25,7 @@ Rails.application.routes.draw do
   end
 
   resources :tenants do
+    resources :tenant_snapshots
     collection {
       put :update_multiple
       get :edit
@@ -30,6 +33,7 @@ Rails.application.routes.draw do
   end
 
   resources :houses do
+    resources :house_snapshots
     collection {
       put :update_multiple
       get :edit
