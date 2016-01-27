@@ -4,7 +4,7 @@
 
 
 <% total_rent = 0 %>
-<% @tenant.tenant_snapshots.each do |s| %>
+<% @tenant.tenant_snapshots.sort { |a,b| a.start_date <=> b.start_date }.each do |s| %>
   <% num_days = (s.end_date - s.start_date).to_i + 1 %>
   <% rent_expected = num_days * s.weekly_rent/7 %>
   <% total_rent += rent_expected %>
@@ -19,7 +19,7 @@
     
     <p class="snapshot_content" id="snapshot_content_<%= s.id %>" style="display:none;">
       House: <b><%= s.house.name %></b><br />
-      Weekly Rent: <b>$<%= s.weekly_rent %></b><br />
+      Weekly Rent: <b><%= number_to_currency(s.weekly_rent, :unit => "$") %></b><br />
       Total Rent Expected: <b><%= number_to_currency(rent_expected, :unit => "$") %></b>
     </p>
     <br />
