@@ -45,7 +45,7 @@ class HousesController < ApplicationController
         end
       end
     end
-    redirect_to houses_path, :notice => "Updated #{updated_rows} row(s)" + error_str
+    redirect_to houses_path, :notice => "Updated <b>#{updated_rows}</b> row(s)" + error_str
   end
 
   # Private method that sets Strong Parameter permissions

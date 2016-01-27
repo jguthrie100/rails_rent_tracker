@@ -1,5 +1,6 @@
+require 'csv'
+
 class Transaction < ActiveRecord::Base
-  require 'csv'
   
   belongs_to :tenant
 
@@ -10,7 +11,6 @@ class Transaction < ActiveRecord::Base
 
   # Imports a CSV of banking transactions to the DB
   def self.import(file)
-    existing_transactions = 0
     updates = Hash.new
     updates[:failed] = Array.new
     updates[:successful] = Array.new
