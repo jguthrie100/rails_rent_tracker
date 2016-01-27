@@ -10,7 +10,12 @@ class Transaction < ActiveRecord::Base
 
   # Imports a CSV of banking transactions to the DB
   def self.import(file)
-    existing_transactions, new_transactions, failed_updates = 0, 0, 0
+    existing_transactions = 0
+    updates = Hash.new
+    updates[:failed] = Array.new
+    updates[:successful] = Array.new
+    updates[:existing] = 0
+
     tenants = Tenant.all
 
     return 0 if file.nil?
@@ -38,7 +43,7 @@ class Transaction < ActiveRecord::Base
           transactions = Transaction.where({ bank_account_id: bank_account_id, transaction_id: line_hash["Unique Id"] })
 
           if transactions.count > 0
-            existing_transactions += 1
+            updates[:existing] += transactions.count
           else
             transaction = Transaction.new do |tr|
               tr.bank_account_id = bank_account_id
@@ -62,9 +67,9 @@ class Transaction < ActiveRecord::Base
 
             # Save transaction to DB and update counter
             if transaction.save
-              new_transactions += 1
+              updates[:successful].push(transaction)
             else
-              failed_updates += 1
+              updates[:failed].push([line_hash.to_s, transaction.errors.full_messages.to_sentence])
             end
           end
         end
@@ -72,6 +77,6 @@ class Transaction < ActiveRecord::Base
         # Non asb bank CSV file
       end
     end
-    return new_transactions
+    return updates
   end
 end

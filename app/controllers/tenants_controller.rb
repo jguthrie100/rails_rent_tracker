@@ -23,9 +23,9 @@ class TenantsController < ApplicationController
       t.house_id = p[:house_id]
     end
     if tenant.save
-      redirect_to tenants_path, notice: "Added Tenant (#{tenant.name}) to database"
+      redirect_to tenants_path, notice: "Added Tenant: <b><i>(#{tenant.name})</i></b> to the database"
     else
-      redirect_to tenants_path, notice: "Failed to add Tenant (#{tenant.name}) to database: #{tenant.errors.full_messages.to_sentence}"
+      redirect_to tenants_path, notice: "Failed to add Tenant: <b><i>(#{tenant.name})</i></b> to the database: #{tenant.errors.full_messages.to_sentence}"
     end
   end
 
