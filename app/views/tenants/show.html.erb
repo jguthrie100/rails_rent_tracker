@@ -12,7 +12,7 @@
 <!-- snapshot <%= s.id %> start -->
   <p class="snapshot" id="snapshot_<%= s.id %>">
     <div class="snapshot_header" id="snapshot_header_<%= s.id %>">
-      <b><%= s.start_date.strftime('%d %b %Y') %> - <%= s.end_date.strftime('%d %b %Y') %></b>&nbsp;
+      <b><%= s.start_date_str %> - <%= s.end_date_str %></b>&nbsp;
       <i>(<%= num_days %> days)</i>&nbsp;&nbsp;
       <small><a href="#" id="snapshot_content_button_<%= s.id %>">[display]</a></small>
     </div>
@@ -37,13 +37,13 @@
 <!-- payment <%= p.id %> start -->
   <p class="payment" id="payment_<%= p.id %>">
     <div class="payment_header" id="payment_header_<%= p.id %>">
-      <b><%= p.date.strftime('%d %b %Y') %></b>&nbsp;
-      <i>(<%= number_to_currency(p.amount, :unit => "$") %>)</i>&nbsp;&nbsp;
+      <b><%= p.date_str %></b>&nbsp;
+      <i>(<%= p.amount_str %>)</i>&nbsp;&nbsp;
       <small><a id="payment_content_button_<%= p.id %>">[display]</a></small>
     </div>
     
     <p class="payment_content" id="payment_content_<%= p.id %>" style="display:none;">
-      &nbsp;&nbsp;<%= p.transaction_id + " - " + p.transaction_type + " - " + p.payee + " - " + p.memo + " - " + number_to_currency(p.amount, :unit => "$") %>
+      &nbsp;&nbsp;<%= p.transaction_id + " - " + p.transaction_type + " - " + p.payee + " - " + p.memo + " - " + p.amount_str %>
     </p>
     
     <script>$("#payment_content_button_<%= p.id %>").click(function() {display_item("#payment_content", <%= p.id %>)});</script>

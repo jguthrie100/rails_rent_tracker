@@ -79,4 +79,11 @@ class Transaction < ActiveRecord::Base
     end
     return updates
   end
+
+  def amount_str
+    return ActionController::Base.helpers.number_to_currency(self[:amount], :unit => "$")
+  end
+  def date_str
+    return self[:date].strftime('%d %b %Y')
+  end
 end

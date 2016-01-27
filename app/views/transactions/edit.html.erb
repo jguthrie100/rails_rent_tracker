@@ -31,7 +31,7 @@
             <td><%= tr.cheque_num %></td>
             <td><%= tr.payee %></td>
             <td><%= tr.memo %></td>
-            <td><%= number_to_currency(tr.amount, :unit => "$") %></td>
+            <td><%= tr.amount_str %></td>
           </tr>
         <% end %>
       <% end %>
