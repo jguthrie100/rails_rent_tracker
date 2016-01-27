@@ -4,4 +4,6 @@ class HouseSnapshot < ActiveRecord::Base
   validates_associated :house
 
   validates :house, presence: true
+
+  validates_with ValidDateRangeValidator
 end

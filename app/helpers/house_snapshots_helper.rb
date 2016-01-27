@@ -1,0 +1,2 @@
+module HouseSnapshotsHelper
+end

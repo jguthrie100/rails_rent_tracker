@@ -1,0 +1,11 @@
+<h1>New House Snapshot for <%= @house.name %></h1>
+
+<h3>Add new Snapshot</h3>
+<%= form_tag(house_house_snapshots_path) do %>
+  Start date: <%= date_field(:house_snapshot, :start_date) %><br />
+  End Date: <%= date_field(:house_snapshot, :end_date) %><br />
+  Num Bedrooms: <%= number_field(:house_snapshot, :num_bedrooms, in: 1..10, step: 1) %><br />
+  Weekly Rent (NZD$): <%= number_field(:house_snapshot, :weekly_rent, step: 5) %><br />
+  Agency Fees (NZD$): <%= number_field(:house_snapshot, :agency_fees, step: 5) %><br />
+  <%= submit_tag("Create New Snapshot") %>
+<% end %>

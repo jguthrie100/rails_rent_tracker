@@ -17,4 +17,6 @@
 </table>
 <p>
   <%= link_to "Add/Edit Houses", edit_houses_path %>
+  <% @date = Date.new(2014, 10, 2) %>
+  <%= date_select("the_date", "", {:default => @date}) %>
 </p>

@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+#  get 'house_snapshots/new'
+
+#  get 'house_snapshots/create'
+
   get 'pages/index'
 
   # The priority is based upon order of creation: first created -> highest priority.

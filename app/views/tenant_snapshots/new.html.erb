@@ -7,6 +7,6 @@
   House: <%= collection_select(:tenant_snapshot, :house_id, House.all, :id, :name) %><br />
   Weekly Rent (NZD$): <%= number_field(:tenant_snapshot, :weekly_rent, step: 5) %><br />
   Rent Frequency: <%= number_field(:tenant_snapshot, :rent_frequency, in: 1..20, step: 1) %><br />
-  Rent paid by: <%= collection_select(:tenant_snapshot, :rent_paid_by, Tenant.all, :id, :name) %><br />
+  Rent paid by: <%= collection_select(:tenant_snapshot, :rent_paid_by, Tenant.all, :id, :name, {:selected => params[:tenant_id]}) %><br />
   <%= submit_tag("Create New Snapshot") %>
 <% end %>

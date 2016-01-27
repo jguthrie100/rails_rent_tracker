@@ -8,7 +8,7 @@
 </head>
 
 <body data-no-turbolink="true">
-<%= flash[:notice] %>
+<%= "<p>#{flash[:notice]}</p>".html_safe if flash[:notice] %>
 
 <%= link_to("Transactions", transactions_path) %> | 
 <%= link_to("Tenants", tenants_path) %> | 

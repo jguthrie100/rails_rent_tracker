@@ -8,6 +8,7 @@
   <% num_days = (s.end_date - s.start_date).to_i + 1 %>
   <% rent_expected = num_days * s.weekly_rent/7 %>
   <% total_rent += rent_expected %>
+
 <!-- snapshot <%= s.id %> start -->
   <p class="snapshot" id="snapshot_<%= s.id %>">
     <div class="snapshot_header" id="snapshot_header_<%= s.id %>">
@@ -24,15 +25,16 @@
     <br />
 
     <script>$("#snapshot_content_button_<%= s.id %>").click(function() {display_item("#snapshot_content", <%= s.id %>)});</script>
-
   </p>
 <!-- snapshot <%= s.id %> end -->
 
 <% end %>
 
 <h3>Rental Payments</h3>
-<%# @payments.where("date BETWEEN '2015-10-01' AND '2015-12-01'").each do |p| %>
+
 <% @payments.each do |p| %>
+  
+<!-- payment <%= p.id %> start -->
   <p class="payment" id="payment_<%= p.id %>">
     <div class="payment_header" id="payment_header_<%= p.id %>">
       <b><%= p.date.strftime('%d %b %Y') %></b>&nbsp;
@@ -44,10 +46,10 @@
       &nbsp;&nbsp;<%= p.transaction_id + " - " + p.transaction_type + " - " + p.payee + " - " + p.memo + " - " + number_to_currency(p.amount, :unit => "$") %>
     </p>
     
-
     <script>$("#payment_content_button_<%= p.id %>").click(function() {display_item("#payment_content", <%= p.id %>)});</script>
+  </p>
+<!-- payment <%= p.id %> end -->
 <% end %>
-
 
 <p class="snapshots_footer">
   Total Rent Expected: <b><%= number_to_currency(total_rent, :unit => "$") %></b><br/>
