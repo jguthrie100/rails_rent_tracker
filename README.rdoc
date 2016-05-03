@@ -1,34 +1,29 @@
 == README
 
-* Only parses Standard ASB Bank (NZ) CSV files at the moment
+Ruby on Rails app that manages a 'portfolio' of rental homes (or any other rental property/asset/whatever)
 
-(Future impementations: )
+Actions include:
 
-* House and Tenant Snapshots are used to model changes to the Houses and Tenants over time. For example, when rent goes up or down, a new Tenant Snapshot will created so that a history of rent values is stored over time.
+* Import an online banking CSV file to the database (only parses Standard ASB Bank (NZ) CSV files at the moment) to save the transaction records to the database
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+* Add and edit rental houses
 
-Things you may want to cover:
+* Add and edit tenants for each house
 
-* Ruby version
+* View all the payments made by each tenant
 
-* System dependencies
+* Calculate the expected total payments from each tenant and compare it to their actual payments made
 
-* Configuration
+== TODO
 
-* Database creation
+* Implement Tenant and House Snapshots. These are used to track changes over time, such as when rent changes, when tenants move in/out, or when the number of bedrooms changes etc. It means that an accurate rental income can be calculated for each 'snapshot', even though the incoming/expected payments will change over time.
 
-* Database initialization
+* Implement a decent front end
 
-* How to run the test suite
+* Integrate into Google Calendar. Create reminders for upcoming rental payments, missed payments etc
 
-* Services (job queues, cache servers, search engines, etc.)
+* Create proper authentication system for admin. Possibly allow tenants to log in and check their payments/expected payments, update email addreses etc
 
-* Deployment instructions
-
-* ...
+* Implement other aspects of rental home administration, such as accounting for mortgage payments, council tax, utility bills, calculate earning projections etc
 
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
