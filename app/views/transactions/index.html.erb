@@ -1,7 +1,8 @@
-<h3>List of Transactions</h3>
-<table>
+<h3 class="text-primary">List of Transactions</h3>
+<table class="table table-hover table-condensed table-striped">
   <thead>
     <tr>
+      <th>&nbsp;</th>
       <th>Date</th>
       <th>Paid by</th>
       <th>Bank Acc Id</th>
@@ -11,19 +12,14 @@
       <th>Payee</th>
       <th>Memo</th>
       <th>Amount</th>
+      <th>&nbsp;</th>
     </tr>
   </thead>
   <tbody>
     <% @transactions.each do |tr| %>
-
-      <% if tr.id % 2 == 1 %>
-        <% bgcolor = "#ffffff" %>
-      <% else %>
-        <% bgcolor = "#f0f0f0" %>
-      <% end %>
-
-      <tr style="background-color:<%= bgcolor %>;">
-        <td><%= tr.date %></td>
+      <tr id="row_<%= tr.id %>" class="mainRow" style="font-size: 11px">
+        <td><input id="checkBox_<%= tr.id %>" class="checkbox" type="checkbox" onchange="edit_row(<%= tr.id %>)" /></td>
+        <td><%= tr.date_str %></td>
         <td><%= tr.tenant.nil? ? "" : link_to(tr.tenant.name, tenant_path(tr.tenant)) %></td>
         <td><%= tr.bank_account_id %></td>
         <td><%= tr.transaction_id %></td>
@@ -32,6 +28,7 @@
         <td><%= tr.payee %></td>
         <td><%= tr.memo %></td>
         <td><%= tr.amount_str %></td>
+        <td><button id="saveBtn_<%= tr.id %>" class="btn btn-default disabled">Save</button></td>
       </tr>
     <% end %>
   </tbody>
@@ -39,3 +36,20 @@
 <p>
   <%= link_to "Add/Edit Transactions", edit_transactions_path %>
 </p>
+
+<script>
+function edit_row(id) {
+  if ( $( "#saveBtn_" + id ).hasClass("disabled") ) {
+    $( "#saveBtn_" + id ).removeClass("disabled");
+    $( "#saveBtn_" + id ).addClass("btn-primary");
+    $(".mainRow:not(#row_" + id + ")").fadeTo("slow", 0.5);
+    $(".checkbox:not(#checkBox_" + id + ")").prop("disabled", true);
+
+  } else {
+    $( "#saveBtn_" + id ).addClass("disabled");
+    $( "#saveBtn_" + id ).removeClass("btn-primary");
+    $(".mainRow").fadeTo("fast", 1);
+    $(".checkbox").prop("disabled", false);
+  }
+}
+</script>

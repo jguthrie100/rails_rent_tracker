@@ -1,10 +1,10 @@
 class TransactionsController < ApplicationController
   def index
-    @transactions = Transaction.all
+    @transactions = Transaction.all.reverse
   end
 
   def edit
-    @transactions = Transaction.all
+    @transactions = Transaction.all.reverse
   end
 
   # Import CSV file to the DB
