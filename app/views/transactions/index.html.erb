@@ -42,13 +42,13 @@ function edit_row(id) {
   if ( $( "#saveBtn_" + id ).hasClass("disabled") ) {
     $( "#saveBtn_" + id ).removeClass("disabled");
     $( "#saveBtn_" + id ).addClass("btn-primary");
-    $(".mainRow:not(#row_" + id + ")").fadeTo("slow", 0.5);
+    $(".mainRow:not(#row_" + id + ")").css("opacity", "0.5");
     $(".checkbox:not(#checkBox_" + id + ")").prop("disabled", true);
 
   } else {
     $( "#saveBtn_" + id ).addClass("disabled");
     $( "#saveBtn_" + id ).removeClass("btn-primary");
-    $(".mainRow").fadeTo("slow", 1);
+    $(".mainRow:not(#row_" + id + ")").css("opacity", "1");
     $(".checkbox").prop("disabled", false);
   }
 }
