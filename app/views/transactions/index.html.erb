@@ -54,19 +54,19 @@ function edit_row(id) {
     $("#save_btn_" + id).removeClass("disabled");
     $("#save_btn_" + id).prop("disabled", false);
     $("#save_btn_" + id).addClass("btn-primary");
-    $(".main_row:not(#row_" + id + ")").css("opacity", "0.5");
-    $(".checkbox:not(#checkbox_" + id + ")").prop("disabled", true);
     $("#tenant_link_" + id).css("visibility", "hidden");
     $("#tenant_dropdown_" + id).css("visibility", "visible");
+    $(".main_row:not(#row_" + id + ")").css("opacity", "0.5");
+    $(".checkbox:not(#checkbox_" + id + ")").prop("disabled", true);
 
   } else {
     $("#save_btn_" + id).addClass("disabled");
     $("#save_btn_" + id).prop("disabled", true);
     $("#save_btn_" + id).removeClass("btn-primary");
-    $(".main_row:not(#row_" + id + ")").css("opacity", "1");
-    $(".checkbox").prop("disabled", false);
     $(".tenant_link").css("visibility", "visible");
     $(".tenant_dropdown").css("visibility", "hidden");
+    $(".main_row:not(#row_" + id + ")").css("opacity", "1");
+    $(".checkbox").prop("disabled", false);
   }
 }
 </script>
