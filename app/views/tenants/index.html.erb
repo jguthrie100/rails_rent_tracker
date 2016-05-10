@@ -16,8 +16,6 @@
       <% @tenants.each do |t| %>
         <%= fields_for "tenants[]", t do |tf| %>
           <tr id="tenant_row_<%= t.id %>" class="tenant_row" style="font-size: 11px">
-            <% is_updated_id = "tenants_" + t.id.to_s + "_is_updated" %>
-            <%= tf.hidden_field(:is_updated, :value => 'false') %>
             <td>
               <input id="checkbox_<%= t.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= t.id %>)" />
             </td>
@@ -43,6 +41,8 @@
               %>
             </td>
             <td>
+              <% is_updated_id = "tenants_" + t.id.to_s + "_is_updated" %>
+              <%= tf.hidden_field(:is_updated, :value => 'false') %>
               <button id="save_btn_<%= t.id %>" class="btn btn-sm btn-default disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" disabled>Save</button>
             </td>
           </tr>
@@ -78,9 +78,6 @@
         <% end %>
   </tbody>
 </table>
-<p>
-  <%= link_to "Add/Edit Tenants", edit_tenants_path %>
-</p>
 
 <script>
 function toggle_edit(id) {

@@ -22,7 +22,9 @@
           <tr id="transaction_row_<%= tr.id %>" class="transaction_row" style="font-size: 11px">
             <% is_updated_id = "transactions_" + tr.id.to_s + "_is_updated" %>
             <%= tf.hidden_field(:is_updated, :value => 'false') %>
-            <td><input id="checkbox_<%= tr.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= tr.id %>)" /></td>
+            <td>
+              <input id="checkbox_<%= tr.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= tr.id %>)" />
+            </td>
             <td><%= tr.date_str %></td>
             <td>
               <%= tr.tenant.nil? ? "" : link_to(tr.tenant.name, tenant_path(tr.tenant), class: "display") %><br />
@@ -36,7 +38,11 @@
             <td><%= tr.payee %></td>
             <td><%= tr.memo %></td>
             <td><%= tr.amount_str %></td>
-            <td><button id="save_btn_<%= tr.id %>" class="btn btn-sm btn-default disabled" disabled>Save</button></td>
+            <td>
+              <% is_updated_id = "transactions_" + tr.id.to_s + "_is_updated" %>
+              <%= tf.hidden_field(:is_updated, :value => 'false') %>
+              <button id="save_btn_<%= tr.id %>" class="btn btn-sm btn-default disabled" disabled>Save</button>
+            </td>
           </tr>
         <% end %>
       <% end %>

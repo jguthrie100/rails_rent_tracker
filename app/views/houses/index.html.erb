@@ -2,19 +2,97 @@
 <table class="table table-hover table-condensed table-striped">
   <thead>
     <tr>
+      <th>&nbsp;</th>
       <th>Name</th>
       <th>Address</th>
+      <th>&nbsp;</th>
     </tr>
   </thead>
   <tbody>
-    <% @houses.each do |h| %>
-      <tr>
-        <td><%= link_to(h.name, house_path(h)) %></td>
-        <td><%= h.address %> - <%= link_to("[map]", "http://www.google.com/maps/search/#{h.address}", :target => "_blank") %></td>
-      </tr>
+    <%= form_for :houses, :url => update_multiple_houses_path, :method => "put" do |f| %>
+      <% @houses.each do |h| %>
+        <%= fields_for "houses[]", h do |hf| %>
+          <tr id="house_row_<%= h.id %>" class="house_row" style="font-size: 11px">
+            <td>
+              <input id="checkbox_<%= h.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= h.id %>)" />
+            </td>
+            <td>
+              <%= link_to(h.name, house_path(h), class: "display") %><br />
+              <%= hf.text_field(:name, class: "edit", style: "visibility:hidden") %>
+            </td>
+            <td>
+              <span class="display"><%= h.address %> - <%= link_to("[map]", "http://www.google.com/maps/search/#{h.address}", :target => "_blank") %></span><br />
+              <%= hf.text_field(:address, class: "edit", style: "visibility:hidden", size: 100) %>
+            </td>
+            <td>
+              <% is_updated_id = "houses_" + h.id.to_s + "_is_updated" %>
+              <%= hf.hidden_field(:is_updated, :value => 'false') %>
+              <button id="save_btn_<%= h.id %>" class="btn btn-sm btn-default disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" disabled>Save</button>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
     <% end %>
+        <%# Create final row with a form to add a new House to the inventory %>
+        <%= form_tag(houses_path) do %>
+          <% @house = nil %>
+          <tr id="house_row_new" class="house_row" style="font-size: 11px">
+            <td>
+              <input id="checkbox_new" class="checkbox new_house" type="checkbox" onchange="toggle_edit('new')" />
+            </td>
+            <td><%= text_field(:house, :name, disabled: "true", class: "new_house") %></td>
+            <td><%= text_field(:house, :address, :size => 100, disabled: "true", class: "new_house") %></td>
+            <td>
+              <button id="save_btn_new" class="btn btn-sm btn-default disabled new_house" disabled>Save</button>
+            </td>
+          </tr>
+        <% end %>
   </tbody>
 </table>
-<p>
-  <%= link_to "Add/Edit Houses", edit_houses_path %>
-</p>
+
+<script>
+function toggle_edit(id) {
+  if ( $("#checkbox_" + id).prop("checked") ) {
+    // WHEN A ROW IS SELECTED..
+
+    // Enable form fields if 'new House' row was selected
+    if(id === "new") {
+      $(".new_house").prop("disabled", false);
+    }
+
+    // Enable the Save button
+    $("#save_btn_" + id).removeClass("disabled")
+                        .addClass("btn-primary")
+                        .prop("disabled", false);
+
+    // Hide all the display fields and show all the edit field
+    $(".display", "#house_row_" + id).css("visibility", "hidden");
+    $(".edit", "#house_row_" + id).css("visibility", "visible");
+
+    // Fade out the unselected rows and disable the checkboxes on them
+    $(".house_row:not(#house_row_" + id + ")").css("opacity", "0.5");
+    $(".checkbox:not(#checkbox_" + id + ")").prop("disabled", true);
+
+  } else {
+    // WHEN A ROW IS DESELECTED..
+
+    // Disable form fields if deselected row was the 'new House' row
+    if(id === "new") {
+      $(".new_house").prop("disabled", true);
+    }
+
+    // Disable save button
+    $("#save_btn_" + id).addClass("disabled")
+                        .removeClass("btn-primary")
+                        .prop("disabled", true);
+
+    // Hide all the edit fields and display the display fields
+    $(".display", "#house_row_" + id).css("visibility", "visible");
+    $(".edit", "#house_row_" + id).css("visibility", "hidden");
+
+    // Fade all the rows back in and enable all the checkboxes
+    $(".house_row").css("opacity", "1");
+    $(".checkbox").prop("disabled", false);
+  }
+}
+</script>

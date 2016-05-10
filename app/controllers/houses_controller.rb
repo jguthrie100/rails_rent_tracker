@@ -19,9 +19,9 @@ class HousesController < ApplicationController
       h.address = p[:address]
     end
     if house.save
-      redirect_to houses_path, notice: "Added House: <b><i>(#{house.name})</i></b> to the database"
+      redirect_to houses_path, notice: "Added House: <b>'#{house.name}'</b> to the database"
     else
-      redirect_to houses_path, notice: "Failed to add House: <b><i>(#{house.name})</i></b> to the database: #{house.errors.full_messages.to_sentence}"
+      redirect_to houses_path, notice: "Failed to add House: <b>'#{house.name}'</b> to the database: #{house.errors.full_messages.to_sentence}"
     end
   end
 

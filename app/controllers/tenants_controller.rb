@@ -9,7 +9,12 @@ class TenantsController < ApplicationController
 
   def show
     @tenant = Tenant.find(params[:id])
-    @payments = Transaction.where({tenant: @tenant})
+    @payments = Transaction.where({tenant: @tenant}).order(date: :desc)
+    @sorted_snapshots = Array.new
+    
+    @tenant.tenant_snapshots.sort { |a,b| a.start_date <=> b.start_date }.each do |s|
+      @sorted_snapshots.push(s)
+    end
   end
 
   # Add new Tenant to DB
@@ -23,9 +28,9 @@ class TenantsController < ApplicationController
       t.house_id = p[:house_id]
     end
     if tenant.save
-      redirect_to tenants_path, notice: "Added Tenant: <b><i>(#{tenant.name})</i></b> to the database"
+      redirect_to tenants_path, notice: "Added Tenant <b>'#{tenant.name}'</b> to the database"
     else
-      redirect_to tenants_path, notice: "Failed to add Tenant: <b><i>(#{tenant.name})</i></b> to the database: #{tenant.errors.full_messages.to_sentence}"
+      redirect_to tenants_path, notice: "Failed to add Tenant <b>'#{tenant.name}'</b> to the database: #{tenant.errors.full_messages.to_sentence}"
     end
   end
 
