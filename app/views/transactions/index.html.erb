@@ -19,14 +19,14 @@
     <%= form_for :transaction, :url => update_multiple_transactions_path, :method => "put" do |f| %>
       <% @transactions.each do |tr| %>
         <%= fields_for "transactions[]", tr do |tf| %>
-          <tr id="tr_<%= tr.id %>" class="transaction_row" style="font-size: 11px">
+          <tr id="transaction_row_<%= tr.id %>" class="transaction_row" style="font-size: 11px">
             <% is_updated_id = "transactions_" + tr.id.to_s + "_is_updated" %>
             <%= tf.hidden_field(:is_updated, :value => 'false') %>
             <td><input id="checkbox_<%= tr.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= tr.id %>)" /></td>
             <td><%= tr.date_str %></td>
             <td>
-              <%= tr.tenant.nil? ? "" : link_to(tr.tenant.name, tenant_path(tr.tenant), class: "tenant_link", id: "tenant_link_#{tr.id}") %><br />
-              <%= tf.collection_select(:tenant_id, Tenant.all, :id, :name, { include_blank: true}, class: "tenant_dropdown", id: "tenant_dropdown_#{tr.id}", style: "visibility:hidden", :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %>
+              <%= tr.tenant.nil? ? "" : link_to(tr.tenant.name, tenant_path(tr.tenant), class: "display") %><br />
+              <%= tf.collection_select(:tenant_id, Tenant.all, :id, :name, { include_blank: true}, class: "edit", style: "visibility:hidden", :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %>
 
             </td>
             <td><%= tr.bank_account_id %></td>
@@ -36,7 +36,7 @@
             <td><%= tr.payee %></td>
             <td><%= tr.memo %></td>
             <td><%= tr.amount_str %></td>
-            <td><button id="save_btn_<%= tr.id %>" class="btn btn-default disabled" disabled>Save</button></td>
+            <td><button id="save_btn_<%= tr.id %>" class="btn btn-sm btn-default disabled" disabled>Save</button></td>
           </tr>
         <% end %>
       <% end %>
@@ -49,22 +49,36 @@
 
 <script>
 function toggle_edit(id) {
-  if ( $("#save_btn_" + id).hasClass("disabled") ) {
-    $("#save_btn_" + id).removeClass("disabled");
-    $("#save_btn_" + id).prop("disabled", false);
-    $("#save_btn_" + id).addClass("btn-primary");
-    $("#tenant_link_" + id).css("visibility", "hidden");
-    $("#tenant_dropdown_" + id).css("visibility", "visible");
-    $(".transaction_row:not(#tr_" + id + ")").css("opacity", "0.5");
+  if ( $("#checkbox_" + id).prop("checked") ) {
+    // WHEN A ROW IS SELECTED..
+
+    // Enable save button
+    $("#save_btn_" + id).removeClass("disabled")
+                        .prop("disabled", false)
+                        .addClass("btn-primary");
+
+    // Hide the display fields and display the edit fields
+    $(".display", "#transaction_row_" + id).css("visibility", "hidden");
+    $(".edit", "#transaction_row_" + id).css("visibility", "visible");
+
+    // Fade out unselected rows and disable the checkboxes
+    $(".transaction_row:not(#transaction_row_" + id + ")").css("opacity", "0.5");
     $(".checkbox:not(#checkbox_" + id + ")").prop("disabled", true);
 
   } else {
-    $("#save_btn_" + id).addClass("disabled");
-    $("#save_btn_" + id).prop("disabled", true);
-    $("#save_btn_" + id).removeClass("btn-primary");
-    $(".tenant_link").css("visibility", "visible");
-    $(".tenant_dropdown").css("visibility", "hidden");
-    $(".transaction_row:not(#tr_" + id + ")").css("opacity", "1");
+    // WHEN A ROW IS DESELECTED..
+
+    // Disable the save button
+    $("#save_btn_" + id).addClass("disabled")
+                        .removeClass("btn-primary")
+                        .prop("disabled", true);
+
+    // Display the display fields and hide the edit fields
+    $(".display", "#transaction_row_" + id).css("visibility", "visible");
+    $(".edit", "#transaction_row_" + id).css("visibility", "hidden");
+
+    // Fade back in all rows and enable the checkboxes
+    $(".transaction_row").css("opacity", "1");
     $(".checkbox").prop("disabled", false);
   }
 }

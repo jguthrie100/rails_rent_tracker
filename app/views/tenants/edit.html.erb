@@ -12,7 +12,6 @@
   <tbody>
     <%= form_for :tenant, :url => update_multiple_tenants_path, :method => "put" do |f| %>
       <% @tenants.each do |t| %>
-        <%# @tenant = t %>
         <%= fields_for "tenants[]", t do |tf| %>
           <tr>
             <% is_updated_id = "tenants_" + t.id.to_s + "_is_updated" %>
