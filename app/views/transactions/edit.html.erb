@@ -16,8 +16,8 @@
     <%= form_for :transaction, :url => update_multiple_transactions_path, :method => "put" do |f| %>
       <% @transactions.each do |tr| %>
         <%= fields_for "transactions[]", tr do |tf| %>
-          <% is_updated_id = "transactions_" + tr.id.to_s + "_is_updated" %>
           <tr>
+            <% is_updated_id = "transactions_" + tr.id.to_s + "_is_updated" %>
             <%= tf.hidden_field(:is_updated, :value => 'false') %>
             <td>
               <%# Create drop down list of tenants - hidden_field(:is_updated) gets updated to 'true' if a change is made %>

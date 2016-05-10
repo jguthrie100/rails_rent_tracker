@@ -2,17 +2,35 @@
 
 <h1><%= @tenant.name %></h1>
 
+<div>
+<%= draw_timeline %>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <% total_rent = 0 %>
-<% @tenant.tenant_snapshots.sort { |a,b| a.start_date <=> b.start_date }.each do |s| %>
-  <% num_days = (s.end_date - s.start_date).to_i + 1 %>
+<% @sorted_snapshots.each do |s| %>
+  <% num_days = s.length_in_days %>
   <% rent_expected = num_days * s.weekly_rent/7 %>
   <% total_rent += rent_expected %>
 
 <!-- snapshot <%= s.id %> start -->
   <p class="snapshot" id="snapshot_<%= s.id %>">
     <div class="snapshot_header" id="snapshot_header_<%= s.id %>">
-      <b><%= s.start_date_str %> - <%= s.end_date_str %></b>&nbsp;
+      <b><%= s.start_date.strftime('%a') %> <%= s.start_date_str %> - <%= s.end_date_str %></b>&nbsp;
       <i>(<%= num_days %> days)</i>&nbsp;&nbsp;
       <small><a href="#" id="snapshot_content_button_<%= s.id %>">[display]</a></small>
     </div>
@@ -37,7 +55,7 @@
 <!-- payment <%= p.id %> start -->
   <p class="payment" id="payment_<%= p.id %>">
     <div class="payment_header" id="payment_header_<%= p.id %>">
-      <b><%= p.date_str %></b>&nbsp;
+      <%= p.date.strftime('%a') %> <b><%= p.date_str %></b>&nbsp;
       <i>(<%= p.amount_str %>)</i>&nbsp;&nbsp;
       <small><a id="payment_content_button_<%= p.id %>">[display]</a></small>
     </div>

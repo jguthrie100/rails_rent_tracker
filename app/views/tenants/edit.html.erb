@@ -12,12 +12,12 @@
   <tbody>
     <%= form_for :tenant, :url => update_multiple_tenants_path, :method => "put" do |f| %>
       <% @tenants.each do |t| %>
-        <% @tenant = t %>
+        <%# @tenant = t %>
         <%= fields_for "tenants[]", t do |tf| %>
-          <% is_updated_id = "tenants_" + t.id.to_s + "_is_updated" %>
-          <%= tf.hidden_field(:is_updated, :value => 'false') %>
           <tr>
-          <%# Consider replacing :onChange with data-update="true" javascript/coffeescript %>
+            <% is_updated_id = "tenants_" + t.id.to_s + "_is_updated" %>
+            <%= tf.hidden_field(:is_updated, :value => 'false') %>
+            <%# Consider replacing :onChange with data-update="true" javascript/coffeescript %>
             <td><%= tf.text_field(:name, :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %></td>
             <td><%= tf.text_field(:payment_handle, :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %></td>
             <td><%= tf.text_field(:phone_num, :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %></td>

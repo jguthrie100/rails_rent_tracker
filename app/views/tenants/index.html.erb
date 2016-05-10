@@ -1,26 +1,141 @@
-<h3>List of Tenants</h3>
-<table>
+<h3 class="text-primary">List of Tenants</h3>
+<table class="table table-hover table-condensed table-striped">
   <thead>
     <tr>
+      <th>&nbsp;</th>
       <th>Name</th>
       <th>Payment Handle</th>
       <th>Phone Number</th>
       <th>Email</th>
       <th>House</th>
+      <th>&nbsp;</th>
     </tr>
   </thead>
   <tbody>
-    <% @tenants.each do |t| %>
-      <tr>
-        <td><%= link_to(t.name, tenant_path(t)) %></td>
-        <td><%= t.payment_handle %></td>
-        <td><%= t.phone_num %></td>
-        <td><%= t.email %></td>
-        <td><%= t.house.nil? ? "" : link_to(t.house.name, house_path(t.house)) %></td>
-      </tr>
+    <%= form_for :tenant, :url => update_multiple_tenants_path, :method => "put" do |f| %>
+      <% @tenants.each do |t| %>
+        <%= fields_for "tenants[]", t do |tf| %>
+          <tr id="t_<%= t.id %>" class="tenant_row" style="font-size: 11px">
+            <% is_updated_id = "tenants_" + t.id.to_s + "_is_updated" %>
+            <%= tf.hidden_field(:is_updated, :value => 'false') %>
+            <td>
+              <input id="checkbox_<%= t.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= t.id %>)" />
+            </td>
+            <td>
+              <%= link_to(t.name, tenant_path(t), class: "tenant_link", id: "tenant_link_#{t.id}") %><br />
+              <%= tf.text_field(:name, class: "edit_name_field", id: "edit_name_field_#{t.id}", style: "visibility:hidden", :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %>
+            </td>
+            <td>
+              <span class="payment_handle_text" id="payment_handle_text_<%= t.id %>"><%= t.payment_handle %></span><br />
+              <%= tf.text_field(:payment_handle, class: "edit_payment_handle_field", id: "edit_payment_handle_field_#{t.id}", style: "visibility:hidden", :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %>
+            </td>
+            <td>
+              <span class="phone_num_text" id="phone_num_text_<%= t.id %>"><%= t.phone_num %></span><br />
+              <%= tf.text_field(:phone_num, class: "edit_phone_num_field", id: "edit_phone_num_field_#{t.id}", style: "visibility:hidden", :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %>
+            </td>
+            <td>
+              <span class="email_text" id="email_text_<%= t.id %>"><%= t.email %></span><br />
+              <%= tf.text_field(:email, class: "edit_email_field", id: "edit_email_field_#{t.id}", style: "visibility:hidden", :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %>
+            </td>
+            <td>
+              <%= t.house.nil? ? "" : link_to(t.house.name, house_path(t.house), class: "house_link", id: "house_link_#{t.id}") %><br />
+              <%= tf.collection_select(:house_id, House.all, :id, :name, { include_blank: true}, class: "edit_house_dropdown", id: "edit_house_dropdown_#{t.id}", style: "visibility:hidden", :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'")
+              %>
+            </td>
+            <td>
+              <button id="save_btn_<%= t.id %>" class="btn btn-default disabled" disabled>Save</button>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
     <% end %>
+        <%# Create final row with a form to add a new Tenant to the inventory %>
+        <%= form_tag(tenants_path) do %>
+          <% @tenant = nil %>
+          <tr id="t_new" class="tenant_row" style="font-size: 11px">
+            <td>
+              <input id="checkbox_new" class="checkbox new_tenant" type="checkbox" onchange="toggle_edit('new')" />
+            </td>
+            <td>
+              <%= text_field(:tenant, :name, disabled: "true", class: "new_tenant disabled") %>
+            </td>
+            <td>
+              <%= text_field(:tenant, :payment_handle, disabled: "true", class: "new_tenant disabled") %>
+            </td>
+            <td>
+              <%= text_field(:tenant, :phone_num, disabled: "true", class: "new_tenant disabled") %>
+            </td>
+            <td>
+              <%= text_field(:tenant, :email, disabled: "true", class: "new_tenant disabled") %>
+            </td>
+            <td>
+              <%= collection_select(:tenant, :house_id, House.all, :id, :name, {include_blank: true}, disabled: "true", class: "new_tenant disabled") %>
+            </td>
+            <td>
+              <button id="save_btn_new" class="btn btn-default disabled new_tenant" disabled>Save</button>
+            </td>
+          </tr>
+        <% end %>
   </tbody>
 </table>
 <p>
   <%= link_to "Add/Edit Tenants", edit_tenants_path %>
 </p>
+
+<script>
+function toggle_edit(id) {
+  if ( $("#save_btn_" + id).hasClass("disabled") ) {
+    $("#save_btn_" + id).removeClass("disabled");
+    $("#save_btn_" + id).addClass("btn-primary");
+    $("#save_btn_" + id).prop("disabled", false);
+
+    $("#tenant_link_" + id).css("visibility", "hidden");
+    $("#edit_name_field_" + id).css("visibility", "visible");
+
+    $("#payment_handle_text_" + id).css("visibility", "hidden");
+    $("#edit_payment_handle_field_" + id).css("visibility", "visible");
+
+    $("#phone_num_text_" + id).css("visibility", "hidden");
+    $("#edit_phone_num_field_" + id).css("visibility", "visible");
+
+    $("#email_text_" + id).css("visibility", "hidden");
+    $("#edit_email_field_" + id).css("visibility", "visible");
+
+    $("#house_link_" + id).css("visibility", "hidden");
+    $("#edit_house_dropdown_" + id).css("visibility", "visible");
+
+    $(".tenant_row:not(#t_" + id + ")").css("opacity", "0.5");
+    $(".checkbox:not(#checkbox_" + id + ")").prop("disabled", true);
+
+    if(id === "new") {
+      $(".new_tenant").prop("disabled", false);
+    }
+
+  } else {
+    $("#save_btn_" + id).addClass("disabled");
+    $("#save_btn_" + id).removeClass("btn-primary");
+
+    $(".tenant_link").css("visibility", "visible");
+    $(".edit_name_field").css("visibility", "hidden");
+
+    $("#payment_handle_text_" + id).css("visibility", "visible");
+    $("#edit_payment_handle_field_" + id).css("visibility", "hidden");
+
+    $("#phone_num_text_" + id).css("visibility", "visible");
+    $("#edit_phone_num_field_" + id).css("visibility", "hidden");
+
+    $("#email_text_" + id).css("visibility", "visible");
+    $("#edit_email_field_" + id).css("visibility", "hidden");
+
+    $("#house_link_" + id).css("visibility", "visible");
+    $("#edit_house_dropdown_" + id).css("visibility", "hidden");
+
+    $(".tenant_row:not(#t_" + id + ")").css("opacity", "1");
+    $(".checkbox").prop("disabled", false);
+
+    if(id === "new") {
+      $(".new_tenant").prop("disabled", true);
+    }
+  }
+}
+</script>
