@@ -20,6 +20,7 @@
       <% @transactions.each do |tr| %>
         <%= fields_for "transactions[]", tr do |tf| %>
           <tr id="transaction_row_<%= tr.id %>" class="transaction_row" style="font-size: 11px">
+            <% is_updated_id = "transactions_" + tr.id.to_s + "_is_updated" %>
             <td>
               <input id="checkbox_<%= tr.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= tr.id %>)" />
             </td>
@@ -37,9 +38,8 @@
             <td><%= tr.memo %></td>
             <td><%= tr.amount_str %></td>
             <td>
-              <% is_updated_id = "transactions_" + tr.id.to_s + "_is_updated" %>
               <%= tf.hidden_field(:is_updated, :value => 'false') %>
-              <button id="save_btn_<%= tr.id %>" class="btn btn-sm btn-default disabled" disabled>Save</button>
+              <button id="save_btn_<%= tr.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" disabled></button>
             </td>
           </tr>
         <% end %>
@@ -58,8 +58,7 @@ function toggle_edit(id) {
 
     // Enable save button
     $("#save_btn_" + id).removeClass("disabled")
-                        .prop("disabled", false)
-                        .addClass("btn-primary");
+                        .prop("disabled", false);
 
     // Hide the display fields and display the edit fields
     $(".display", "#transaction_row_" + id).css("visibility", "hidden");
@@ -74,7 +73,6 @@ function toggle_edit(id) {
 
     // Disable the save button
     $("#save_btn_" + id).addClass("disabled")
-                        .removeClass("btn-primary")
                         .prop("disabled", true);
 
     // Display the display fields and hide the edit fields

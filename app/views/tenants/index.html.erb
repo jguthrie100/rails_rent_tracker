@@ -43,7 +43,10 @@
             <td>
               <% is_updated_id = "tenants_" + t.id.to_s + "_is_updated" %>
               <%= tf.hidden_field(:is_updated, :value => 'false') %>
-              <button id="save_btn_<%= t.id %>" class="btn btn-sm btn-default disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" disabled>Save</button>
+              
+              <button id="save_btn_<%= t.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" disabled></button>
+
+              <%= link_to "", {:controller => :tenants, :action => 'destroy', :id => t.id }, :method => :delete, class: "fa fa-trash btn btn-danger", data: { confirm: "Are you sure you want to delete tenant '#{t.name.upcase}' from the database?" } %>
             </td>
           </tr>
         <% end %>
@@ -72,7 +75,7 @@
               <%= collection_select(:tenant, :house_id, House.all, :id, :name, {include_blank: true}, disabled: "true", class: "new_tenant") %>
             </td>
             <td>
-              <button id="save_btn_new" class="btn btn-sm btn-default disabled new_tenant" disabled>Save</button>
+              <button id="save_btn_new" class="fa fa-floppy-o btn btn-sm btn-primary disabled new_tenant" disabled></button>
             </td>
           </tr>
         <% end %>
@@ -84,14 +87,13 @@ function toggle_edit(id) {
   if ( $("#checkbox_" + id).prop("checked") ) {
     // WHEN A ROW IS SELECTED..
 
-    // Enable form fields if 'new Tenant' was selected
+    // Enable form fields if 'new Tenant' row is selected
     if(id === "new") {
       $(".new_tenant").prop("disabled", false);
     }
 
     // Enable the Save button
     $("#save_btn_" + id).removeClass("disabled")
-                        .addClass("btn-primary")
                         .prop("disabled", false);
 
     // Hide all the display fields and show all the edit field
@@ -112,7 +114,6 @@ function toggle_edit(id) {
 
     // Disable save button
     $("#save_btn_" + id).addClass("disabled")
-                        .removeClass("btn-primary")
                         .prop("disabled", true);
 
     // Hide all the edit fields and display the display fields

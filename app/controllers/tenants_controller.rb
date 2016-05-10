@@ -17,6 +17,16 @@ class TenantsController < ApplicationController
     end
   end
 
+  def destroy
+    tenant = Tenant.find(params[:id])
+
+    if tenant.destroy
+      redirect_to tenants_path, notice: "Deleted Tenant: <b>'#{tenant.name}'</b> from the database"
+    else
+      redirect_to tenants_path, notice: "Failed to delete Tenant: <b>'#{tenant.name}'</b> from the database: #{tenant.errors.full_messages.to_sentence}"
+    end
+  end
+
   # Add new Tenant to DB
   def create
     tenant = Tenant.new do |t|

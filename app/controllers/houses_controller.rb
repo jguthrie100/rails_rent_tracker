@@ -11,6 +11,16 @@ class HousesController < ApplicationController
     @houses = House.all
   end
 
+  def destroy
+    house = House.find(params[:id])
+
+    if house.destroy
+      redirect_to houses_path, notice: "Deleted House: <b>'#{house.name}'</b> from the database"
+    else
+      redirect_to houses_path, notice: "Failed to delete House: <b>'#{house.name}'</b> from the database: #{house.errors.full_messages.to_sentence}"
+    end
+  end
+
   # Add new House to DB
   def create
     house = House.new do |h|

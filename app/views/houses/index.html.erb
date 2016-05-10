@@ -27,7 +27,10 @@
             <td>
               <% is_updated_id = "houses_" + h.id.to_s + "_is_updated" %>
               <%= hf.hidden_field(:is_updated, :value => 'false') %>
-              <button id="save_btn_<%= h.id %>" class="btn btn-sm btn-default disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" disabled>Save</button>
+
+              <button id="save_btn_<%= h.id %>" class="fa fa-floppy-o btn btn-primary disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" disabled></button>
+              
+              <%= link_to "", {:controller => :houses, :action => 'destroy', :id => h.id }, :method => :delete, class: "fa fa-trash btn btn-danger", data: { confirm: "Are you sure you want to delete house '#{h.name.upcase}' from the database?" } %>
             </td>
           </tr>
         <% end %>
@@ -43,7 +46,7 @@
             <td><%= text_field(:house, :name, disabled: "true", class: "new_house") %></td>
             <td><%= text_field(:house, :address, :size => 100, disabled: "true", class: "new_house") %></td>
             <td>
-              <button id="save_btn_new" class="btn btn-sm btn-default disabled new_house" disabled>Save</button>
+              <button id="save_btn_new" class="fa fa-floppy-o btn btn-primary disabled new_house" disabled></button>
             </td>
           </tr>
         <% end %>
@@ -62,7 +65,6 @@ function toggle_edit(id) {
 
     // Enable the Save button
     $("#save_btn_" + id).removeClass("disabled")
-                        .addClass("btn-primary")
                         .prop("disabled", false);
 
     // Hide all the display fields and show all the edit field
@@ -83,7 +85,6 @@ function toggle_edit(id) {
 
     // Disable save button
     $("#save_btn_" + id).addClass("disabled")
-                        .removeClass("btn-primary")
                         .prop("disabled", true);
 
     // Hide all the edit fields and display the display fields
