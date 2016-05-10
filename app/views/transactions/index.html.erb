@@ -1,4 +1,8 @@
-<h3 class="text-primary">List of Transactions</h3>
+<h3 class="text-primary">List of Transactions&nbsp;&nbsp;
+  <span style="font-size: 12px;"><a href="#importcsv">&bull; Import new transactions from CSV file</a></span>
+</h3>
+<br />
+
 <table class="table table-hover table-condensed table-striped">
   <thead>
     <tr>
@@ -47,9 +51,15 @@
     <% end %>
   </tbody>
 </table>
-<p>
-  <%= link_to "Add/Edit Transactions", edit_transactions_path %>
-</p>
+<br />
+<h3 id="importcsv" class="text-primary">Import Transactions from a CSV file</h3>
+<br />
+<%= form_tag import_transactions_path, multipart: true do %>
+  <%= file_field_tag :file %>
+  <br />
+  <%= submit_tag "Import CSV file" %>
+<% end %>
+<br />
 
 <script>
 function toggle_edit(id) {

@@ -76,6 +76,7 @@ class Transaction < ActiveRecord::Base
         end
       else
         # Non asb bank CSV file
+        updates[:failed].push(["Failed to import any transactions", "File type must be text/csv and in a recognised format"])
       end
     end
     return updates
