@@ -20,8 +20,6 @@
       <% @transactions.each do |tr| %>
         <%= fields_for "transactions[]", tr do |tf| %>
           <tr id="transaction_row_<%= tr.id %>" class="transaction_row" style="font-size: 11px">
-            <% is_updated_id = "transactions_" + tr.id.to_s + "_is_updated" %>
-            <%= tf.hidden_field(:is_updated, :value => 'false') %>
             <td>
               <input id="checkbox_<%= tr.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= tr.id %>)" />
             </td>
