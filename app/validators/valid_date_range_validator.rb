@@ -1,6 +1,6 @@
 class ValidDateRangeValidator < ActiveModel::Validator
    def validate(record)
-    snapshots = record.class.name.constantize.send("all")
+    snapshots = record.class.name.constantize.send("all").where(tenant_id: record.tenant.id)
 
     snapshots.each do |ss|
       if record.start_date >= ss.start_date && record.start_date <= ss.end_date
