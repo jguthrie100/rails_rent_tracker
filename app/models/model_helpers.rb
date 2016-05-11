@@ -32,8 +32,8 @@ module ModelHelpers
     return ActionController::Base.helpers.number_to_currency(self[:amount], :unit => "$")
   end
 
-  # Calling object requires :start_date property to be set
   def length_in_days
+    # Throw exception if start_date is not set or is of invalid type
     if self[:start_date].nil? || (self[:start_date].class != Time && self[:start_date].class != Date)
       raise "Exception: Calling object requires a valid .start_date property"
     end

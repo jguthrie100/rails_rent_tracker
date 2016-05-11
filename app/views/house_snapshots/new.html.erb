@@ -1,4 +1,4 @@
-<h1 class="text-primary">New Rental Period Snapshot for <%= @house.name %></h1>
+<h1 class="text-primary">New Rental Period Snapshot for <%= link_to(@house.name, house_path(@house), style: "text-decoration: underline;") %></h1>
 
 <h3 class="text-primary">Add new Snapshot</h3>
 <%= form_tag(house_house_snapshots_path) do %>
