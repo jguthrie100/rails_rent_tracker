@@ -1,12 +1,36 @@
-<h1 class="text-primary">New Tenant Snapshot for <%= @tenant.name %></h1>
+<h1 class="text-primary">New Rental Period Snapshot for <%= @tenant.name %></h1>
 
 <h3 class="text-primary">Add new Snapshot</h3>
 <%= form_tag(tenant_tenant_snapshots_path) do %>
-  Start date: <%= date_field(:tenant_snapshot, :start_date) %><br />
-  End Date: <%= date_field(:tenant_snapshot, :end_date) %><br />
-  House: <%= collection_select(:tenant_snapshot, :house_id, House.all, :id, :name) %><br />
-  Weekly Rent (NZD$): <%= number_field(:tenant_snapshot, :weekly_rent, step: 5) %><br />
-  Rent Frequency: <%= number_field(:tenant_snapshot, :rent_frequency, in: 1..20, step: 1) %><br />
-  Rent paid by: <%= collection_select(:tenant_snapshot, :rent_paid_by, Tenant.all, :id, :name, {:selected => params[:tenant_id]}) %><br />
-  <%= submit_tag("Create New Snapshot") %>
+  <table class="table table-hover table-condensed table-striped">
+    <tbody>
+      <tr>
+        <td>Start date: </td>
+        <td><%= date_field(:tenant_snapshot, :start_date) %></td>
+      </tr>
+      <tr>
+        <td>End Date: </td>
+        <td><%= date_field(:tenant_snapshot, :end_date) %></td>
+      </tr>
+      <tr>
+        <td>House: </td>
+        <td><%= collection_select(:tenant_snapshot, :house_id, House.all, :id, :name) %></td>
+      </tr>
+      <tr>
+        <td>Weekly Rent (NZD$): </td>
+        <td><%= number_field(:tenant_snapshot, :weekly_rent, step: 5) %></td>
+      </tr>
+      <tr>
+        <td>Rent Frequency: </td>
+        <td><%= number_field(:tenant_snapshot, :rent_frequency, in: 1..20, step: 1) %></td>
+      </tr>
+      <tr>
+        <td>Rent paid by: </td>
+        <td><%= collection_select(:tenant_snapshot, :rent_paid_by, Tenant.all, :id, :name, {:selected => params[:tenant_id]}) %></td>
+      </tr>
+      <tr>
+        <td colspan="2"><%= submit_tag("Create New Snapshot") %></td>
+      </tr>
+    </tbody>
+  </table>
 <% end %>
