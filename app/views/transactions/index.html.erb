@@ -20,16 +20,19 @@
     </tr>
   </thead>
   <tbody>
+    <%# Create rows of Transactions %>
     <%= form_for :transaction, :url => update_multiple_transactions_path, :method => "put" do |f| %>
       <% @transactions.each do |tr| %>
         <%= fields_for "transactions[]", tr do |tf| %>
           <tr id="transaction_row_<%= tr.id %>" class="transaction_row" style="font-size: 11px">
             <% is_updated_id = "transactions_" + tr.id.to_s + "_is_updated" %>
             <td>
+              <%# Checkbox %>
               <input id="checkbox_<%= tr.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= tr.id %>)" />
             </td>
             <td><%= tr.date_str %></td>
             <td>
+              <%# Tenant name (w/ link) / Tenant drop down box %>
               <%= tr.tenant.nil? ? "" : link_to(tr.tenant.name, tenant_path(tr.tenant), class: "display") %><br />
               <%= tf.collection_select(:tenant_id, Tenant.all, :id, :name, { include_blank: true}, class: "edit", style: "visibility:hidden", :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %>
 
@@ -42,6 +45,7 @@
             <td><%= tr.memo %></td>
             <td><%= tr.amount_str %></td>
             <td>
+              <%# Hidden 'is_updated' field and Save button %>
               <%= tf.hidden_field(:is_updated, :value => 'false') %>
               <button id="save_btn_<%= tr.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" disabled></button>
             </td>
@@ -62,6 +66,8 @@
 <br />
 
 <script>
+
+// Method that gets called everytime a checkbox is selected
 function toggle_edit(id) {
   if ( $("#checkbox_" + id).prop("checked") ) {
     // WHEN A ROW IS SELECTED..

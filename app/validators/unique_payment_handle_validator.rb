@@ -1,4 +1,6 @@
 class UniquePaymentHandleValidator < ActiveModel::EachValidator
+  
+  # Validates that the unique reference each tenant has is not duplicated with another tenant
   def validate_each(record, attribute, value)
     tenants = Tenant.all
     tenants.each do |t|

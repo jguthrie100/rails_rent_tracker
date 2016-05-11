@@ -9,18 +9,22 @@
     </tr>
   </thead>
   <tbody>
+    <%# Create rows of Houses %>
     <%= form_for :houses, :url => update_multiple_houses_path, :method => "put" do |f| %>
       <% @houses.each do |h| %>
         <%= fields_for "houses[]", h do |hf| %>
           <tr id="house_row_<%= h.id %>" class="house_row" style="font-size: 11px">
             <td>
+              <%# Checkbox %>
               <input id="checkbox_<%= h.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= h.id %>)" />
             </td>
             <td>
+              <%# House name (w/ link) / House name edit field %>
               <%= link_to(h.name, house_path(h), class: "display") %><br />
               <%= hf.text_field(:name, class: "edit", style: "visibility:hidden") %>
             </td>
             <td>
+              <%# House address (w/ map link) / House address edit field %>
               <span class="display"><%= h.address %> - <%= link_to("[map]", "http://www.google.com/maps/search/#{h.address}", :target => "_blank") %></span><br />
               <%= hf.text_field(:address, class: "edit", style: "visibility:hidden", size: 100) %>
             </td>
@@ -28,8 +32,10 @@
               <% is_updated_id = "houses_" + h.id.to_s + "_is_updated" %>
               <%= hf.hidden_field(:is_updated, :value => 'false') %>
 
+              <%# Save button %>
               <button id="save_btn_<%= h.id %>" class="fa fa-floppy-o btn btn-primary disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" disabled></button>
               
+              <%# Delete button (w/ confirm message) %>
               <%= link_to "", {:controller => :houses, :action => 'destroy', :id => h.id }, :method => :delete, class: "fa fa-trash btn btn-danger", data: { confirm: "Are you sure you want to delete house '#{h.name.upcase}' from the database?" } %>
             </td>
           </tr>
@@ -41,11 +47,19 @@
           <% @house = nil %>
           <tr id="house_row_new" class="house_row" style="font-size: 11px">
             <td>
+              <%# Checkbox %>
               <input id="checkbox_new" class="checkbox new_house" type="checkbox" onchange="toggle_edit('new')" />
             </td>
-            <td><%= text_field(:house, :name, disabled: "true", class: "new_house") %></td>
-            <td><%= text_field(:house, :address, :size => 100, disabled: "true", class: "new_house") %></td>
             <td>
+              <%# House name edit field %>
+              <%= text_field(:house, :name, disabled: "true", class: "new_house") %>
+            </td>
+            <td>
+              <%# House address edit field %>
+              <%= text_field(:house, :address, :size => 100, disabled: "true", class: "new_house") %>
+            </td>
+            <td>
+              <%# Save button %>
               <button id="save_btn_new" class="fa fa-floppy-o btn btn-primary disabled new_house" disabled></button>
             </td>
           </tr>
@@ -54,6 +68,8 @@
 </table>
 
 <script>
+
+// Method that gets called everytime a checkbox is selected
 function toggle_edit(id) {
   if ( $("#checkbox_" + id).prop("checked") ) {
     // WHEN A ROW IS SELECTED..

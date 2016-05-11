@@ -12,30 +12,37 @@
     </tr>
   </thead>
   <tbody>
+    <%# Create rows of Tenants %>
     <%= form_for :tenant, :url => update_multiple_tenants_path, :method => "put" do |f| %>
       <% @tenants.each do |t| %>
         <%= fields_for "tenants[]", t do |tf| %>
           <tr id="tenant_row_<%= t.id %>" class="tenant_row" style="font-size: 11px">
             <td>
+              <%# Checkbox %>
               <input id="checkbox_<%= t.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= t.id %>)" />
             </td>
             <td>
+              <%# Tenant name (w/ link) / Tenant name edit field %>
               <%= link_to(t.name, tenant_path(t), class: "display") %><br />
               <%= tf.text_field(:name, class: "edit", style: "visibility:hidden") %>
             </td>
             <td>
+              <%# Payment handle / Payment handle edit field %>
               <span class="display"><%= t.payment_handle %></span><br />
               <%= tf.text_field(:payment_handle, class: "edit", style: "visibility:hidden") %>
             </td>
             <td>
+              <%# Phone number / Phone number edit field %>
               <span class="display"><%= t.phone_num %></span><br />
               <%= tf.text_field(:phone_num, class: "edit", style: "visibility:hidden") %>
             </td>
             <td>
+              <%# Email address / Email address edit field %>
               <span class="display"><%= t.email %></span><br />
               <%= tf.text_field(:email, class: "edit", style: "visibility:hidden") %>
             </td>
             <td>
+              <%# Tenant's rental property (w/ link) / Rental property dropdown box %>
               <%= t.house.nil? ? "" : link_to(t.house.name, house_path(t.house), class: "display") %><br />
               <%= tf.collection_select(:house_id, House.all, :id, :name, { include_blank: true}, class: "edit", style: "visibility:hidden")
               %>
@@ -44,8 +51,10 @@
               <% is_updated_id = "tenants_" + t.id.to_s + "_is_updated" %>
               <%= tf.hidden_field(:is_updated, :value => 'false') %>
               
+              <%# Save button %>
               <button id="save_btn_<%= t.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" disabled></button>
 
+              <%# Delete button, with confirmation %>
               <%= link_to "", {:controller => :tenants, :action => 'destroy', :id => t.id }, :method => :delete, class: "fa fa-trash btn btn-danger", data: { confirm: "Are you sure you want to delete tenant '#{t.name.upcase}' from the database?" } %>
             </td>
           </tr>
@@ -57,24 +66,31 @@
           <% @tenant = nil %>
           <tr id="tenant_row_new" class="tenant_row" style="font-size: 11px">
             <td>
+              <%# Checkbox %>
               <input id="checkbox_new" class="checkbox new_tenant" type="checkbox" onchange="toggle_edit('new')" />
             </td>
             <td>
+              <%# Tenant name edit field %>
               <%= text_field(:tenant, :name, disabled: "true", class: "new_tenant") %>
             </td>
             <td>
+              <%# Payment handle edit field %>
               <%= text_field(:tenant, :payment_handle, disabled: "true", class: "new_tenant") %>
             </td>
             <td>
+              <%# Phone number edit field %>
               <%= text_field(:tenant, :phone_num, disabled: "true", class: "new_tenant") %>
             </td>
             <td>
+              <%# Email address edit field %>
               <%= text_field(:tenant, :email, disabled: "true", class: "new_tenant") %>
             </td>
             <td>
+              <%# Tenant's rental property dropdown selection box' %>
               <%= collection_select(:tenant, :house_id, House.all, :id, :name, {include_blank: true}, disabled: "true", class: "new_tenant") %>
             </td>
             <td>
+              <%# Save button %>
               <button id="save_btn_new" class="fa fa-floppy-o btn btn-sm btn-primary disabled new_tenant" disabled></button>
             </td>
           </tr>
@@ -83,6 +99,8 @@
 </table>
 
 <script>
+
+// Method that gets called everytime a checkbox is selected
 function toggle_edit(id) {
   if ( $("#checkbox_" + id).prop("checked") ) {
     // WHEN A ROW IS SELECTED..
