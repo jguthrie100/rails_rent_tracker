@@ -1,6 +1,6 @@
-<h1>New Tenant Snapshot for <%= @tenant.name %></h1>
+<h1 class="text-primary">New Tenant Snapshot for <%= @tenant.name %></h1>
 
-<h3>Add new Snapshot</h3>
+<h3 class="text-primary">Add new Snapshot</h3>
 <%= form_tag(tenant_tenant_snapshots_path) do %>
   Start date: <%= date_field(:tenant_snapshot, :start_date) %><br />
   End Date: <%= date_field(:tenant_snapshot, :end_date) %><br />

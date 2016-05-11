@@ -1,25 +1,8 @@
-<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<h1 class="text-primary"><%= @tenant.name %></h1>
 
-<h1><%= @tenant.name %></h1>
-
-<div>
-<%= draw_timeline %>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<h3 class="text-primary">Rental Periods&nbsp;&nbsp;
+  <span style="font-size: 12px;">&bull; <%= link_to("Add new rental snapshot", new_tenant_tenant_snapshot_path(@tenant, @tenant.id)) %></span>
+</h3>
 
 <% total_rent = 0 %>
 <% @sorted_snapshots.each do |s| %>
@@ -48,7 +31,7 @@
 
 <% end %>
 
-<h3>Rental Payments</h3>
+<h3 class="text-primary">Rental Payments</h3>
 
 <% @payments.each do |p| %>
   
