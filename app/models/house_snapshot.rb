@@ -7,5 +7,5 @@ class HouseSnapshot < ActiveRecord::Base
 
   validates :house, :start_date, presence: true
 
-  validates_with ValidDateRangeValidator, model_type: "house"
+  validates_with ValidDateRangeValidator, model: "house"
 end
