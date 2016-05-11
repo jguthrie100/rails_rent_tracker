@@ -12,7 +12,7 @@ class TenantsController < ApplicationController
     @payments = Transaction.where({tenant: @tenant}).order(date: :desc)
     @sorted_snapshots = Array.new
     
-    @tenant.tenant_snapshots.sort { |a,b| a.start_date <=> b.start_date }.each do |s|
+    @tenant.tenant_snapshots.sort { |a,b| b.start_date <=> a.start_date }.each do |s|
       @sorted_snapshots.push(s)
     end
   end

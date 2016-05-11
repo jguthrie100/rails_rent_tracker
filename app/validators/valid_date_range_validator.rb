@@ -2,8 +2,8 @@ class ValidDateRangeValidator < ActiveModel::Validator
    def validate(record)
     
     if options[:model_type]
-      clause = record.send("#{options[:model_type]}").id
-      snapshots = record.class.name.constantize.send("all").where("#{options[:model_type]}_id = #{clause}")
+      id = record.send("#{options[:model_type]}").id
+      snapshots = record.class.name.constantize.send("all").where("#{options[:model_type]}_id = #{id}")
     else
       snapshots = record.class.name.constantize.send("all")
     end
