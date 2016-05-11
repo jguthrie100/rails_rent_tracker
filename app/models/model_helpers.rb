@@ -21,6 +21,10 @@ module ModelHelpers
   end
 
   def date_str(date = self[:date])
+    if date.nil?
+      return 'nil'
+    end
+
     return date.strftime('%d %b %Y')
   end
 
