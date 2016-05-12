@@ -7,7 +7,7 @@ class UniquePaymentHandleValidator < ActiveModel::EachValidator
     tenants.each do |t|
       next if t.id == record.id || t.payment_handle.blank? || record.payment_handle.blank?
       if t.payment_handle.downcase.include?(record.payment_handle.downcase) || record.payment_handle.downcase.include?(t.payment_handle.downcase)
-        record.errors[:payment_handle] << "Submitted Payment Handle clashes with existing payment handle (<b><i>#{record.payment_handle}</b></i> & <b><i>#{t.payment_handle}</b></i>)"
+        record.errors[:payment_handle] << " clashes with existing payment handle (<b><i>#{record.payment_handle}</b></i> & <b><i>#{t.payment_handle}</b></i>)"
         break
       end
     end

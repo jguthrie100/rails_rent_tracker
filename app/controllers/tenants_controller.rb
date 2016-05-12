@@ -1,8 +1,6 @@
 class TenantsController < ApplicationController
   def index
     @tenants = Tenant.all
-
-    @tenant.nil? ? (@tenant = Tenant.new) : ""
   end
 
   def edit
@@ -43,7 +41,8 @@ class TenantsController < ApplicationController
       redirect_to tenants_path, notice: "Added Tenant <b>'#{tenant.name}'</b> to the database"
     else
       # Create 'failed_edits' hash which stores all the values from the records that failed to get saved
-      failed_edits = {'new' => params[:tenant]}
+      failed_edits = Hash.new
+      failed_edits['new'] = params[:tenant]
       failed_edits['new']['errors'] = tenant.errors.keys.map(&:to_s)
 
       redirect_to tenants_path(failed_edits), notice: "Failed to add Tenant <b>'#{tenant.name}'</b> to the database: #{tenant.errors.full_messages.to_sentence}"

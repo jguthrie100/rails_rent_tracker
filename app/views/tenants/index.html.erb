@@ -16,7 +16,10 @@
     <%# Create rows of Tenants %>
     <%= form_for :tenant, :url => update_multiple_tenants_path, :method => "put" do |f| %>
       <% @tenants.each do |t| %>
+
+      <%# Populate failed_edits hash with list of errors if applicable %>
       <% (!params.nil? && params[t.id.to_s]) ? (failed_edits[t.id] = params[t.id.to_s]) : "" %>
+
         <%= fields_for "tenants[]", t do |tf| %>
           <tr id="tenant_row_<%= t.id %>" class="tenant_row" style="font-size: 11px">
             <td>
@@ -31,7 +34,7 @@
             <td>
               <%# Payment handle / Payment handle edit field %>
               <span class="display payment_handle"><%= t.payment_handle %></span><br />
-              <%= tf.text_field(:payment_handle, class: "edit payment_handle", id: "payment_handle_#{t.id}", value: "#{failed_edits[t.id] ? failed_edits[t.id][:payment_handle] : t.payment_handle}") %>
+              <%= tf.text_field(:payment_handle, class: "edit payment_handle", value: "#{failed_edits[t.id] ? failed_edits[t.id][:payment_handle] : t.payment_handle}") %>
             </td>
             <td>
               <%# Phone number / Phone number edit field %>
@@ -46,7 +49,7 @@
             <td>
               <%# Tenant's rental property (w/ link) / Rental property dropdown box %>
               <%= t.house.nil? ? "" : link_to(t.house.name, house_path(t.house), class: "display house_id") %><br />
-              <%= tf.collection_select(:house_id, House.all, :id, :name, { include_blank: true}, class: "edit house_id", value: "#{failed_edits[t.id] ? failed_edits[t.id][:house_id] : t.house_id}")
+              <%= tf.collection_select(:house_id, House.all, :id, :name, { include_blank: true, selected: (failed_edits[t.id] ? failed_edits[t.id][:house_id].to_i : '')}, class: "edit house_id")
               %>
             </td>
             <td>
@@ -89,7 +92,8 @@
             </td>
             <td>
               <%# Tenant's rental property dropdown selection box' %>
-              <%= collection_select(:tenant, :house_id, House.all, :id, :name, {include_blank: true}, disabled: "true", class: "display edit house_id", value: "#{failed_edits['new'] ? failed_edits['new'][:house_id] : ''}") %>
+              <%= collection_select(:tenant, :house_id, House.all, :id, :name, {include_blank: true, selected: (failed_edits['new'] ? failed_edits['new'][:house_id].to_i : '')}, disabled: "true", class: "display edit house_id") %>
+              <% byebug %>
             </td>
             <td>
               <%# Save button %>
@@ -126,17 +130,13 @@ function toggle_edit(id) {
   if ( $("#checkbox_" + id).prop("checked") ) {
     // WHEN A ROW IS SELECTED..
 
-    // Enable form fields if 'new Tenant' row is selected
-    if(id === "new") {
-      $(".edit", "#tenant_row_new").prop("disabled", false);
-    }
-
     // Enable the Save button
     $("#save_btn_" + id).removeClass("disabled")
                         .prop("disabled", false);
 
-    // Hide all the display fields and show all the edit field
+    // Hide and disable all the display fields and show all the edit fields
     $(".display", "#tenant_row_" + id).css("visibility", "hidden");
+    $(".edit", "#tenant_row_" + id).prop("disabled", false);
     $(".edit", "#tenant_row_" + id).css("visibility", "visible");
 
     // Fade out the unselected rows and disable the checkboxes on them
@@ -146,16 +146,12 @@ function toggle_edit(id) {
   } else {
     // WHEN A ROW IS DESELECTED..
 
-    // Disable form fields if deselected row was the 'new Tenant' row
-    if(id === "new") {
-      $(".edit", "#tenant_row_new").prop("disabled", true);
-    }
-
     // Disable save button
     $("#save_btn_" + id).addClass("disabled")
                         .prop("disabled", true);
 
-    // Hide all the edit fields and display the display fields
+    // Hide and disable all the edit fields and display the display fields
+    $(".edit", "#tenant_row_" + id).prop("disabled", true);
     $(".edit", "#tenant_row_" + id).css("visibility", "hidden");
     $(".display", "#tenant_row_" + id).css("visibility", "visible");
 
