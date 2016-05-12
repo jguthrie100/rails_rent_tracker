@@ -93,7 +93,6 @@
             <td>
               <%# Tenant's rental property dropdown selection box' %>
               <%= collection_select(:tenant, :house_id, House.all, :id, :name, {include_blank: true, selected: (failed_edits['new'] ? failed_edits['new'][:house_id].to_i : '')}, disabled: "true", class: "display edit house_id") %>
-              <% byebug %>
             </td>
             <td>
               <%# Save button %>
