@@ -1,6 +1,8 @@
 class TenantsController < ApplicationController
   def index
     @tenants = Tenant.all
+
+    @tenant.nil? ? (@tenant = Tenant.new) : ""
   end
 
   def edit
@@ -11,7 +13,7 @@ class TenantsController < ApplicationController
     @tenant = Tenant.find(params[:id])
     @payments = Transaction.where({tenant: @tenant}).order(date: :desc)
     @sorted_snapshots = Array.new
-    
+
     @tenant.tenant_snapshots.sort { |a,b| b.start_date <=> a.start_date }.each do |s|
       @sorted_snapshots.push(s)
     end
@@ -40,13 +42,18 @@ class TenantsController < ApplicationController
     if tenant.save
       redirect_to tenants_path, notice: "Added Tenant <b>'#{tenant.name}'</b> to the database"
     else
-      redirect_to tenants_path, notice: "Failed to add Tenant <b>'#{tenant.name}'</b> to the database: #{tenant.errors.full_messages.to_sentence}"
+      # Create 'failed_edits' hash which stores all the values from the records that failed to get saved
+      failed_edits = {'new' => params[:tenant]}
+      failed_edits['new']['errors'] = tenant.errors.keys.map(&:to_s)
+
+      redirect_to tenants_path(failed_edits), notice: "Failed to add Tenant <b>'#{tenant.name}'</b> to the database: #{tenant.errors.full_messages.to_sentence}"
     end
   end
 
   # Update multiple tenant attributes
   def update_multiple
     update_hash = params[:tenants]
+    failed_edits = Hash.new
 
     updated_rows = 0
     error_str = ""
@@ -61,10 +68,12 @@ class TenantsController < ApplicationController
           updated_rows += 1
         else
           error_str += ": " + tenant.name + " - " + tenant.errors.full_messages.to_sentence
+          failed_edits[t_id] = values
+          failed_edits[t_id]['errors'] = tenant.errors.keys.map(&:to_s)
         end
       end
     end
-    redirect_to tenants_path, :notice => "Updated <b>#{updated_rows}</b> row(s)" + error_str
+    redirect_to tenants_path(failed_edits), :notice => "Updated <b>#{updated_rows}</b> row(s)" + error_str
   end
 
   # Private method that sets Strong Parameter permissions

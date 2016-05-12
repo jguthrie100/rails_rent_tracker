@@ -1,3 +1,4 @@
+<% failed_edits = Hash.new %>
 <h3 class="text-primary">List of Tenants</h3>
 <table class="table table-hover table-condensed table-striped">
   <thead>
@@ -15,42 +16,43 @@
     <%# Create rows of Tenants %>
     <%= form_for :tenant, :url => update_multiple_tenants_path, :method => "put" do |f| %>
       <% @tenants.each do |t| %>
+      <% (!params.nil? && params[t.id.to_s]) ? (failed_edits[t.id] = params[t.id.to_s]) : "" %>
         <%= fields_for "tenants[]", t do |tf| %>
           <tr id="tenant_row_<%= t.id %>" class="tenant_row" style="font-size: 11px">
             <td>
               <%# Checkbox %>
-              <input id="checkbox_<%= t.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= t.id %>)" />
+              <input id="checkbox_<%= t.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= t.id %>)">
             </td>
             <td>
               <%# Tenant name (w/ link) / Tenant name edit field %>
-              <%= link_to(t.name, tenant_path(t), class: "display") %><br />
-              <%= tf.text_field(:name, class: "edit", style: "visibility:hidden") %>
+              <%= link_to(t.name, tenant_path(t), class: "display name") %><br />
+              <%= tf.text_field(:name, class: "edit name", value: "#{failed_edits[t.id] ? failed_edits[t.id][:name] : t.name}") %>
             </td>
             <td>
               <%# Payment handle / Payment handle edit field %>
-              <span class="display"><%= t.payment_handle %></span><br />
-              <%= tf.text_field(:payment_handle, class: "edit", style: "visibility:hidden") %>
+              <span class="display payment_handle"><%= t.payment_handle %></span><br />
+              <%= tf.text_field(:payment_handle, class: "edit payment_handle", id: "payment_handle_#{t.id}", value: "#{failed_edits[t.id] ? failed_edits[t.id][:payment_handle] : t.payment_handle}") %>
             </td>
             <td>
               <%# Phone number / Phone number edit field %>
-              <span class="display"><%= t.phone_num %></span><br />
-              <%= tf.text_field(:phone_num, class: "edit", style: "visibility:hidden") %>
+              <span class="display phone_num"><%= t.phone_num %></span><br />
+              <%= tf.text_field(:phone_num, class: "edit phone_num", value: "#{failed_edits[t.id] ? failed_edits[t.id][:phone_num] : t.phone_num}") %>
             </td>
             <td>
               <%# Email address / Email address edit field %>
-              <span class="display"><%= t.email %></span><br />
-              <%= tf.text_field(:email, class: "edit", style: "visibility:hidden") %>
+              <span class="display email"><%= t.email %></span><br />
+              <%= tf.text_field(:email, class: "edit email", value: "#{failed_edits[t.id] ? failed_edits[t.id][:email] : t.email}") %>
             </td>
             <td>
               <%# Tenant's rental property (w/ link) / Rental property dropdown box %>
-              <%= t.house.nil? ? "" : link_to(t.house.name, house_path(t.house), class: "display") %><br />
-              <%= tf.collection_select(:house_id, House.all, :id, :name, { include_blank: true}, class: "edit", style: "visibility:hidden")
+              <%= t.house.nil? ? "" : link_to(t.house.name, house_path(t.house), class: "display house_id") %><br />
+              <%= tf.collection_select(:house_id, House.all, :id, :name, { include_blank: true}, class: "edit house_id", value: "#{failed_edits[t.id] ? failed_edits[t.id][:house_id] : t.house_id}")
               %>
             </td>
             <td>
               <% is_updated_id = "tenants_" + t.id.to_s + "_is_updated" %>
               <%= tf.hidden_field(:is_updated, :value => 'false') %>
-              
+
               <%# Save button %>
               <button id="save_btn_<%= t.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" disabled></button>
 
@@ -63,35 +65,35 @@
     <% end %>
         <%# Create final row with a form to add a new Tenant to the inventory %>
         <%= form_tag(tenants_path) do %>
-          <% @tenant = nil %>
+        <% (!params.nil? && params['new']) ? (failed_edits['new'] = params['new']) : "" %>
           <tr id="tenant_row_new" class="tenant_row" style="font-size: 11px">
             <td>
               <%# Checkbox %>
-              <input id="checkbox_new" class="checkbox new_tenant" type="checkbox" onchange="toggle_edit('new')" />
+              <input id="checkbox_new" class="checkbox" type="checkbox" onchange="toggle_edit('new')" />
             </td>
             <td>
               <%# Tenant name edit field %>
-              <%= text_field(:tenant, :name, disabled: "true", class: "new_tenant") %>
+              <%= text_field(:tenant, :name, disabled: "true", class: "display edit name", value: "#{failed_edits['new'] ? failed_edits['new'][:name] : ''}") %>
             </td>
             <td>
               <%# Payment handle edit field %>
-              <%= text_field(:tenant, :payment_handle, disabled: "true", class: "new_tenant") %>
+              <%= text_field(:tenant, :payment_handle, disabled: "true", class: "display edit payment_handle", value: "#{failed_edits['new'] ? failed_edits['new'][:payment_handle] : ''}") %>
             </td>
             <td>
               <%# Phone number edit field %>
-              <%= text_field(:tenant, :phone_num, disabled: "true", class: "new_tenant") %>
+              <%= text_field(:tenant, :phone_num, disabled: "true", class: "display edit phone_num", value: "#{failed_edits['new'] ? failed_edits['new'][:phone_num] : ''}") %>
             </td>
             <td>
               <%# Email address edit field %>
-              <%= text_field(:tenant, :email, disabled: "true", class: "new_tenant") %>
+              <%= text_field(:tenant, :email, disabled: "true", class: "display edit email", value: "#{failed_edits['new'] ? failed_edits['new'][:email] : ''}") %>
             </td>
             <td>
               <%# Tenant's rental property dropdown selection box' %>
-              <%= collection_select(:tenant, :house_id, House.all, :id, :name, {include_blank: true}, disabled: "true", class: "new_tenant") %>
+              <%= collection_select(:tenant, :house_id, House.all, :id, :name, {include_blank: true}, disabled: "true", class: "display edit house_id", value: "#{failed_edits['new'] ? failed_edits['new'][:house_id] : ''}") %>
             </td>
             <td>
               <%# Save button %>
-              <button id="save_btn_new" class="fa fa-floppy-o btn btn-sm btn-primary disabled new_tenant" disabled></button>
+              <button id="save_btn_new" class="fa fa-floppy-o btn btn-sm btn-primary disabled" disabled></button>
             </td>
           </tr>
         <% end %>
@@ -100,6 +102,25 @@
 
 <script>
 
+// On load we want to select the error'd rows and highlight the fields that raised an error
+$(document).ready(function() {
+  $(".edit").css("visibility", "hidden");
+  $(".display").css("visibility", "visible");
+
+//  <%# Select row that failed to update/be saved %>
+  <% failed_edits.keys.each do |t_id| %>
+    <% t_id.is_a?(String) ? (t_id_s = "'#{t_id}'".html_safe) : (t_id_s = t_id) %>
+    $("#checkbox_" + <%= t_id_s %>).prop("checked", true);
+    toggle_edit(<%= t_id_s %>);
+
+//    <%# Highlight the attributes that were the reason for the error %>
+    <% failed_edits[t_id].keys.each do |attr| %>
+      <% next unless failed_edits[t_id][:errors].include? attr %>
+      $(".<%= attr %>.edit", "#tenant_row_" + <%= t_id_s %>).css("background-color", "rgba(255,0,0,0.5)");
+    <% end %>
+  <% end %>
+});
+
 // Method that gets called everytime a checkbox is selected
 function toggle_edit(id) {
   if ( $("#checkbox_" + id).prop("checked") ) {
@@ -107,7 +128,7 @@ function toggle_edit(id) {
 
     // Enable form fields if 'new Tenant' row is selected
     if(id === "new") {
-      $(".new_tenant").prop("disabled", false);
+      $(".edit", "#tenant_row_new").prop("disabled", false);
     }
 
     // Enable the Save button
@@ -127,7 +148,7 @@ function toggle_edit(id) {
 
     // Disable form fields if deselected row was the 'new Tenant' row
     if(id === "new") {
-      $(".new_tenant").prop("disabled", true);
+      $(".edit", "#tenant_row_new").prop("disabled", true);
     }
 
     // Disable save button
@@ -135,8 +156,8 @@ function toggle_edit(id) {
                         .prop("disabled", true);
 
     // Hide all the edit fields and display the display fields
-    $(".display", "#tenant_row_" + id).css("visibility", "visible");
     $(".edit", "#tenant_row_" + id).css("visibility", "hidden");
+    $(".display", "#tenant_row_" + id).css("visibility", "visible");
 
     // Fade all the rows back in and enable all the checkboxes
     $(".tenant_row").css("opacity", "1");
