@@ -31,13 +31,19 @@ class HousesController < ApplicationController
     if house.save
       redirect_to houses_path, notice: "Added House: <b>'#{house.name}'</b> to the database"
     else
-      redirect_to houses_path, notice: "Failed to add House: <b>'#{house.name}'</b> to the database: #{house.errors.full_messages.to_sentence}"
+      # Create 'failed_edits' hash which stores all the values from the records that failed to get saved
+      failed_edits = Hash.new
+      failed_edits['new'] = params[:house]
+      failed_edits['new']['errors'] = house.errors.keys.map(&:to_s)
+
+      redirect_to houses_path(failed_edits), notice: "Failed to add House: <b>'#{house.name}'</b> to the database: #{house.errors.full_messages.to_sentence}"
     end
   end
 
   # Update multiple house attributes
   def update_multiple
     update_hash = params[:houses]
+    failed_edits = Hash.new
 
     updated_rows = 0
     error_str = ""
@@ -52,10 +58,12 @@ class HousesController < ApplicationController
           updated_rows += 1
         else
           error_str += ": " + house.name + " - " + house.errors.full_messages.to_sentence
+          failed_edits[h_id] = values
+          failed_edits[h_id]['errors'] = house.errors.keys.map(&:to_s)
         end
       end
     end
-    redirect_to houses_path, :notice => "Updated <b>#{updated_rows}</b> row(s)" + error_str
+    redirect_to houses_path(failed_edits), :notice => "Updated <b>#{updated_rows}</b> row(s)" + error_str
   end
 
   # Private method that sets Strong Parameter permissions

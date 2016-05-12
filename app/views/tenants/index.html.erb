@@ -1,3 +1,6 @@
+<!-- Hack to avoid 'jQuery flickering' when page intially loads -->
+<script>document.write('<style type="text/css">body{display:none}</style>');</script>
+
 <% failed_edits = Hash.new %>
 <h3 class="text-primary">List of Tenants</h3>
 <table class="table table-hover table-condensed table-striped">
@@ -17,8 +20,8 @@
     <%= form_for :tenant, :url => update_multiple_tenants_path, :method => "put" do |f| %>
       <% @tenants.each do |t| %>
 
-      <%# Populate failed_edits hash with list of errors if applicable %>
-      <% (!params.nil? && params[t.id.to_s]) ? (failed_edits[t.id] = params[t.id.to_s]) : "" %>
+        <%# Populate failed_edits hash with list of errors if applicable %>
+        <% (!params.nil? && params[t.id.to_s]) ? (failed_edits[t.id] = params[t.id.to_s]) : "" %>
 
         <%= fields_for "tenants[]", t do |tf| %>
           <tr id="tenant_row_<%= t.id %>" class="tenant_row" style="font-size: 11px">
@@ -68,7 +71,7 @@
     <% end %>
         <%# Create final row with a form to add a new Tenant to the inventory %>
         <%= form_tag(tenants_path) do %>
-        <% (!params.nil? && params['new']) ? (failed_edits['new'] = params['new']) : "" %>
+          <% (!params.nil? && params['new']) ? (failed_edits['new'] = params['new']) : "" %>
           <tr id="tenant_row_new" class="tenant_row" style="font-size: 11px">
             <td>
               <%# Checkbox %>
@@ -76,23 +79,23 @@
             </td>
             <td>
               <%# Tenant name edit field %>
-              <%= text_field(:tenant, :name, disabled: "true", class: "display edit name", value: "#{failed_edits['new'] ? failed_edits['new'][:name] : ''}") %>
+              <%= text_field(:tenant, :name, class: "display edit name", value: "#{failed_edits['new'] ? failed_edits['new'][:name] : ''}") %>
             </td>
             <td>
               <%# Payment handle edit field %>
-              <%= text_field(:tenant, :payment_handle, disabled: "true", class: "display edit payment_handle", value: "#{failed_edits['new'] ? failed_edits['new'][:payment_handle] : ''}") %>
+              <%= text_field(:tenant, :payment_handle, class: "display edit payment_handle", value: "#{failed_edits['new'] ? failed_edits['new'][:payment_handle] : ''}") %>
             </td>
             <td>
               <%# Phone number edit field %>
-              <%= text_field(:tenant, :phone_num, disabled: "true", class: "display edit phone_num", value: "#{failed_edits['new'] ? failed_edits['new'][:phone_num] : ''}") %>
+              <%= text_field(:tenant, :phone_num, class: "display edit phone_num", value: "#{failed_edits['new'] ? failed_edits['new'][:phone_num] : ''}") %>
             </td>
             <td>
               <%# Email address edit field %>
-              <%= text_field(:tenant, :email, disabled: "true", class: "display edit email", value: "#{failed_edits['new'] ? failed_edits['new'][:email] : ''}") %>
+              <%= text_field(:tenant, :email, class: "display edit email", value: "#{failed_edits['new'] ? failed_edits['new'][:email] : ''}") %>
             </td>
             <td>
               <%# Tenant's rental property dropdown selection box' %>
-              <%= collection_select(:tenant, :house_id, House.all, :id, :name, {include_blank: true, selected: (failed_edits['new'] ? failed_edits['new'][:house_id].to_i : '')}, disabled: "true", class: "display edit house_id") %>
+              <%= collection_select(:tenant, :house_id, House.all, :id, :name, {include_blank: true, selected: (failed_edits['new'] ? failed_edits['new'][:house_id].to_i : '')}, class: "display edit house_id") %>
             </td>
             <td>
               <%# Save button %>
@@ -107,7 +110,9 @@
 
 // On load we want to select the error'd rows and highlight the fields that raised an error
 $(document).ready(function() {
+
   $(".edit").css("visibility", "hidden");
+  $(".edit").prop("disabled", true);
   $(".display").css("visibility", "visible");
 
 //  <%# Select row that failed to update/be saved %>
@@ -122,6 +127,8 @@ $(document).ready(function() {
       $(".<%= attr %>.edit", "#tenant_row_" + <%= t_id_s %>).css("background-color", "rgba(255,0,0,0.5)");
     <% end %>
   <% end %>
+
+  $("body").css("display","block");
 });
 
 // Method that gets called everytime a checkbox is selected
@@ -133,7 +140,7 @@ function toggle_edit(id) {
     $("#save_btn_" + id).removeClass("disabled")
                         .prop("disabled", false);
 
-    // Hide and disable all the display fields and show all the edit fields
+    // Hide all the display fields and show and enable all the edit fields
     $(".display", "#tenant_row_" + id).css("visibility", "hidden");
     $(".edit", "#tenant_row_" + id).prop("disabled", false);
     $(".edit", "#tenant_row_" + id).css("visibility", "visible");

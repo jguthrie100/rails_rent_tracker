@@ -1,3 +1,7 @@
+<!-- Hack to avoid 'jQuery flickering' when page intially loads -->
+<script>document.write('<style type="text/css">body{display:none}</style>');</script>
+
+<% failed_edits = Hash.new %>
 <h3 class="text-primary">List of Houses</h3>
 <table class="table table-hover table-condensed table-striped">
   <thead>
@@ -12,6 +16,10 @@
     <%# Create rows of Houses %>
     <%= form_for :houses, :url => update_multiple_houses_path, :method => "put" do |f| %>
       <% @houses.each do |h| %>
+
+        <%# Populate failed_edits hash with list of errors if applicable %>
+        <% (!params.nil? && params[h.id.to_s]) ? (failed_edits[h.id] = params[h.id.to_s]) : "" %>
+
         <%= fields_for "houses[]", h do |hf| %>
           <tr id="house_row_<%= h.id %>" class="house_row" style="font-size: 11px">
             <td>
@@ -20,13 +28,13 @@
             </td>
             <td>
               <%# House name (w/ link) / House name edit field %>
-              <%= link_to(h.name, house_path(h), class: "display") %><br />
-              <%= hf.text_field(:name, class: "edit", style: "visibility:hidden") %>
+              <%= link_to(h.name, house_path(h), class: "display name") %><br />
+              <%= hf.text_field(:name, class: "edit name", value: "#{failed_edits[h.id] ? failed_edits[h.id][:name] : h.name}") %>
             </td>
             <td>
               <%# House address (w/ map link) / House address edit field %>
-              <span class="display"><%= h.address %> - <%= link_to("[map]", "http://www.google.com/maps/search/#{h.address}", :target => "_blank") %></span><br />
-              <%= hf.text_field(:address, class: "edit", style: "visibility:hidden", size: 100) %>
+              <span class="display name"><%= h.address %> - <%= link_to("[map]", "http://www.google.com/maps/search/#{h.address}", :target => "_blank") %></span><br />
+              <%= hf.text_field(:address, class: "edit name", size: 100, value: "#{failed_edits[h.id] ? failed_edits[h.id][:address] : h.address}") %>
             </td>
             <td>
               <% is_updated_id = "houses_" + h.id.to_s + "_is_updated" %>
@@ -34,7 +42,7 @@
 
               <%# Save button %>
               <button id="save_btn_<%= h.id %>" class="fa fa-floppy-o btn btn-primary disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" disabled></button>
-              
+
               <%# Delete button (w/ confirm message) %>
               <%= link_to "", {:controller => :houses, :action => 'destroy', :id => h.id }, :method => :delete, class: "fa fa-trash btn btn-danger", data: { confirm: "Are you sure you want to delete house '#{h.name.upcase}' from the database?" } %>
             </td>
@@ -44,7 +52,7 @@
     <% end %>
         <%# Create final row with a form to add a new House to the inventory %>
         <%= form_tag(houses_path) do %>
-          <% @house = nil %>
+          <% (!params.nil? && params['new']) ? (failed_edits['new'] = params['new']) : "" %>
           <tr id="house_row_new" class="house_row" style="font-size: 11px">
             <td>
               <%# Checkbox %>
@@ -52,11 +60,11 @@
             </td>
             <td>
               <%# House name edit field %>
-              <%= text_field(:house, :name, disabled: "true", class: "new_house") %>
+              <%= text_field(:house, :name, disabled: "true", class: "display edit name", value: "#{failed_edits['new'] ? failed_edits['new'][:name] : ''}") %>
             </td>
             <td>
               <%# House address edit field %>
-              <%= text_field(:house, :address, :size => 100, disabled: "true", class: "new_house") %>
+              <%= text_field(:house, :address, :size => 100, disabled: "true", class: "display edit address", value: "#{failed_edits['new'] ? failed_edits['new'][:address] : ''}") %>
             </td>
             <td>
               <%# Save button %>
@@ -69,22 +77,40 @@
 
 <script>
 
+// On load we want to select the error'd rows and highlight the fields that raised an error
+$(document).ready(function() {
+  $(".edit").css("visibility", "hidden");
+  $(".edit").prop("disabled", true);
+  $(".display").css("visibility", "visible");
+
+//  <%# Select row that failed to update/be saved %>
+  <% failed_edits.keys.each do |h_id| %>
+    <% h_id.is_a?(String) ? (h_id_s = "'#{h_id}'".html_safe) : (h_id_s = h_id) %>
+    $("#checkbox_" + <%= h_id_s %>).prop("checked", true);
+    toggle_edit(<%= h_id_s %>);
+
+//    <%# Highlight the attributes that were the reason for the error %>
+    <% failed_edits[h_id].keys.each do |attr| %>
+      <% next unless failed_edits[h_id][:errors].include? attr %>
+      $(".<%= attr %>.edit", "#house_row_" + <%= h_id_s %>).css("background-color", "rgba(255,0,0,0.5)");
+    <% end %>
+  <% end %>
+
+  $("body").css("display","block");
+});
+
 // Method that gets called everytime a checkbox is selected
 function toggle_edit(id) {
   if ( $("#checkbox_" + id).prop("checked") ) {
     // WHEN A ROW IS SELECTED..
 
-    // Enable form fields if 'new House' row was selected
-    if(id === "new") {
-      $(".new_house").prop("disabled", false);
-    }
-
     // Enable the Save button
     $("#save_btn_" + id).removeClass("disabled")
                         .prop("disabled", false);
 
-    // Hide all the display fields and show all the edit field
+    // Hide all the display fields and show and enable all the edit fields
     $(".display", "#house_row_" + id).css("visibility", "hidden");
+    $(".edit", "#house_row_" + id).prop("disabled", false);
     $(".edit", "#house_row_" + id).css("visibility", "visible");
 
     // Fade out the unselected rows and disable the checkboxes on them
@@ -94,18 +120,14 @@ function toggle_edit(id) {
   } else {
     // WHEN A ROW IS DESELECTED..
 
-    // Disable form fields if deselected row was the 'new House' row
-    if(id === "new") {
-      $(".new_house").prop("disabled", true);
-    }
-
     // Disable save button
     $("#save_btn_" + id).addClass("disabled")
                         .prop("disabled", true);
 
-    // Hide all the edit fields and display the display fields
-    $(".display", "#house_row_" + id).css("visibility", "visible");
+    // Hide and disable all the edit fields and display the display fields
+    $(".edit", "#house_row_" + id).prop("disabled", true);
     $(".edit", "#house_row_" + id).css("visibility", "hidden");
+    $(".display", "#house_row_" + id).css("visibility", "visible");
 
     // Fade all the rows back in and enable all the checkboxes
     $(".house_row").css("opacity", "1");
