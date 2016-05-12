@@ -49,7 +49,7 @@
             <td>
               <%# Tenant's rental property (w/ link) / Rental property dropdown box %>
               <%= t.house.nil? ? "" : link_to(t.house.name, house_path(t.house), class: "display house_id") %><br />
-              <%= tf.collection_select(:house_id, House.all, :id, :name, { include_blank: true, selected: (failed_edits[t.id] ? failed_edits[t.id][:house_id].to_i : '')}, class: "edit house_id")
+              <%= tf.collection_select(:house_id, House.all, :id, :name, { include_blank: true, selected: (failed_edits[t.id] ? failed_edits[t.id][:house_id].to_i : t.house_id)}, class: "edit house_id")
               %>
             </td>
             <td>
