@@ -1,10 +1,10 @@
 class ValidDateRangeValidator < ActiveModel::Validator
    def validate(record)
-    
+
     # Specify the model (i.e. 'house' or 'tenant') to only compare dates with a specific tenant or house,
     #  rather than all tenants or houses (i.e. different tenants can have overlapping date ranges)
     if options[:model]
-      id = record.send("#{options[:model]}").id
+      id = record.send("#{options[:model]}_id")
       snapshots = record.class.name.constantize.send("all").where("#{options[:model]}_id = #{id}")
     else
       snapshots = record.class.name.constantize.send("all")
