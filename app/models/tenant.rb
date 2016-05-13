@@ -3,7 +3,7 @@ class Tenant < ActiveRecord::Base
   has_many :transactions
   belongs_to :house
 
-  validates_associated :house
+  validates_presence_of :house, :if => :house_id
 
   validates_length_of :name, minimum: 4, allow_blank: false
   validates_length_of :payment_handle, :phone_num, minimum: 5, allow_blank: true

@@ -49,5 +49,10 @@ describe Tenant do
   end
 
   # House id tests
-  it "is only valid if house_id matches existing house"
+  it "is only valid if house_id matches existing house" do
+    expect(FactoryGirl.create(:house)).to be_valid
+    house_id = House.first.id
+    expect(FactoryGirl.create(:tenant, house_id: house_id)).to be_valid
+    expect{FactoryGirl.create(:tenant, house_id: house_id+1)}.to raise_error(ActiveRecord::RecordInvalid)
+  end
 end
