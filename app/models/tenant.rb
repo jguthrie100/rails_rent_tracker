@@ -5,8 +5,7 @@ class Tenant < ActiveRecord::Base
 
   validates_associated :house
 
-  validates :name, presence: true
-  validates_length_of :name, minimum: 4, allow_blank: true
+  validates_length_of :name, minimum: 4, allow_blank: false
   validates_length_of :payment_handle, :phone_num, minimum: 5, allow_blank: true
   validates_uniqueness_of :name
   validates :payment_handle, unique_payment_handle: true
