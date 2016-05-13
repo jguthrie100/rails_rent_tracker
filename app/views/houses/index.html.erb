@@ -83,7 +83,7 @@ $(document).ready(function() {
   $(".edit").prop("disabled", true);
   $(".display").css("visibility", "visible");
 
-//  <%# Select row that failed to update/be saved %>
+//  <%# Automatically select and highlight row that failed to update/be saved and threw the error %>
   <% failed_edits.keys.each do |h_id| %>
     <% h_id.is_a?(String) ? (h_id_s = "'#{h_id}'".html_safe) : (h_id_s = h_id) %>
     $("#checkbox_" + <%= h_id_s %>).prop("checked", true);
@@ -129,7 +129,7 @@ function toggle_edit(id) {
     $(".edit", "#house_row_" + id).css("visibility", "hidden");
     $(".display", "#house_row_" + id).css("visibility", "visible");
 
-    // Fade all the rows back in and enable all the checkboxes
+    // Fade all the other rows back in and enable all the checkboxes
     $(".house_row").css("opacity", "1");
     $(".checkbox").prop("disabled", false);
   }
