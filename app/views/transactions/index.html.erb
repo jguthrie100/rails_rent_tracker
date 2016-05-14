@@ -21,33 +21,33 @@
   </thead>
   <tbody>
     <%# Create rows of Transactions %>
-    <%= form_for :transaction, :url => update_multiple_transactions_path, :method => "put" do |f| %>
-      <% @transactions.each do |tr| %>
-        <%= fields_for "transactions[]", tr do |tf| %>
-          <tr id="transaction_row_<%= tr.id %>" class="transaction_row" style="font-size: 11px">
-            <% is_updated_id = "transactions_" + tr.id.to_s + "_is_updated" %>
+    <%= form_for :transaction, :url => update_multiple_transactions_path, :method => "put" do |form| %>
+      <% @transactions.each do |transaction| %>
+        <%= fields_for "transactions[]", transaction do |transaction_form| %>
+          <tr id="transaction_row_<%= transaction.id %>" class="transaction_row" style="font-size: 11px">
+            <% is_updated_id = "transactions_" + transaction.id.to_s + "_is_updated" %>
             <td>
               <%# Checkbox %>
-              <input id="checkbox_<%= tr.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= tr.id %>)" />
+              <input id="checkbox_<%= transaction.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= transaction.id %>)" />
             </td>
-            <td><%= tr.date_str %></td>
+            <td><%= transaction.date_str %></td>
             <td>
               <%# Tenant name (w/ link) / Tenant drop down box %>
-              <%= tr.tenant.nil? ? "" : link_to(tr.tenant.name, tenant_path(tr.tenant), class: "display") %><br />
-              <%= tf.collection_select(:tenant_id, Tenant.all, :id, :name, { include_blank: true}, class: "edit", style: "visibility:hidden", :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %>
+              <%= transaction.tenant.nil? ? "" : link_to(transaction.tenant.name, tenant_path(transaction.tenant), class: "display") %><br />
+              <%= transaction_form.collection_select(:tenant_id, Tenant.all, :id, :name, { include_blank: true}, class: "edit", style: "visibility:hidden", :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %>
 
             </td>
-            <td><%= tr.bank_account_id %></td>
-            <td><%= tr.transaction_id %></td>
-            <td><%= tr.transaction_type %></td>
-            <td><%= tr.cheque_num %></td>
-            <td><%= tr.payee %></td>
-            <td><%= tr.memo %></td>
-            <td><%= tr.amount_str %></td>
+            <td><%= transaction.bank_account_id %></td>
+            <td><%= transaction.transaction_id %></td>
+            <td><%= transaction.transaction_type %></td>
+            <td><%= transaction.cheque_num %></td>
+            <td><%= transaction.payee %></td>
+            <td><%= transaction.memo %></td>
+            <td><%= transaction.amount_str %></td>
             <td>
               <%# Hidden 'is_updated' field and Save button %>
-              <%= tf.hidden_field(:is_updated, :value => 'false') %>
-              <button id="save_btn_<%= tr.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" disabled></button>
+              <%= transaction_form.hidden_field(:is_updated, :value => 'false') %>
+              <button id="save_btn_<%= transaction.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" disabled></button>
             </td>
           </tr>
         <% end %>

@@ -23,53 +23,53 @@
   </thead>
   <tbody>
     <%# Create rows of Tenants %>
-    <%= form_for :tenant, :url => update_multiple_tenants_path, :method => "put" do |f| %>
-      <% @tenants.each do |t| %>
+    <%= form_for :tenant, :url => update_multiple_tenants_path, :method => "put" do |form| %>
+      <% @tenants.each do |tenant| %>
 
         <%# Populate failed_edits hash with list of errors if applicable %>
-        <% (!params.nil? && params[t.id.to_s]) ? (failed_edits[t.id] = params[t.id.to_s]) : "" %>
+        <% (!params.nil? && params[tenant.id.to_s]) ? (failed_edits[tenant.id] = params[tenant.id.to_s]) : "" %>
 
-        <%= fields_for "tenants[]", t do |tf| %>
-          <tr id="tenant_row_<%= t.id %>" class="tenant_row" style="font-size: 11px">
+        <%= fields_for "tenants[]", tenant do |tenant_form| %>
+          <tr id="tenant_row_<%= tenant.id %>" class="tenant_row" style="font-size: 11px">
             <td>
               <%# Checkbox %>
-              <input id="checkbox_<%= t.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= t.id %>)">
+              <input id="checkbox_<%= tenant.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= tenant.id %>)">
             </td>
             <td>
               <%# Tenant name (w/ link) / Tenant name edit field %>
-              <%= link_to(t.name, tenant_path(t), class: "display name") %><br />
-              <%= tf.text_field(:name, class: "edit name", value: "#{failed_edits[t.id] ? failed_edits[t.id][:name] : t.name}") %>
+              <%= link_to(tenant.name, tenant_path(tenant), class: "display name") %><br />
+              <%= tenant_form.text_field(:name, class: "edit name", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id][:name] : tenant.name}") %>
             </td>
             <td>
               <%# Payment handle / Payment handle edit field %>
-              <span class="display payment_handle"><%= t.payment_handle %></span><br />
-              <%= tf.text_field(:payment_handle, class: "edit payment_handle", value: "#{failed_edits[t.id] ? failed_edits[t.id][:payment_handle] : t.payment_handle}") %>
+              <span class="display payment_handle"><%= tenant.payment_handle %></span><br />
+              <%= tenant_form.text_field(:payment_handle, class: "edit payment_handle", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id][:payment_handle] : tenant.payment_handle}") %>
             </td>
             <td>
               <%# Phone number / Phone number edit field %>
-              <span class="display phone_num"><%= t.phone_num %></span><br />
-              <%= tf.text_field(:phone_num, class: "edit phone_num", value: "#{failed_edits[t.id] ? failed_edits[t.id][:phone_num] : t.phone_num}") %>
+              <span class="display phone_num"><%= tenant.phone_num %></span><br />
+              <%= tenant_form.text_field(:phone_num, class: "edit phone_num", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id][:phone_num] : tenant.phone_num}") %>
             </td>
             <td>
               <%# Email address / Email address edit field %>
-              <span class="display email"><%= t.email %></span><br />
-              <%= tf.text_field(:email, class: "edit email", value: "#{failed_edits[t.id] ? failed_edits[t.id][:email] : t.email}") %>
+              <span class="display email"><%= tenant.email %></span><br />
+              <%= tenant_form.text_field(:email, class: "edit email", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id][:email] : tenant.email}") %>
             </td>
             <td>
               <%# Tenant's rental property (w/ link) / Rental property dropdown box %>
-              <%= t.property.nil? ? "" : link_to(t.property.name, property_path(t.property), class: "display property_id") %><br />
-              <%= tf.collection_select(:property_id, Property.all, :id, :name, { include_blank: true, selected: (failed_edits[t.id] ? failed_edits[t.id][:property_id].to_i : t.property_id)}, class: "edit property_id")
+              <%= tenant.property.nil? ? "" : link_to(tenant.property.name, property_path(tenant.property), class: "display property_id") %><br />
+              <%= tenant_form.collection_select(:property_id, Property.all, :id, :name, { include_blank: true, selected: (failed_edits[tenant.id] ? failed_edits[tenant.id][:property_id].to_i : tenant.property_id)}, class: "edit property_id")
               %>
             </td>
             <td>
-              <% is_updated_id = "tenants_" + t.id.to_s + "_is_updated" %>
-              <%= tf.hidden_field(:is_updated, :value => 'false') %>
+              <% is_updated_id = "tenants_" + tenant.id.to_s + "_is_updated" %>
+              <%= tenant_form.hidden_field(:is_updated, :value => 'false') %>
 
               <%# Save button %>
-              <button id="save_btn_<%= t.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" disabled></button>
+              <button id="save_btn_<%= tenant.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" disabled></button>
 
               <%# Delete button, with confirmation %>
-              <%= link_to "", {:controller => :tenants, :action => 'archive', :id => t.id }, :method => :patch, class: "fa fa-trash btn btn-danger", data: { confirm: "Are you sure you want to archive tenant '#{t.name.upcase}' and remove them from your list of current Tenants? (This change can be reversed later..)" } %>
+              <%= link_to "", {:controller => :tenants, :action => 'archive', :id => tenant.id }, :method => :patch, class: "fa fa-trash btn btn-danger", data: { confirm: "Are you sure you want to archive tenant '#{tenant.name.upcase}' and remove them from your list of current Tenants? (This change can be reversed later..)" } %>
             </td>
           </tr>
         <% end %>

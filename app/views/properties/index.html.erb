@@ -20,7 +20,7 @@
   </thead>
   <tbody>
     <%# Create rows of Properties %>
-    <%= form_for :properties, :url => update_multiple_properties_path, :method => "put" do |f| %>
+    <%= form_for :properties, :url => update_multiple_properties_path, :method => "put" do |form| %>
       <% @properties.each do |property| %>
 
         <%# Populate failed_edits hash with list of errors if applicable %>
