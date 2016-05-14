@@ -1,5 +1,11 @@
-<!-- Hack to avoid 'jQuery flickering' when page intially loads -->
-<script>document.write('<style type="text/css">body{display:none}</style>');</script>
+<style type="text/css">
+  .edit {
+    visibility: hidden;
+  }
+  .display {
+    visibility: visible;
+  }
+</style>
 
 <% failed_edits = Hash.new %>
 <h3 class="text-primary">List of Houses</h3>
@@ -79,9 +85,7 @@
 
 // On load we want to select the error'd rows and highlight the fields that raised an error
 $(document).ready(function() {
-  $(".edit").css("visibility", "hidden");
   $(".edit").prop("disabled", true);
-  $(".display").css("visibility", "visible");
 
 //  <%# Automatically select and highlight row that failed to update/be saved and threw the error %>
   <% failed_edits.keys.each do |h_id| %>
@@ -95,8 +99,6 @@ $(document).ready(function() {
       $(".<%= attr %>.edit", "#house_row_" + <%= h_id_s %>).css("background-color", "rgba(255,0,0,0.5)");
     <% end %>
   <% end %>
-
-  $("body").css("display","block");
 });
 
 // Method that gets called everytime a checkbox is selected
