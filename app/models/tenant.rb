@@ -1,9 +1,9 @@
 class Tenant < ActiveRecord::Base
   has_many :tenant_snapshots, inverse_of: :tenant
   has_many :transactions
-  belongs_to :house
+  belongs_to :property
 
-  validates_presence_of :house, :if => :house_id
+  validates_presence_of :property, :if => :property_id
 
   validates_length_of :name, minimum: 4, allow_blank: false
   validates_uniqueness_of :name

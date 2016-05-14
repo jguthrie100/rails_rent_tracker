@@ -27,9 +27,9 @@ class TenantsController < ApplicationController
     tenant = Tenant.find(params[:id])
 
     if tenant.destroy
-      redirect_to tenants_path, notice: "Deleted Tenant: <b>'#{tenant.name}'</b> from the database"
+      redirect_to tenants_path, notice: "Deleted tenant: <b>'#{tenant.name}'</b> from the database"
     else
-      redirect_to tenants_path, notice: "Failed to delete Tenant: <b>'#{tenant.name}'</b> from the database: #{tenant.errors.full_messages.to_sentence}"
+      redirect_to tenants_path, notice: "Failed to delete tenant: <b>'#{tenant.name}'</b> from the database: #{tenant.errors.full_messages.to_sentence}"
     end
   end
 
@@ -39,9 +39,9 @@ class TenantsController < ApplicationController
     tenant.archived = true
 
     if tenant.save
-      redirect_to tenants_path, notice: "Archived Tenant: <b>'#{tenant.name}'</b>."
+      redirect_to tenants_path, notice: "Archived tenant: <b>'#{tenant.name}'</b>."
     else
-      redirect_to tenants_path, notice: "Failed to archive Tenant: <b>'#{tenant.name}'</b> from the database: #{tenant.errors.full_messages.to_sentence}"
+      redirect_to tenants_path, notice: "Failed to archive tenant: <b>'#{tenant.name}'</b> from the database: #{tenant.errors.full_messages.to_sentence}"
     end
   end
 
@@ -53,17 +53,17 @@ class TenantsController < ApplicationController
       t.payment_handle = p[:payment_handle]
       t.phone_num = p[:phone_num]
       t.email = p[:email]
-      t.house_id = p[:house_id]
+      t.property_id = p[:property_id]
     end
     if tenant.save
-      redirect_to tenants_path, notice: "Added Tenant <b>'#{tenant.name}'</b> to the database"
+      redirect_to tenants_path, notice: "Added tenant <b>'#{tenant.name}'</b> to the database"
     else
       # Create 'failed_edits' hash which stores all the values from the records that failed to get saved
       failed_edits = Hash.new
       failed_edits['new'] = params[:tenant]
       failed_edits['new']['errors'] = tenant.errors.keys.map(&:to_s)
 
-      redirect_to tenants_path(failed_edits), notice: "Failed to add Tenant <b>'#{tenant.name}'</b> to the database: #{tenant.errors.full_messages.to_sentence}"
+      redirect_to tenants_path(failed_edits), notice: "Failed to add tenant <b>'#{tenant.name}'</b> to the database: #{tenant.errors.full_messages.to_sentence}"
     end
   end
 
@@ -96,6 +96,6 @@ class TenantsController < ApplicationController
   # Private method that sets Strong Parameter permissions
   private
   def allowed_params(t_id)
-    params.require(:tenants).require(t_id).permit(:name, :payment_handle, :phone_num, :email, :house_id)
+    params.require(:tenants).require(t_id).permit(:name, :payment_handle, :phone_num, :email, :property_id)
   end
 end

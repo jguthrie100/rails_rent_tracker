@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>RentTracker</title>
+  <title>Property Rental Tracker</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
@@ -14,9 +14,9 @@
   <div class="container-fluid">
     <%= "<p>#{flash[:notice]}</p>".html_safe if flash[:notice] %>
 
-    <%= link_to("Transactions", transactions_path) %> | 
-    <%= link_to("Tenants", tenants_path) %> | 
-    <%= link_to("Houses", houses_path) %>
+    <%= link_to("Transactions", transactions_path) %> |
+    <%= link_to("Tenants", tenants_path) %> |
+    <%= link_to("Properties", properties_path) %>
 
     <%= yield %>
   </div>

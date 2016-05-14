@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-#  get 'house_snapshots/new'
+#  get 'property_snapshots/new'
 
-#  get 'house_snapshots/create'
+#  get 'property_snapshots/create'
 
   get 'pages/index'
 
@@ -39,11 +39,11 @@ Rails.application.routes.draw do
     }
   end
 
-  get 'houses/archived' => 'houses#index', :view => "archived"
-  get 'houses/all' => 'houses#index', :view => "all"
-  patch 'houses/:id/archive' => 'houses#archive'
-  resources :houses do
-    resources :house_snapshots
+  get 'properties/archived' => 'properties#index', :view => "archived"
+  get 'properties/all' => 'properties#index', :view => "all"
+  patch 'properties/:id/archive' => 'properties#archive'
+  resources :properties do
+    resources :property_snapshots
     collection {
       put :update_multiple
       get :edit

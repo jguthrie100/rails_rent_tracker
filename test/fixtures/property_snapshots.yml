@@ -6,7 +6,7 @@ one:
   num_bedrooms: 1
   weekly_rent: 9.99
   agency_fees: 9.99
-  house_id: 
+  property_id:
 
 two:
   start_date: 2015-09-28
@@ -14,4 +14,4 @@ two:
   num_bedrooms: 1
   weekly_rent: 9.99
   agency_fees: 9.99
-  house_id: 
+  property_id:

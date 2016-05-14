@@ -1,14 +1,14 @@
 == README
 
-Ruby on Rails app that manages a 'portfolio' of rental homes (or any other rental property/asset/whatever)
+Ruby on Rails app that manages a 'portfolio' of rental properties (or any other rental asset)
 
 Actions include:
 
 * Import an online banking CSV file to the database (only parses ASB Bank (NZ) CSV files at the moment) to save the transaction records to the database
 
-* Add and edit rental houses
+* Add and edit rental properties
 
-* Add and edit tenants for each house
+* Add and edit tenants for each property
 
 * View all the payments made by each tenant
 
@@ -16,7 +16,7 @@ Actions include:
 
 == TODO
 
-* Implement Tenant and House Snapshots. These are used to track changes over time, such as when rent changes, when tenants move in/out, or when the number of bedrooms changes etc. It means that an accurate rental income can be calculated for each 'snapshot', even though the incoming/expected payments will change over time.
+* Implement Tenant and Property Snapshots. These are used to track changes over time, such as when rent changes, when tenants move in/out, or when the number of bedrooms changes etc. It means that an accurate rental income can be calculated for each 'snapshot', even though the incoming/expected payments will change over time.
 
 * Implement a decent front end
 
@@ -24,4 +24,4 @@ Actions include:
 
 * Create proper authentication system for admin. Possibly allow tenants to log in and check their payments/expected payments, update email addreses etc
 
-* Implement other aspects of rental home administration, such as accounting for mortgage payments, council tax, utility bills, calculate earning projections etc
+* Implement other aspects of rental property administration, such as accounting for mortgage payments, council tax, utility bills, calculate earning projections etc

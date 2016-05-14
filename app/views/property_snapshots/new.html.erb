@@ -1,0 +1,32 @@
+<h1 class="text-primary">New Rental Snapshot for <%= link_to(@property.name, property_path(@property), style: "text-decoration: underline;") %></h1>
+
+<h3 class="text-primary">Add new Snapshot</h3>
+<%= form_tag(property_property_snapshots_path) do %>
+  <table class="table table-hover table-condensed table-striped">
+    <tbody>
+      <tr>
+        <td>Start date: </td>
+        <td><%= date_field(:property_snapshot, :start_date) %></td>
+      </tr>
+      <tr>
+        <td>End Date: </td>
+        <td><%= date_field(:property_snapshot, :end_date) %></td>
+      </tr>
+      <tr>
+        <td>Num Bedrooms: </td>
+        <td><%= number_field(:property_snapshot, :num_bedrooms, in: 1..10, step: 1) %></td>
+      </tr>
+      <tr>
+        <td>Weekly Rent (NZD$): </td>
+        <td><%= number_field(:property_snapshot, :weekly_rent, step: 5) %></td>
+      </tr>
+      <tr>
+        <td>Agency Fees (NZD$): </td>
+        <td><%= number_field(:property_snapshot, :agency_fees, step: 5) %></td>
+      </tr>
+      <tr>
+        <td colspan="2"><%= submit_tag("Create New Snapshot") %></td>
+      </tr>
+    </tbody>
+  </table>
+<% end %>

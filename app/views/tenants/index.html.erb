@@ -17,7 +17,7 @@
       <th>Payment Handle</th>
       <th>Phone Number</th>
       <th>Email</th>
-      <th>House</th>
+      <th>Property</th>
       <th>&nbsp;</th>
     </tr>
   </thead>
@@ -57,8 +57,8 @@
             </td>
             <td>
               <%# Tenant's rental property (w/ link) / Rental property dropdown box %>
-              <%= t.house.nil? ? "" : link_to(t.house.name, house_path(t.house), class: "display house_id") %><br />
-              <%= tf.collection_select(:house_id, House.all, :id, :name, { include_blank: true, selected: (failed_edits[t.id] ? failed_edits[t.id][:house_id].to_i : t.house_id)}, class: "edit house_id")
+              <%= t.property.nil? ? "" : link_to(t.property.name, property_path(t.property), class: "display property_id") %><br />
+              <%= tf.collection_select(:property_id, Property.all, :id, :name, { include_blank: true, selected: (failed_edits[t.id] ? failed_edits[t.id][:property_id].to_i : t.property_id)}, class: "edit property_id")
               %>
             </td>
             <td>
@@ -101,7 +101,7 @@
             </td>
             <td>
               <%# Tenant's rental property dropdown selection box' %>
-              <%= collection_select(:tenant, :house_id, House.all, :id, :name, {include_blank: true, selected: (failed_edits['new'] ? failed_edits['new'][:house_id].to_i : '')}, class: "display edit house_id") %>
+              <%= collection_select(:tenant, :property_id, Property.all, :id, :name, {include_blank: true, selected: (failed_edits['new'] ? failed_edits['new'][:property_id].to_i : '')}, class: "display edit property_id") %>
             </td>
             <td>
               <%# Save button %>

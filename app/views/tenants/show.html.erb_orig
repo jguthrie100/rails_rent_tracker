@@ -16,9 +16,9 @@
       <i>(<%= num_days %> days)</i>&nbsp;&nbsp;
       <small><a href="#" id="snapshot_content_button_<%= s.id %>">[display]</a></small>
     </div>
-    
+
     <p class="snapshot_content" id="snapshot_content_<%= s.id %>" style="display:none;">
-      House: <b><%= s.house.name %></b><br />
+      Property: <b><%= s.property.name %></b><br />
       Weekly Rent: <b><%= number_to_currency(s.weekly_rent, :unit => "$") %></b><br />
       Total Rent Expected: <b><%= number_to_currency(rent_expected, :unit => "$") %></b>
     </p>
@@ -33,7 +33,7 @@
 <h3>Rental Payments</h3>
 
 <% @payments.each do |p| %>
-  
+
 <!-- payment <%= p.id %> start -->
   <p class="payment" id="payment_<%= p.id %>">
     <div class="payment_header" id="payment_header_<%= p.id %>">
@@ -41,11 +41,11 @@
       <i>(<%= p.amount_str %>)</i>&nbsp;&nbsp;
       <small><a id="payment_content_button_<%= p.id %>">[display]</a></small>
     </div>
-    
+
     <p class="payment_content" id="payment_content_<%= p.id %>" style="display:none;">
       &nbsp;&nbsp;<%= p.transaction_id + " - " + p.transaction_type + " - " + p.payee + " - " + p.memo + " - " + p.amount_str %>
     </p>
-    
+
     <script>$("#payment_content_button_<%= p.id %>").click(function() {display_item("#payment_content", <%= p.id %>)});</script>
   </p>
 <!-- payment <%= p.id %> end -->

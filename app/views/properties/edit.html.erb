@@ -1,4 +1,4 @@
-<h3>Update Houses</h3>
+<h3>Update Properties</h3>
 <table>
   <thead>
     <tr>
@@ -7,11 +7,11 @@
     </tr>
   </thead>
   <tbody>
-    <%= form_for :houses, :url => update_multiple_houses_path, :method => "put" do |f| %>
-      <% @houses.each do |h| %>
-        <% @house = h %>
-        <%= fields_for "houses[]", h do |hf| %>
-          <% is_updated_id = "houses_" + h.id.to_s + "_is_updated" %>
+    <%= form_for :properties, :url => update_multiple_properties_path, :method => "put" do |f| %>
+      <% @properties.each do |property| %>
+        <% @property = property %>
+        <%= fields_for "properties[]", property do |hf| %>
+          <% is_updated_id = "properties_" + property.id.to_s + "_is_updated" %>
           <%= hf.hidden_field(:is_updated, :value => 'false') %>
           <tr>
           <%# Consider replacing :onChange with data-update="true" javascript/coffeescript %>
@@ -22,14 +22,14 @@
       <% end %>
       <tr>
         <td colspan="2">
-          <%= submit_tag("Update Houses") %>
+          <%= submit_tag("Update Properties") %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 <br /><br /><br />
-<h3>Add new House</h3>
+<h3>Add new Property</h3>
 <table>
   <thead>
     <tr>
@@ -39,13 +39,13 @@
     </tr>
   </thead>
   <tbody>
-    <%# Create final row with a form to add a new House to the inventory %>
-    <%= form_tag(houses_path) do %>
-      <% @house = nil %>
+    <%# Create final row with a form to add a new Property to the inventory %>
+    <%= form_tag(properties_path) do %>
+      <% @property = nil %>
       <tr>
-        <td><%= text_field(:house, :name) %></td>
-        <td><%= text_field(:house, :address, :size => 50) %></td>
-        <td><%= submit_tag("Add New House") %></td>
+        <td><%= text_field(:property, :name) %></td>
+        <td><%= text_field(:property, :address, :size => 50) %></td>
+        <td><%= submit_tag("Add New Property") %></td>
       </tr>
     <% end %>
   </tbody>

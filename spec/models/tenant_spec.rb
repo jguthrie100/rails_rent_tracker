@@ -54,12 +54,12 @@ describe "Tests for Tenant validation" do
     end
   end
 
-  context "Testing House ID validation" do
-    it "is only valid if house_id matches existing house" do
-      expect(FactoryGirl.create(:house)).to be_valid
-      house_id = House.last.id
-      expect(FactoryGirl.create(:tenant, house_id: house_id)).to be_valid
-      expect{FactoryGirl.create(:tenant, house_id: house_id+1)}.to raise_error(ActiveRecord::RecordInvalid)
+  context "Testing Property ID validation" do
+    it "is only valid if property_id matches existing property" do
+      expect(FactoryGirl.create(:property)).to be_valid
+      property_id = Property.last.id
+      expect(FactoryGirl.create(:tenant, property_id: property_id)).to be_valid
+      expect{FactoryGirl.create(:tenant, property_id: property_id+1)}.to raise_error(ActiveRecord::RecordInvalid)
     end
   end
 end

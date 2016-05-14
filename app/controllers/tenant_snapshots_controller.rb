@@ -9,7 +9,7 @@ class TenantSnapshotsController < ApplicationController
       p = params[:tenant_snapshot]
       ts.start_date = p[:start_date]
       ts.end_date = p[:end_date]
-      ts.house_id = p[:house_id]
+      ts.property_id = p[:property_id]
       ts.weekly_rent = p[:weekly_rent]
       ts.rent_frequency = p[:rent_frequency]
       ts.tenant_id = params[:tenant_id]

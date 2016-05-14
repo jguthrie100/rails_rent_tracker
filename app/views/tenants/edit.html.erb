@@ -6,7 +6,7 @@
       <th>Payment Handle</th>
       <th>Phone Number</th>
       <th>Email</th>
-      <th>House</th>
+      <th>Property</th>
     </tr>
   </thead>
   <tbody>
@@ -21,7 +21,7 @@
             <td><%= tf.text_field(:payment_handle, :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %></td>
             <td><%= tf.text_field(:phone_num, :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %></td>
             <td><%= tf.text_field(:email, :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %></td>
-            <td><%= tf.collection_select(:house_id, House.all, :id, :name, { include_blank: true}, :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'")
+            <td><%= tf.collection_select(:property_id, Property.all, :id, :name, { include_blank: true}, :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'")
               %></td>
           </tr>
         <% end %>
@@ -43,7 +43,7 @@
       <th>Payment Handle</th>
       <th>Phone Number</th>
       <th>Email</th>
-      <th>House</th>
+      <th>Property</th>
       <th />
     </tr>
   </thead>
@@ -56,7 +56,7 @@
         <td><%= text_field(:tenant, :payment_handle) %></td>
         <td><%= text_field(:tenant, :phone_num) %></td>
         <td><%= text_field(:tenant, :email) %></td>
-        <td><%= collection_select(:tenant, :house_id, House.all, :id, :name, {include_blank: true}) %></td>
+        <td><%= collection_select(:tenant, :property_id, Property.all, :id, :name, {include_blank: true}) %></td>
         <td><%= submit_tag("Add New Tenant") %></td>
       </tr>
     <% end %>

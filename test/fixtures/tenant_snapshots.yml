@@ -3,15 +3,15 @@
 one:
   start_date: 2015-09-28
   end_date: 2015-09-28
-  house_id: 
+  property_id:
   weekly_rent: 9.99
   rent_frequency: 1
-  tenant_id: 
+  tenant_id:
 
 two:
   start_date: 2015-09-28
   end_date: 2015-09-28
-  house_id: 
+  property_id:
   weekly_rent: 9.99
   rent_frequency: 1
-  tenant_id: 
+  tenant_id:

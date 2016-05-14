@@ -1,5 +1,5 @@
-class House < ActiveRecord::Base
-  has_many :house_snapshots, inverse_of: :house
+class Property < ActiveRecord::Base
+  has_many :property_snapshots, inverse_of: :property
   has_many :tenants
   has_many :tenant_snapshots, inverse_of: :tenant
 
