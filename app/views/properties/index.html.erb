@@ -88,15 +88,15 @@ $(document).ready(function() {
   $(".edit").prop("disabled", true);
 
 //  <%# Automatically select and highlight row that failed to update/be saved and threw the error %>
-  <% failed_edits.keys.each do |h_id| %>
-    <% h_id.is_a?(String) ? (h_id_s = "'#{h_id}'".html_safe) : (h_id_s = h_id) %>
-    $("#checkbox_" + <%= h_id_s %>).prop("checked", true);
-    toggle_edit(<%= h_id_s %>);
+  <% failed_edits.keys.each do |property_id| %>
+    <% property_id.is_a?(String) ? (property_id_s = "'#{property_id}'".html_safe) : (property_id_s = property_id) %>
+    $("#checkbox_" + <%= property_id_s %>).prop("checked", true);
+    toggle_edit(<%= property_id_s %>);
 
 //    <%# Highlight the attributes that were the reason for the error %>
-    <% failed_edits[h_id].keys.each do |attr| %>
-      <% next unless failed_edits[h_id][:errors].include? attr %>
-      $(".<%= attr %>.edit", "#property_row_" + <%= h_id_s %>).css("background-color", "rgba(255,0,0,0.5)");
+    <% failed_edits[property_id].keys.each do |attr| %>
+      <% next unless failed_edits[property_id][:errors].include? attr %>
+      $(".<%= attr %>.edit", "#property_row_" + <%= property_id_s %>).css("background-color", "rgba(255,0,0,0.5)");
     <% end %>
   <% end %>
 });
