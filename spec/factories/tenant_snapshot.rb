@@ -16,7 +16,5 @@ FactoryGirl.define do
     f.weekly_rent { Faker::Number.decimal(3, 2) }
     f.rent_frequency { Faker::Number.between(1, 10) }
     f.tenant_id { tenant1.id }
-
-  #  f.address { |a| "#{a.name}, #{Faker::Address.city}, #{Faker::Address.country}" }
   end
 end

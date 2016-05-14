@@ -1,3 +1,11 @@
+<style type="text/css">
+  .snapshot_content, .payment_content {
+    display: none;
+  }
+  .snapshot, .payment {
+    padding: 10px;
+  }
+</style>
 <h1 class="text-primary"><%= @tenant.name %></h1>
 
 <h3 class="text-primary">Rental Periods&nbsp;&nbsp;
@@ -11,22 +19,21 @@
   <% total_rent += rent_expected %>
 
 <!-- snapshot <%= s.id %> start -->
-  <p class="snapshot" id="snapshot_<%= s.id %>">
-    <div class="snapshot_header" id="snapshot_header_<%= s.id %>">
+  <div class="snapshot" id="snapshot_<%= s.id %>">
+    <div class="snapshot_header">
       <b><%= s.start_date.strftime('%a') %> <%= s.start_date_str %> - <%= s.end_date_str %></b>&nbsp;
       <i>(<%= num_days %> days)</i>&nbsp;&nbsp;
-      <small><a href="#" id="snapshot_content_button_<%= s.id %>">[display]</a></small>
+      <small><a class="snapshot_content_button">[display]</a></small>
     </div>
-    
-    <p class="snapshot_content" id="snapshot_content_<%= s.id %>" style="display:none;">
+
+    <p class="snapshot_content">
       House: <b><%= s.house.name %></b><br />
       Weekly Rent: <b><%= number_to_currency(s.weekly_rent, :unit => "$") %></b><br />
       Total Rent Expected: <b><%= number_to_currency(rent_expected, :unit => "$") %></b>
     </p>
-    <br />
+  </div>
 
-    <script>$("#snapshot_content_button_<%= s.id %>").click(function() {display_item("#snapshot_content", <%= s.id %>)});</script>
-  </p>
+  <script>$(".snapshot_content_button", "#snapshot_<%= s.id %>").click(function() {display_item("snapshot", <%= s.id %>)});</script>
 <!-- snapshot <%= s.id %> end -->
 
 <% end %>
@@ -34,21 +41,21 @@
 <h3 class="text-primary">Rental Payments</h3>
 
 <% @payments.each do |p| %>
-  
+
 <!-- payment <%= p.id %> start -->
-  <p class="payment" id="payment_<%= p.id %>">
-    <div class="payment_header" id="payment_header_<%= p.id %>">
+  <div class="payment" id="payment_<%= p.id %>">
+    <div class="payment_header">
       <%= p.date.strftime('%a') %> <b><%= p.date_str %></b>&nbsp;
       <i>(<%= p.amount_str %>)</i>&nbsp;&nbsp;
-      <small><a id="payment_content_button_<%= p.id %>">[display]</a></small>
+      <small><a class="payment_content_button">[display]</a></small>
     </div>
-    
-    <p class="payment_content" id="payment_content_<%= p.id %>" style="display:none;">
+
+    <p class="payment_content">
       &nbsp;&nbsp;<%= p.transaction_id + " - " + p.transaction_type + " - " + p.payee + " - " + p.memo + " - " + p.amount_str %>
     </p>
-    
-    <script>$("#payment_content_button_<%= p.id %>").click(function() {display_item("#payment_content", <%= p.id %>)});</script>
-  </p>
+  </div>
+
+  <script>$(".payment_content_button", "#payment_<%= p.id %>").click(function() {display_item("payment", <%= p.id %>)});</script>
 <!-- payment <%= p.id %> end -->
 <% end %>
 
@@ -59,13 +66,15 @@
 
 <script>
 function display_item(prefix, id) {
-  prefix += "_";
-  if ( $( prefix + id ).is( ":hidden" ) ) {
-    $( prefix + id ).slideDown( "slow" );
-    $( prefix + "button_" + id).text("[hide]");
+  var content_class = "." + prefix + "_content";
+  var main = "#" + prefix + "_" + id;
+
+  if ($(content_class, main).is(":hidden") ) {
+    $(content_class, main).slideDown("slow");
+    $(content_class + "_button", main).text("[hide]");
   } else {
-    $( prefix + id ).slideUp("slow");
-    $( prefix + "button_" + id).text("[display]");
+    $(content_class, main).slideUp("slow");
+    $(content_class + "_button", main).text("[display]");
   }
 }
 </script>

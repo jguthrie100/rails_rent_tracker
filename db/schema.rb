@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150928221734) do
+ActiveRecord::Schema.define(version: 20160514112602) do
 
   create_table "house_snapshots", force: :cascade do |t|
     t.date     "start_date"
@@ -27,10 +27,11 @@ ActiveRecord::Schema.define(version: 20150928221734) do
   add_index "house_snapshots", ["house_id"], name: "index_house_snapshots_on_house_id"
 
   create_table "houses", force: :cascade do |t|
-    t.string   "name",       null: false
-    t.string   "address",    null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "name",                       null: false
+    t.string   "address",                    null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.boolean  "archived",   default: false, null: false
   end
 
   create_table "tenant_snapshots", force: :cascade do |t|
@@ -50,13 +51,14 @@ ActiveRecord::Schema.define(version: 20150928221734) do
   add_index "tenant_snapshots", ["tenant_id"], name: "index_tenant_snapshots_on_tenant_id"
 
   create_table "tenants", force: :cascade do |t|
-    t.string   "name",           null: false
+    t.string   "name",                           null: false
     t.string   "payment_handle"
     t.string   "phone_num"
     t.string   "email"
     t.integer  "house_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.boolean  "archived",       default: false, null: false
   end
 
   add_index "tenants", ["house_id"], name: "index_tenants_on_house_id"

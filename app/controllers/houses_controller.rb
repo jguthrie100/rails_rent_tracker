@@ -1,6 +1,12 @@
 class HousesController < ApplicationController
   def index
-    @houses = House.all
+    if params[:view].nil?
+      @houses = House.all.where(archived: false)
+    elsif params[:view] == "archived"
+      @houses = House.all.where(archived: true)
+    else
+      @houses = House.all
+    end
   end
 
   def show
@@ -18,6 +24,18 @@ class HousesController < ApplicationController
       redirect_to houses_path, notice: "Deleted House: <b>'#{house.name}'</b> from the database"
     else
       redirect_to houses_path, notice: "Failed to delete House: <b>'#{house.name}'</b> from the database: #{house.errors.full_messages.to_sentence}"
+    end
+  end
+
+  def archive
+    house = House.find(params[:id])
+
+    house.archived = true
+
+    if house.save
+      redirect_to houses_path, notice: "Archived House: <b>'#{house.name}'</b>."
+    else
+      redirect_to houses_path, notice: "Failed to archive House: <b>'#{house.name}'</b>: #{house.errors.full_messages.to_sentence}"
     end
   end
 
@@ -69,6 +87,6 @@ class HousesController < ApplicationController
   # Private method that sets Strong Parameter permissions
   private
   def allowed_params(h_id)
-    params.require(:houses).require(h_id).permit(:name, :address)
+    params.require(:houses).require(h_id).permit(:name, :address, :archived)
   end
 end

@@ -63,7 +63,7 @@
               <button id="save_btn_<%= t.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" disabled></button>
 
               <%# Delete button, with confirmation %>
-              <%= link_to "", {:controller => :tenants, :action => 'destroy', :id => t.id }, :method => :delete, class: "fa fa-trash btn btn-danger", data: { confirm: "Are you sure you want to delete tenant '#{t.name.upcase}' from the database?" } %>
+              <%= link_to "", {:controller => :tenants, :action => 'archive', :id => t.id }, :method => :patch, class: "fa fa-trash btn btn-danger", data: { confirm: "Are you sure you want to archive tenant '#{t.name.upcase}' and remove them from your list of current Tenants? (This change can be reversed later..)" } %>
             </td>
           </tr>
         <% end %>

@@ -44,7 +44,7 @@
               <button id="save_btn_<%= h.id %>" class="fa fa-floppy-o btn btn-primary disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" disabled></button>
 
               <%# Delete button (w/ confirm message) %>
-              <%= link_to "", {:controller => :houses, :action => 'destroy', :id => h.id }, :method => :delete, class: "fa fa-trash btn btn-danger", data: { confirm: "Are you sure you want to delete house '#{h.name.upcase}' from the database?" } %>
+              <%= link_to "", {:controller => :houses, :action => 'archive', :id => h.id }, :method => :patch, class: "fa fa-trash btn btn-danger", data: { confirm: "Are you sure you want to archive house '#{h.name.upcase}' and remove it from your lst of current Houses? (This change can be reversed later..)" } %>
             </td>
           </tr>
         <% end %>

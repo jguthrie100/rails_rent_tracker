@@ -1,6 +1,12 @@
 class TenantsController < ApplicationController
   def index
-    @tenants = Tenant.all
+    if params[:view].nil?
+      @tenants = Tenant.all.where(archived: false)
+    elsif params[:view] == "archived"
+      @tenants = Tenant.all.where(archived: true)
+    else
+      @tenants = Tenant.all
+    end
   end
 
   def edit
@@ -24,6 +30,18 @@ class TenantsController < ApplicationController
       redirect_to tenants_path, notice: "Deleted Tenant: <b>'#{tenant.name}'</b> from the database"
     else
       redirect_to tenants_path, notice: "Failed to delete Tenant: <b>'#{tenant.name}'</b> from the database: #{tenant.errors.full_messages.to_sentence}"
+    end
+  end
+
+  def archive
+    tenant = Tenant.find(params[:id])
+
+    tenant.archived = true
+
+    if tenant.save
+      redirect_to tenants_path, notice: "Archived Tenant: <b>'#{tenant.name}'</b>."
+    else
+      redirect_to tenants_path, notice: "Failed to archive Tenant: <b>'#{tenant.name}'</b> from the database: #{tenant.errors.full_messages.to_sentence}"
     end
   end
 
