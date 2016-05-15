@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-   root 'pages#index'
+   root 'transactions#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
@@ -28,8 +28,8 @@ Rails.application.routes.draw do
     }
   end
 
-  get 'tenants/archived' => 'tenants#index', :view => "archived"
-  get 'tenants/all' => 'tenants#index', :view => "all"
+  get 'tenants/archived' => 'tenants#index', :view => "archived", as: 'archived_tenants'
+  get 'tenants/all' => 'tenants#index', :view => "all", as: 'all_tenants'
   patch 'tenants/:id/archive' => 'tenants#archive'
   patch 'tenants/:id/unarchive' => 'tenants#unarchive'
   resources :tenants do
@@ -40,8 +40,8 @@ Rails.application.routes.draw do
     }
   end
 
-  get 'properties/archived' => 'properties#index', :view => "archived"
-  get 'properties/all' => 'properties#index', :view => "all"
+  get 'properties/archived' => 'properties#index', :view => "archived", as: 'archived_properties'
+  get 'properties/all' => 'properties#index', :view => "all", as: 'all_properties'
   patch 'properties/:id/archive' => 'properties#archive'
   patch 'properties/:id/unarchive' => 'properties#unarchive'
   resources :properties do

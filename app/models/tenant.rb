@@ -13,4 +13,12 @@ class Tenant < ActiveRecord::Base
 
   validates_format_of :phone_num, :with => /\A\+*[-()0-9\. x]+\z/, allow_blank: true
   validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, allow_blank: true
+
+  def self.archived
+    return Tenant.all.where(archived: true)
+  end
+
+  def self.current
+    return Tenant.all.where(archived: false)
+  end
 end

@@ -1,11 +1,14 @@
 class TenantsController < ApplicationController
   def index
     if params[:view].nil?
-      @tenants = Tenant.all.where(archived: false)
+      @tenants = Tenant.current
+      @desc = "Current"
     elsif params[:view] == "archived"
-      @tenants = Tenant.all.where(archived: true)
+      @tenants = Tenant.archived
+      @desc = "Archived"
     else
       @tenants = Tenant.all
+      @desc = "All"
     end
   end
 
@@ -39,9 +42,9 @@ class TenantsController < ApplicationController
     tenant.archived = true
 
     if tenant.save
-      redirect_to tenants_path(:view => 'archived'), notice: "Archived tenant: <b>'#{tenant.name}'</b>."
+      redirect_to archived_tenants_path, notice: "Archived tenant: <b>'#{tenant.name}'</b>."
     else
-      redirect_to tenants_path(:view => 'all'), notice: "Failed to archive tenant: <b>'#{tenant.name}'</b>: #{tenant.errors.full_messages.to_sentence}"
+      redirect_to all_tenants_path, notice: "Failed to archive tenant: <b>'#{tenant.name}'</b>: #{tenant.errors.full_messages.to_sentence}"
     end
   end
 
@@ -51,9 +54,9 @@ class TenantsController < ApplicationController
     tenant.archived = false
 
     if tenant.save
-      redirect_to tenants_path(:view => 'all'), notice: "Restored tenant to main tenants list: <b>'#{tenant.name}'</b>."
+      redirect_to all_tenants_path, notice: "Restored tenant to main tenants list: <b>'#{tenant.name}'</b>."
     else
-      redirect_to tenants_path(:view => 'all'), notice: "Failed to restore tenant to main tenants list: <b>'#{tenant.name}'</b>: #{tenant.errors.full_messages.to_sentence}"
+      redirect_to all_tenants_path, notice: "Failed to restore tenant to main tenants list: <b>'#{tenant.name}'</b>: #{tenant.errors.full_messages.to_sentence}"
     end
   end
 

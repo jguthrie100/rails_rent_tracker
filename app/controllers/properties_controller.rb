@@ -1,11 +1,14 @@
 class PropertiesController < ApplicationController
   def index
     if params[:view].nil?
-      @properties = Property.all.where(archived: false)
+      @properties = Property.current
+      @desc = "Current"
     elsif params[:view] == "archived"
-      @properties = Property.all.where(archived: true)
+      @properties = Property.archived
+      @desc = "Archived"
     else
       @properties = Property.all
+      @desc = "All"
     end
   end
 
@@ -33,9 +36,9 @@ class PropertiesController < ApplicationController
     property.archived = true
 
     if property.save
-      redirect_to properties_path(:view => 'archived'), notice: "Archived property: <b>'#{property.name}'</b>."
+      redirect_to archived_properties_path, notice: "Archived property: <b>'#{property.name}'</b>."
     else
-      redirect_to properties_path(:view => 'all'), notice: "Failed to archive property: <b>'#{property.name}'</b>: #{property.errors.full_messages.to_sentence}"
+      redirect_to all_properties_path, notice: "Failed to archive property: <b>'#{property.name}'</b>: #{property.errors.full_messages.to_sentence}"
     end
   end
 
@@ -45,9 +48,9 @@ class PropertiesController < ApplicationController
     property.archived = false
 
     if property.save
-      redirect_to properties_path(:view => 'all'), notice: "Restored property to main properties list: <b>'#{property.name}'</b>."
+      redirect_to all_properties_path, notice: "Restored property to main properties list: <b>'#{property.name}'</b>."
     else
-      redirect_to properties_path(:view => 'all'), notice: "Failed to restore property to main properties list: <b>'#{property.name}'</b>: #{property.errors.full_messages.to_sentence}"
+      redirect_to all_properties_path, notice: "Failed to restore property to main properties list: <b>'#{property.name}'</b>: #{property.errors.full_messages.to_sentence}"
     end
   end
 
