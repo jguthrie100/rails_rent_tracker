@@ -1,5 +1,5 @@
 class ValidDateRangeValidator < ActiveModel::Validator
-   def validate(record)
+  def validate(record)
 
     # Specify the model (i.e. 'property' or 'tenant') to only compare dates with a specific tenant or property,
     #  rather than all tenants or properties (i.e. different tenants can have overlapping date ranges)

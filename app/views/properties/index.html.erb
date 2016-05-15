@@ -49,8 +49,12 @@
               <%# Save button %>
               <button id="save_btn_<%= property.id %>" class="fa fa-floppy-o btn btn-primary disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" disabled></button>
 
-              <%# Delete button (w/ confirm message) %>
-              <%= link_to "", {:controller => :properties, :action => 'archive', :id => property.id }, :method => :patch, class: "fa fa-trash btn btn-danger", data: { confirm: "Are you sure you want to archive property '#{property.name.upcase}' and remove it from your current list of properties? (This change can be reversed later..)" } %>
+              <%# Archive/Unarchive button (w/ confirm message) %>
+              <% if !property.archived %>
+                <%= link_to "", {:controller => :properties, :action => 'archive', :id => property.id }, :method => :patch, class: "fa fa-minus-square btn btn-danger", data: { confirm: "Are you sure you want to archive property '#{property.name.upcase}' and remove it from your current list of properties? (This change can be reversed later..)" } %>
+              <% else %>
+                <%= link_to "", {:controller => :properties, :action => 'unarchive', :id => property.id }, :method => :patch, class: "fa fa-plus-square btn btn-warning", data: { confirm: "Are you sure you want to restore property '#{property.name.upcase}' and add them to your list of current properties? (This change can be reversed later..)" } %>
+              <% end %>
             </td>
           </tr>
         <% end %>

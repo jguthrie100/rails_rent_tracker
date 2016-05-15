@@ -39,9 +39,21 @@ class TenantsController < ApplicationController
     tenant.archived = true
 
     if tenant.save
-      redirect_to tenants_path, notice: "Archived tenant: <b>'#{tenant.name}'</b>."
+      redirect_to tenants_path(:view => 'archived'), notice: "Archived tenant: <b>'#{tenant.name}'</b>."
     else
-      redirect_to tenants_path, notice: "Failed to archive tenant: <b>'#{tenant.name}'</b> from the database: #{tenant.errors.full_messages.to_sentence}"
+      redirect_to tenants_path(:view => 'all'), notice: "Failed to archive tenant: <b>'#{tenant.name}'</b>: #{tenant.errors.full_messages.to_sentence}"
+    end
+  end
+
+  def unarchive
+    tenant = Tenant.find(params[:id])
+
+    tenant.archived = false
+
+    if tenant.save
+      redirect_to tenants_path(:view => 'all'), notice: "Restored tenant to main tenants list: <b>'#{tenant.name}'</b>."
+    else
+      redirect_to tenants_path(:view => 'all'), notice: "Failed to restore tenant to main tenants list: <b>'#{tenant.name}'</b>: #{tenant.errors.full_messages.to_sentence}"
     end
   end
 

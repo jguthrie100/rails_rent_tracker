@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   get 'tenants/archived' => 'tenants#index', :view => "archived"
   get 'tenants/all' => 'tenants#index', :view => "all"
   patch 'tenants/:id/archive' => 'tenants#archive'
+  patch 'tenants/:id/unarchive' => 'tenants#unarchive'
   resources :tenants do
     resources :tenant_snapshots
     collection {
@@ -42,6 +43,7 @@ Rails.application.routes.draw do
   get 'properties/archived' => 'properties#index', :view => "archived"
   get 'properties/all' => 'properties#index', :view => "all"
   patch 'properties/:id/archive' => 'properties#archive'
+  patch 'properties/:id/unarchive' => 'properties#unarchive'
   resources :properties do
     resources :property_snapshots
     collection {

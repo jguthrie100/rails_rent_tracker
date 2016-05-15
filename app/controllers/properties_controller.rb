@@ -33,9 +33,21 @@ class PropertiesController < ApplicationController
     property.archived = true
 
     if property.save
-      redirect_to properties_path, notice: "Archived property: <b>'#{property.name}'</b>."
+      redirect_to properties_path(:view => 'archived'), notice: "Archived property: <b>'#{property.name}'</b>."
     else
-      redirect_to properties_path, notice: "Failed to archive property: <b>'#{property.name}'</b>: #{property.errors.full_messages.to_sentence}"
+      redirect_to properties_path(:view => 'all'), notice: "Failed to archive property: <b>'#{property.name}'</b>: #{property.errors.full_messages.to_sentence}"
+    end
+  end
+
+  def unarchive
+    property = Property.find(params[:id])
+
+    property.archived = false
+
+    if property.save
+      redirect_to properties_path(:view => 'all'), notice: "Restored property to main properties list: <b>'#{property.name}'</b>."
+    else
+      redirect_to properties_path(:view => 'all'), notice: "Failed to restore property to main properties list: <b>'#{property.name}'</b>: #{property.errors.full_messages.to_sentence}"
     end
   end
 
