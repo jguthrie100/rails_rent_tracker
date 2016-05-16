@@ -36,8 +36,6 @@ class PropertiesController < ApplicationController
     property.archived = true
 
     if property.save
-      # Using HTTP_REFERER, because we don't know if the page we came from is properties/all or properties/archived etc
-      # split('?')[0] gets rid of the query string and just goes back to the vanilla page
       redirect_to back_address(""), notice: "Archived property: <b>'#{property.name}'</b>."
     else
       redirect_to back_address(""), notice: "Failed to archive property: <b>'#{property.name}'</b>: #{property.errors.full_messages.to_sentence}"
@@ -108,6 +106,10 @@ class PropertiesController < ApplicationController
   end
 
   # returns address that request came from, either with or without params included
+  # Using HTTP_REFERER, because we don't know if the page we came from is properties/all or properties/archived etc
+  # split('?')[0] gets rid of the query string and just goes back to the vanilla page
+  # :back returns to the previous page, but includes the full query string :(
+  # --- can't think of a better way to do this than this way, despite how long winded it seems!
   def back_address param_string
     !param_string.blank? ? (return "#{request.env['HTTP_REFERER']}?#{param_string}") : (return request.env['HTTP_REFERER'].split('?')[0])
   end

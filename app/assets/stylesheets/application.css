@@ -26,7 +26,9 @@ a {
 .display {
 	visibility: visible;
 }
-.property_row, .tenant_row {
+.property_row,
+.tenant_row,
+.transaction_row {
 	font-size: 11px;
 }
 .archived {

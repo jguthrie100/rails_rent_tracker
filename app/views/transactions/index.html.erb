@@ -24,7 +24,7 @@
     <%= form_for :transaction, :url => update_multiple_transactions_path, :method => "put" do |form| %>
       <% @transactions.each do |transaction| %>
         <%= fields_for "transactions[]", transaction do |transaction_form| %>
-          <tr id="transaction_row_<%= transaction.id %>" class="transaction_row" style="font-size: 11px">
+          <tr id="transaction_row_<%= transaction.id %>" class="transaction_row">
             <% is_updated_id = "transactions_" + transaction.id.to_s + "_is_updated" %>
             <td>
               <%# Checkbox %>
