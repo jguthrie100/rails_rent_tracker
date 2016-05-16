@@ -34,7 +34,7 @@
             <td>
               <%# Tenant name (w/ link) / Tenant drop down box %>
               <%= transaction.tenant.nil? ? "" : link_to(transaction.tenant.name, tenant_path(transaction.tenant), class: "display") %><br />
-              <%= transaction_form.collection_select(:tenant_id, Tenant.all, :id, :name, { include_blank: true}, class: "edit", style: "visibility:hidden", :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %>
+              <%= transaction_form.collection_select(:tenant_id, Tenant.all, :id, :name, { include_blank: true}, class: "edit", :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %>
 
             </td>
             <td><%= transaction.bank_account_id %></td>
@@ -64,40 +64,3 @@
   <%= submit_tag "Import CSV file" %>
 <% end %>
 <br />
-
-<script>
-
-// Method that gets called everytime a checkbox is selected
-function toggle_edit(id) {
-  if ( $("#checkbox_" + id).prop("checked") ) {
-    // WHEN A ROW IS SELECTED..
-
-    // Enable save button
-    $("#save_btn_" + id).removeClass("disabled")
-                        .prop("disabled", false);
-
-    // Hide the display fields and display the edit fields
-    $(".display", "#transaction_row_" + id).css("visibility", "hidden");
-    $(".edit", "#transaction_row_" + id).css("visibility", "visible");
-
-    // Fade out unselected rows and disable the checkboxes
-    $(".transaction_row:not(#transaction_row_" + id + ")").css("opacity", "0.5");
-    $(".checkbox:not(#checkbox_" + id + ")").prop("disabled", true);
-
-  } else {
-    // WHEN A ROW IS DESELECTED..
-
-    // Disable the save button
-    $("#save_btn_" + id).addClass("disabled")
-                        .prop("disabled", true);
-
-    // Display the display fields and hide the edit fields
-    $(".display", "#transaction_row_" + id).css("visibility", "visible");
-    $(".edit", "#transaction_row_" + id).css("visibility", "hidden");
-
-    // Fade back in all rows and enable the checkboxes
-    $(".transaction_row").css("opacity", "1");
-    $(".checkbox").prop("disabled", false);
-  }
-}
-</script>

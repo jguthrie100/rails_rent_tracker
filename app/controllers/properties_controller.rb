@@ -90,6 +90,7 @@ class PropertiesController < ApplicationController
         if property.update_attributes(allowed_params(p_id))
           updated_rows += 1
         else
+          byebug
           error_str += ": " + property.name + " - " + property.errors.full_messages.to_sentence
           failed_edits[p_id] = values
           failed_edits[p_id]['errors'] = property.errors.keys.map(&:to_s)
@@ -103,14 +104,5 @@ class PropertiesController < ApplicationController
   private
   def allowed_params(p_id)
     params.require(:properties).require(p_id).permit(:name, :address, :archived)
-  end
-
-  # returns address that request came from, either with or without params included
-  # Using HTTP_REFERER, because we don't know if the page we came from is properties/all or properties/archived etc
-  # split('?')[0] gets rid of the query string and just goes back to the vanilla page
-  # :back returns to the previous page, but includes the full query string :(
-  # --- can't think of a better way to do this than this way, despite how long winded it seems!
-  def back_address param_string
-    !param_string.blank? ? (return "#{request.env['HTTP_REFERER']}?#{param_string}") : (return request.env['HTTP_REFERER'].split('?')[0])
   end
 end

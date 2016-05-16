@@ -116,65 +116,6 @@
 
 <script>
 
-// On load we want to select the error'd rows and highlight the fields that raised an error
-$(document).ready(function() {
-  $(".edit").prop("disabled", true);
+<%= on_ready_jquery "property", failed_edits %>
 
-//  <%# Select row that failed to update/be saved %>
-  <% failed_edits.keys.each do |tenant_id| %>
-    <% tenant_id.is_a?(String) ? (tenant_id_s = "'#{tenant_id}'".html_safe) : (tenant_id_s = tenant_id) %>
-    $("#checkbox_" + <%= tenant_id_s %>).prop("checked", true);
-    toggle_edit(<%= tenant_id_s %>);
-
-//    <%# Highlight the attributes that were the reason for the error %>
-    <% failed_edits[tenant_id].keys.each do |attr| %>
-      <% next unless failed_edits[tenant_id][:errors].include? attr %>
-      $(".<%= attr %>.edit", "#tenant_row_" + <%= tenant_id_s %>).addClass('error');
-    <% end %>
-  <% end %>
-});
-
-// Method that gets called everytime a checkbox is selected
-function toggle_edit(id) {
-  if ( $("#checkbox_" + id).prop("checked") ) {
-    // WHEN A ROW IS SELECTED..
-
-    // Enable the Save button
-    $("#save_btn_" + id).removeClass("disabled")
-                        .prop("disabled", false);
-
-    // Hide all the display fields and show and enable all the edit fields
-    $(".display", "#tenant_row_" + id).css("visibility", "hidden");
-    $(".edit", "#tenant_row_" + id).prop("disabled", false);
-    $(".edit", "#tenant_row_" + id).css("visibility", "visible");
-
-    // Fade out the unselected rows and disable the checkboxes on them
-    $(".tenant_row:not(#tenant_row_" + id + ")").css("opacity", "0.5");
-    $(".checkbox:not(#checkbox_" + id + ")").prop("disabled", true);
-
-    // Handles archived rows to remove special formatting when editing
-    $("#tenant_row_" + id).removeClass("archived");
-    $("#tenant_row_" + id).css("opacity", 1);
-
-  } else {
-    // WHEN A ROW IS DESELECTED..
-
-    // Disable save button
-    $("#save_btn_" + id).addClass("disabled")
-                        .prop("disabled", true);
-
-    // Hide and disable all the edit fields and display the display fields
-    $(".edit", "#tenant_row_" + id).prop("disabled", true);
-    $(".edit", "#tenant_row_" + id).css("visibility", "hidden");
-    $(".display", "#tenant_row_" + id).css("visibility", "visible");
-
-    // Fade all the other rows back in and enable all the checkboxes
-    $(".tenant_row").css("opacity", "1");
-    $(".checkbox").prop("disabled", false);
-
-    // Handles archived rows to return special formatting once editing is finished
-    $("#tenant_row_" + id).addClass("archived");
-    $(".archived").css("opacity", 0.7);
-  }
-}
 </script>
