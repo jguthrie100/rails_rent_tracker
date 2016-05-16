@@ -1,14 +1,6 @@
-<style type="text/css">
-  .edit {
-    visibility: hidden;
-  }
-  .display {
-    visibility: visible;
-  }
-</style>
-
 <% failed_edits = Hash.new %>
-<h3 class="text-primary">List of <%= @desc %> Tenants</h3>
+<h3 class="text-primary">List of <%= @desc %> Tenants&nbsp;&nbsp;
+  <span style="font-size: 12px;">&bull; view: <%= link_to("all", all_tenants_path) %> | <%= link_to("current", tenants_path) %> | <%= link_to("archived", archived_tenants_path) %></span></h3>
 <table class="table table-hover table-condensed table-striped">
   <thead>
     <tr>
@@ -18,6 +10,7 @@
       <th>Phone Number</th>
       <th>Email</th>
       <th>Property</th>
+      <th>&nbsp;</th>
       <th>&nbsp;</th>
     </tr>
   </thead>
@@ -30,7 +23,8 @@
         <% (!params.nil? && params[tenant.id.to_s]) ? (failed_edits[tenant.id] = params[tenant.id.to_s]) : "" %>
 
         <%= fields_for "tenants[]", tenant do |tenant_form| %>
-          <tr id="tenant_row_<%= tenant.id %>" class="tenant_row" style="font-size: 11px">
+          <% archived = " archived" if tenant.archived && @desc == "All" %>
+          <tr id="tenant_row_<%= tenant.id %>" class="tenant_row<%= archived %>">
             <td>
               <%# Checkbox %>
               <input id="checkbox_<%= tenant.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= tenant.id %>)">
@@ -62,6 +56,9 @@
               %>
             </td>
             <td>
+              <%= tenant.archived ? "<b>- ARCHIVED -</b>".html_safe : "" %>
+            </td>
+            <td>
               <% is_updated_id = "tenants_" + tenant.id.to_s + "_is_updated" %>
               <%= tenant_form.hidden_field(:is_updated, :value => 'false') %>
 
@@ -82,7 +79,7 @@
         <%# Create final row with a form to add a new Tenant to the inventory %>
         <%= form_tag(tenants_path) do %>
           <% (!params.nil? && params['new']) ? (failed_edits['new'] = params['new']) : "" %>
-          <tr id="tenant_row_new" class="tenant_row" style="font-size: 11px">
+          <tr id="tenant_row_new" class="tenant_row">
             <td>
               <%# Checkbox %>
               <input id="checkbox_new" class="checkbox" type="checkbox" onchange="toggle_edit('new')" />
@@ -107,6 +104,7 @@
               <%# Tenant's rental property dropdown selection box' %>
               <%= collection_select(:tenant, :property_id, Property.all, :id, :name, {include_blank: true, selected: (failed_edits['new'] ? failed_edits['new'][:property_id].to_i : '')}, class: "display edit property_id") %>
             </td>
+            <td></td>
             <td>
               <%# Save button %>
               <button id="save_btn_new" class="fa fa-floppy-o btn btn-sm btn-primary disabled" disabled></button>
@@ -131,7 +129,7 @@ $(document).ready(function() {
 //    <%# Highlight the attributes that were the reason for the error %>
     <% failed_edits[tenant_id].keys.each do |attr| %>
       <% next unless failed_edits[tenant_id][:errors].include? attr %>
-      $(".<%= attr %>.edit", "#tenant_row_" + <%= tenant_id_s %>).css("background-color", "rgba(255,0,0,0.5)");
+      $(".<%= attr %>.edit", "#tenant_row_" + <%= tenant_id_s %>).addClass('error');
     <% end %>
   <% end %>
 });
@@ -154,6 +152,10 @@ function toggle_edit(id) {
     $(".tenant_row:not(#tenant_row_" + id + ")").css("opacity", "0.5");
     $(".checkbox:not(#checkbox_" + id + ")").prop("disabled", true);
 
+    // Handles archived rows to remove special formatting when editing
+    $("#tenant_row_" + id).removeClass("archived");
+    $("#tenant_row_" + id).css("opacity", 1);
+
   } else {
     // WHEN A ROW IS DESELECTED..
 
@@ -169,6 +171,10 @@ function toggle_edit(id) {
     // Fade all the other rows back in and enable all the checkboxes
     $(".tenant_row").css("opacity", "1");
     $(".checkbox").prop("disabled", false);
+
+    // Handles archived rows to return special formatting once editing is finished
+    $("#tenant_row_" + id).addClass("archived");
+    $(".archived").css("opacity", 0.7);
   }
 }
 </script>

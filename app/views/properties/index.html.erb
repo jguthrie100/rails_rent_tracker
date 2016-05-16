@@ -1,20 +1,13 @@
-<style type="text/css">
-  .edit {
-    visibility: hidden;
-  }
-  .display {
-    visibility: visible;
-  }
-</style>
-
 <% failed_edits = Hash.new %>
-<h3 class="text-primary">List of <%= @desc %> Properties</h3>
+<h3 class="text-primary">List of <%= @desc %> Properties&nbsp;&nbsp;
+  <span style="font-size: 12px;">&bull; view: <%= link_to("all", all_properties_path) %> | <%= link_to("current", properties_path) %> | <%= link_to("archived", archived_properties_path) %></span></h3>
 <table class="table table-hover table-condensed table-striped">
   <thead>
     <tr>
       <th>&nbsp;</th>
       <th>Property Name</th>
       <th>Address</th>
+      <th>&nbsp;</th>
       <th>&nbsp;</th>
     </tr>
   </thead>
@@ -27,7 +20,8 @@
         <% (!params.nil? && params[property.id.to_s]) ? (failed_edits[property.id] = params[property.id.to_s]) : "" %>
 
         <%= fields_for "properties[]", property do |property_form| %>
-          <tr id="property_row_<%= property.id %>" class="property_row" style="font-size: 11px">
+          <% archived = " archived" if property.archived && @desc == "All" %>
+          <tr id="property_row_<%= property.id %>" class="property_row<%= archived %>">
             <td>
               <%# Checkbox %>
               <input id="checkbox_<%= property.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= property.id %>)" />
@@ -39,8 +33,11 @@
             </td>
             <td>
               <%# Property address (w/ map link) / Property address edit field %>
-              <span class="display name"><%= property.address %> - <%= link_to("[map]", "http://www.google.com/maps/search/#{property.address}", :target => "_blank") %></span><br />
-              <%= property_form.text_field(:address, class: "edit name", size: 100, value: "#{failed_edits[property.id] ? failed_edits[property.id][:address] : property.address}") %>
+              <span class="display address"><%= property.address %> - <%= link_to("[map]", "http://www.google.com/maps/search/#{property.address}", :target => "_blank") %></span><br />
+              <%= property_form.text_field(:address, class: "edit address", size: 100, value: "#{failed_edits[property.id] ? failed_edits[property.id][:address] : property.address}") %>
+            </td>
+            <td>
+              <%= property.archived ? "<b>- ARCHIVED -</b>".html_safe : "" %>
             </td>
             <td>
               <% is_updated_id = "properties_" + property.id.to_s + "_is_updated" %>
@@ -63,7 +60,7 @@
         <%# Create final row with a form to add a new Property to the inventory %>
         <%= form_tag(properties_path) do %>
           <% (!params.nil? && params['new']) ? (failed_edits['new'] = params['new']) : "" %>
-          <tr id="property_row_new" class="property_row" style="font-size: 11px">
+          <tr id="property_row_new" class="property_row">
             <td>
               <%# Checkbox %>
               <input id="checkbox_new" class="checkbox new_property" type="checkbox" onchange="toggle_edit('new')" />
@@ -76,6 +73,7 @@
               <%# Property address edit field %>
               <%= text_field(:property, :address, :size => 100, disabled: "true", class: "display edit address", value: "#{failed_edits['new'] ? failed_edits['new'][:address] : ''}") %>
             </td>
+            <td></td>
             <td>
               <%# Save button %>
               <button id="save_btn_new" class="fa fa-floppy-o btn btn-primary disabled new_property" disabled></button>
@@ -100,7 +98,7 @@ $(document).ready(function() {
 //    <%# Highlight the attributes that were the reason for the error %>
     <% failed_edits[property_id].keys.each do |attr| %>
       <% next unless failed_edits[property_id][:errors].include? attr %>
-      $(".<%= attr %>.edit", "#property_row_" + <%= property_id_s %>).css("background-color", "rgba(255,0,0,0.5)");
+      $(".<%= attr %>.edit", "#property_row_" + <%= property_id_s %>).addClass('error');
     <% end %>
   <% end %>
 });
@@ -123,6 +121,10 @@ function toggle_edit(id) {
     $(".property_row:not(#property_row_" + id + ")").css("opacity", "0.5");
     $(".checkbox:not(#checkbox_" + id + ")").prop("disabled", true);
 
+    // Handles archived rows to remove special formatting when editing
+    $("#property_row_" + id).removeClass("archived");
+    $("#property_row_" + id).css("opacity", 1);
+
   } else {
     // WHEN A ROW IS DESELECTED..
 
@@ -138,6 +140,10 @@ function toggle_edit(id) {
     // Fade all the other rows back in and enable all the checkboxes
     $(".property_row").css("opacity", "1");
     $(".checkbox").prop("disabled", false);
+
+    // Handles archived rows to return special formatting once editing is finished
+    $("#property_row_" + id).addClass("archived");
+    $(".archived").css("opacity", 0.7);
   }
 }
 </script>
