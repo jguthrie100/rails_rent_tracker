@@ -9,7 +9,7 @@ module ApplicationHelper
 
     # Automatically select and highlight row that failed to update/be saved and threw the error
     failed_edits.keys.each do |record_id|
-      record_id.is_a?(String) ? (record_id_s = "'#{record_id}'".html_safe) : (record_id_s = record_id.to_s)
+      record_id.is_a?(String) ? (record_id_s = "'#{record_id}'") : (record_id_s = record_id.to_s)
 
       output << '  $("#checkbox_" + ' << record_id_s << ').prop("checked", true);' << "\n"
       output << '  toggle_edit(' << record_id_s << ');' << "\n"

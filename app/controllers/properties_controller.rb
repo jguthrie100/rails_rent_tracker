@@ -90,7 +90,6 @@ class PropertiesController < ApplicationController
         if property.update_attributes(allowed_params(p_id))
           updated_rows += 1
         else
-          byebug
           error_str += ": " + property.name + " - " + property.errors.full_messages.to_sentence
           failed_edits[p_id] = values
           failed_edits[p_id]['errors'] = property.errors.keys.map(&:to_s)
