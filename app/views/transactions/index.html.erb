@@ -47,7 +47,7 @@
             <td>
               <%# Hidden 'is_updated' field and Save button %>
               <%= transaction_form.hidden_field(:is_updated, :value => 'false') %>
-              <button id="save_btn_<%= transaction.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" disabled></button>
+              <button id="save_btn_<%= transaction.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" title="Save changes" disabled></button>
             </td>
           </tr>
         <% end %>
