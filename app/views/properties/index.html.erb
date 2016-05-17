@@ -48,9 +48,9 @@
 
               <%# Archive/Unarchive button (w/ confirm message) %>
               <% if !property.archived %>
-                <%= link_to "", {:controller => :properties, :action => 'archive', :id => property.id }, :method => :patch, class: "fa fa-minus-square btn btn-danger", title: "Archive Property", data: { confirm: "Are you sure you want to archive property '#{property.name.upcase}' and remove it from your current list of properties? (This change can be reversed later..)" } %>
+                <%= link_to "", {:controller => :properties, :action => 'archive', :id => property.id }, :method => :patch, class: "fa fa-minus-square btn btn-danger", title: "Archive property", data: { confirm: "Are you sure you want to archive property '#{property.name.upcase}' and remove it from your current list of properties? (This change can be reversed later..)" } %>
               <% else %>
-                <%= link_to "", {:controller => :properties, :action => 'unarchive', :id => property.id }, :method => :patch, class: "fa fa-plus-square btn btn-warning", title: "Restore Property", data: { confirm: "Are you sure you want to restore property '#{property.name.upcase}' and add it to your list of current properties? (This change can be reversed later..)" } %>
+                <%= link_to "", {:controller => :properties, :action => 'unarchive', :id => property.id }, :method => :patch, class: "fa fa-plus-square btn btn-warning", title: "Restore property", data: { confirm: "Are you sure you want to restore property '#{property.name.upcase}' and add it to your list of current properties? (This change can be reversed later..)" } %>
               <% end %>
             </td>
           </tr>
@@ -76,7 +76,7 @@
             <td></td>
             <td>
               <%# Save button %>
-              <button id="save_btn_new" class="fa fa-floppy-o btn btn-primary disabled new_property" title="Save New Property" disabled></button>
+              <button id="save_btn_new" class="fa fa-floppy-o btn btn-primary disabled new_property" title="Save new property" disabled></button>
             </td>
           </tr>
         <% end %>

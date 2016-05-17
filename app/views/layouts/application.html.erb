@@ -6,13 +6,21 @@
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
 </head>
 
 <body data-no-turbolink="true">
   <div class="container-fluid">
-    <%= "<p>#{flash[:notice]}</p>".html_safe if flash[:notice] %>
+
+    <% if flash[:notice] %>
+      <% flash[:notice].start_with?('<strong>Error:</strong>') ? (alert_type = "alert-danger") : (alert_type = "alert-success") %>
+      <div class="alert <%= alert_type %>">
+        <a onclick="javascript:$('.alert').slideUp('slow')" class="close" aria-label="close">&times;</a>
+        <%= flash[:notice].html_safe %>
+      </div>
+    <% end %>
 
     <%= link_to("Transactions", transactions_path) %> |
     <%= link_to("Tenants", tenants_path) %> |

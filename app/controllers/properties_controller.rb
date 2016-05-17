@@ -24,9 +24,9 @@ class PropertiesController < ApplicationController
     property = Property.find(params[:id])
 
     if property.destroy
-      redirect_to back_address(""), notice: "Deleted property: <b>'#{property.name}'</b> from the database"
+      redirect_to back_address(""), notice: "Deleted property: <strong>'#{property.name}'</strong> from the database"
     else
-      redirect_to back_address(""), notice: "Failed to delete property: <b>'#{property.name}'</b> from the database: #{property.errors.full_messages.to_sentence}"
+      redirect_to back_address(""), notice: "<strong>Error:</strong> Failed to delete property: <strong>'#{property.name}'</strong> from the database: #{property.errors.full_messages.to_sentence}"
     end
   end
 
@@ -36,9 +36,9 @@ class PropertiesController < ApplicationController
     property.archived = true
 
     if property.save
-      redirect_to back_address(""), notice: "Archived property: <b>'#{property.name}'</b>."
+      redirect_to back_address(""), notice: "Archived property: <strong>'#{property.name}'</strong>."
     else
-      redirect_to back_address(""), notice: "Failed to archive property: <b>'#{property.name}'</b>: #{property.errors.full_messages.to_sentence}"
+      redirect_to back_address(""), notice: "<strong>Error:</strong> Failed to archive property: <strong>'#{property.name}'</strong>: #{property.errors.full_messages.to_sentence}"
     end
   end
 
@@ -48,9 +48,9 @@ class PropertiesController < ApplicationController
     property.archived = false
 
     if property.save
-      redirect_to back_address(""), notice: "Restored property to main properties list: <b>'#{property.name}'</b>."
+      redirect_to back_address(""), notice: "Restored property: <strong>'#{property.name}'</strong> to the main properties list."
     else
-      redirect_to back_address(""), notice: "Failed to restore property to main properties list: <b>'#{property.name}'</b>: #{property.errors.full_messages.to_sentence}"
+      redirect_to back_address(""), notice: "<strong>Error:</strong> Failed to restore property: <strong>'#{property.name}'</strong> to the main properties list: #{property.errors.full_messages.to_sentence}"
     end
   end
 
@@ -62,14 +62,14 @@ class PropertiesController < ApplicationController
       h.address = p[:address]
     end
     if property.save
-      redirect_to back_address(""), notice: "Added property: <b>'#{property.name}'</b> to the database"
+      redirect_to back_address(""), notice: "Added property: <strong>'#{property.name}'</strong> to the database"
     else
       # Create 'failed_edits' hash which stores all the values from the records that failed to get saved
       failed_edits = Hash.new
       failed_edits['new'] = params[:property]
       failed_edits['new']['errors'] = property.errors.keys.map(&:to_s)
 
-      redirect_to back_address(failed_edits.to_param), notice: "Failed to add property: <b>'#{property.name}'</b> to the database: #{property.errors.full_messages.to_sentence}"
+      redirect_to back_address(failed_edits.to_param), notice: "<strong>Error:</strong> Failed to add property: <strong>'#{property.name}'</strong> to the database: #{property.errors.full_messages.to_sentence}"
     end
   end
 
@@ -96,7 +96,8 @@ class PropertiesController < ApplicationController
         end
       end
     end
-    redirect_to back_address(failed_edits.to_param), :notice => "Updated <b>#{updated_rows}</b> row(s)" + error_str
+    updated_rows == 0 && !error_str.blank? ? (is_error = "<strong>Error:</strong> ") : ""
+    redirect_to back_address(failed_edits.to_param), :notice => "#{is_error}Updated <strong>#{updated_rows}</strong> row(s)" + error_str
   end
 
   # Private method that sets Strong Parameter permissions

@@ -67,9 +67,9 @@
 
               <%# Archive/Unarchive button, with confirmation %>
               <% if !tenant.archived %>
-                <%= link_to "", {:controller => :tenants, :action => 'archive', :id => tenant.id }, :method => :patch, class: "fa fa-minus-square btn btn-danger", title: "Archive Tenant", data: { confirm: "Are you sure you want to archive tenant '#{tenant.name.upcase}' and remove them from your list of current Tenants? (This change can be reversed later..)" } %>
+                <%= link_to "", {:controller => :tenants, :action => 'archive', :id => tenant.id }, :method => :patch, class: "fa fa-minus-square btn btn-danger", title: "Archive tenant", data: { confirm: "Are you sure you want to archive tenant '#{tenant.name.upcase}' and remove them from your list of current Tenants? (This change can be reversed later..)" } %>
               <% else %>
-                <%= link_to "", {:controller => :tenants, :action => 'unarchive', :id => tenant.id }, :method => :patch, class: "fa fa-plus-square btn btn-warning", title: "Restore Tenant", data: { confirm: "Are you sure you want to restore tenant '#{tenant.name.upcase}' and add them to your list of current tenants? (This change can be reversed later..)" } %>
+                <%= link_to "", {:controller => :tenants, :action => 'unarchive', :id => tenant.id }, :method => :patch, class: "fa fa-plus-square btn btn-warning", title: "Restore tenant", data: { confirm: "Are you sure you want to restore tenant '#{tenant.name.upcase}' and add them to your list of current tenants? (This change can be reversed later..)" } %>
               <% end %>
             </td>
           </tr>
@@ -107,7 +107,7 @@
             <td></td>
             <td>
               <%# Save button %>
-              <button id="save_btn_new" class="fa fa-floppy-o btn btn-sm btn-primary disabled" title="Save New Tenant" disabled></button>
+              <button id="save_btn_new" class="fa fa-floppy-o btn btn-sm btn-primary disabled" title="Save new tenant" disabled></button>
             </td>
           </tr>
         <% end %>

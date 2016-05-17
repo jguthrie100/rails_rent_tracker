@@ -30,9 +30,9 @@ class TenantsController < ApplicationController
     tenant = Tenant.find(params[:id])
 
     if tenant.destroy
-      redirect_to back_address(""), notice: "Deleted tenant: <b>'#{tenant.name}'</b> from the database"
+      redirect_to back_address(""), notice: "Deleted tenant: <strong>'#{tenant.name}'</strong> from the database"
     else
-      redirect_to back_address(""), notice: "Failed to delete tenant: <b>'#{tenant.name}'</b> from the database: #{tenant.errors.full_messages.to_sentence}"
+      redirect_to back_address(""), notice: "<strong>Error:</strong> Failed to delete tenant: <strong>'#{tenant.name}'</strong> from the database: #{tenant.errors.full_messages.to_sentence}"
     end
   end
 
@@ -42,9 +42,9 @@ class TenantsController < ApplicationController
     tenant.archived = true
 
     if tenant.save
-      redirect_to back_address(""), notice: "Archived tenant: <b>'#{tenant.name}'</b>."
+      redirect_to back_address(""), notice: "Archived tenant: <strong>'#{tenant.name}'</strong>."
     else
-      redirect_to back_address(""), notice: "Failed to archive tenant: <b>'#{tenant.name}'</b>: #{tenant.errors.full_messages.to_sentence}"
+      redirect_to back_address(""), notice: "<strong>Error:</strong> Failed to archive tenant: <strong>'#{tenant.name}'</strong>: #{tenant.errors.full_messages.to_sentence}"
     end
   end
 
@@ -54,9 +54,9 @@ class TenantsController < ApplicationController
     tenant.archived = false
 
     if tenant.save
-      redirect_to back_address(""), notice: "Restored tenant to main tenants list: <b>'#{tenant.name}'</b>."
+      redirect_to back_address(""), notice: "Restored tenant: <strong>'#{tenant.name}'</strong> to main tenants list."
     else
-      redirect_to back_address(""), notice: "Failed to restore tenant to main tenants list: <b>'#{tenant.name}'</b>: #{tenant.errors.full_messages.to_sentence}"
+      redirect_to back_address(""), notice: "<strong>Error:</strong> Failed to restore tenant: <strong>'#{tenant.name}'</strong> to main tenants list: #{tenant.errors.full_messages.to_sentence}"
     end
   end
 
@@ -71,14 +71,14 @@ class TenantsController < ApplicationController
       t.property_id = p[:property_id]
     end
     if tenant.save
-      redirect_to back_address(""), notice: "Added tenant <b>'#{tenant.name}'</b> to the database"
+      redirect_to back_address(""), notice: "Added tenant <strong>'#{tenant.name}'</strong> to the database"
     else
       # Create 'failed_edits' hash which stores all the values from the records that failed to get saved
       failed_edits = Hash.new
       failed_edits['new'] = params[:tenant]
       failed_edits['new']['errors'] = tenant.errors.keys.map(&:to_s)
 
-      redirect_to back_address(failed_edits.to_param), notice: "Failed to add tenant <b>'#{tenant.name}'</b> to the database: #{tenant.errors.full_messages.to_sentence}"
+      redirect_to back_address(failed_edits.to_param), notice: "<strong>Error:</strong> Failed to add tenant: <strong>'#{tenant.name}'</strong> to the database: #{tenant.errors.full_messages.to_sentence}"
     end
   end
 
@@ -105,7 +105,8 @@ class TenantsController < ApplicationController
         end
       end
     end
-    redirect_to back_address(failed_edits.to_param), :notice => "Updated <b>#{updated_rows}</b> row(s)" + error_str
+    updated_rows == 0 && !error_str.blank? ? (is_error = "<strong>Error:</strong> ") : ""
+    redirect_to back_address(failed_edits.to_param), :notice => "#{is_error}Updated <strong>#{updated_rows}</strong> row(s)" + error_str
   end
 
   # Private method that sets Strong Parameter permissions
