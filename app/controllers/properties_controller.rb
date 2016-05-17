@@ -93,7 +93,7 @@ class PropertiesController < ApplicationController
     if attempted_rows == 1
       redirect_to back_address(failed_edits.to_param), notice: return_notice(property, "update")
     else
-      !error_str.blank? ? (pre_string = "<strong>Error:</strong> U") : (pre_string = "Successfully u")
+      error_str.blank? ? (pre_string = "Successfully u") : (pre_string = "<strong>Error:</strong> U")
       redirect_to back_address(failed_edits.to_param), notice: "#{pre_string}pdated <strong>#{updated_rows}/#{attempted_rows}</strong> row(s)" + error_str
     end
   end

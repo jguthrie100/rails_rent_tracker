@@ -9,38 +9,38 @@ module ControllerHelpers
   end
 
   def return_notice record, action
-    model_name = record.class.name.titleize # -> "TenantSnapshot -> Tenant Snapshot"
+    model_name = record.class.name.titleize.downcase # -> "TenantSnapshot -> tenant snapshot"
     is_error = !record.errors.messages.blank?
 
     if action == "destroy"
       if !is_error
-        return "Successfully deleted #{model_name.downcase}: <strong>'#{record.name}'</strong> from the database"
+        return "Successfully deleted #{model_name}: <strong>'#{record.name}'</strong> from the database"
       else
-        return "<strong>Error:</strong> Failed to delete #{model_name.downcase}: <strong>'#{record.name}'</strong> from the database: #{record.errors.full_messages.to_sentence}"
+        return "<strong>Error:</strong> Failed to delete #{model_name}: <strong>'#{record.name}'</strong> from the database: #{record.errors.full_messages.to_sentence}"
       end
     elsif action == "archive"
       if !is_error
-        return "Successfully archived #{model_name.downcase}: <strong>'#{record.name}'</strong>."
+        return "Successfully archived #{model_name}: <strong>'#{record.name}'</strong>."
       else
-        return "<strong>Error:</strong> Failed to archive #{model_name.downcase}: <strong>'#{record.name}'</strong>: #{record.errors.full_messages.to_sentence}"
+        return "<strong>Error:</strong> Failed to archive #{model_name}: <strong>'#{record.name}'</strong>: #{record.errors.full_messages.to_sentence}"
       end
     elsif action == "unarchive"
       if !is_error
-        return "Successfully restored #{model_name.downcase}: <strong>'#{record.name}'</strong> to the main #{model_name.downcase}s list."
+        return "Successfully restored #{model_name}: <strong>'#{record.name}'</strong> to the main #{model_name}s list."
       else
-        return "<strong>Error:</strong> Failed to restore #{model_name.downcase}: <strong>'#{record.name}'</strong> to the main #{model_name.downcase}s list: #{record.errors.full_messages.to_sentence}"
+        return "<strong>Error:</strong> Failed to restore #{model_name}: <strong>'#{record.name}'</strong> to the main #{model_name}s list: #{record.errors.full_messages.to_sentence}"
       end
     elsif action == "create"
       if !is_error
-        return "Successfully added #{model_name.downcase}: <strong>'#{record.name}'</strong> to the database"
+        return "Successfully added #{model_name}: <strong>'#{record.name}'</strong> to the database"
       else
-        return "<strong>Error:</strong> Failed to add #{model_name.downcase}: <strong>'#{record.name}'</strong> to the database: #{record.errors.full_messages.to_sentence}"
+        return "<strong>Error:</strong> Failed to add #{model_name}: <strong>'#{record.name}'</strong> to the database: #{record.errors.full_messages.to_sentence}"
       end
     elsif action == "update"
       if !is_error
-        return "Successfully updated #{model_name.downcase}: <strong>'#{record.name}'</strong>"
+        return "Successfully updated #{model_name}: <strong>'#{record.name}'</strong>"
       else
-        return "<strong>Error:</strong> Failed to update #{model_name.downcase}: <strong>'#{record.name}'</strong>: #{record.errors.full_messages.to_sentence}"
+        return "<strong>Error:</strong> Failed to update #{model_name}: <strong>'#{record.name}'</strong>: #{record.errors.full_messages.to_sentence}"
       end
     end
   end
