@@ -15,10 +15,7 @@ class PropertySnapshotsController < ApplicationController
       hs.property_id = params[:property_id]
     end
 
-    if property_snapshot.save
-      redirect_to property_path(params[:property_id]), notice: "Added Property Snapshot: <b><i>(#{property_snapshot.start_date_str} - #{property_snapshot.end_date_str})</i></b> to the database"
-    else
-      redirect_to property_path(params[:property_id]), notice: "Failed to add Property Snapshot: <b><i>(#{property_snapshot.start_date_str} - #{property_snapshot.end_date_str})</i></b> to the database: #{property_snapshot.errors.full_messages.to_sentence}"
-    end
+    property_snapshot.save
+    redirect_to property_path(params[:property_id]), notice: return_notice(property_snapshot, "create")
   end
 end

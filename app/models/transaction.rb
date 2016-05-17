@@ -2,7 +2,7 @@ require 'csv'
 
 class Transaction < ActiveRecord::Base
   include ModelHelpers
-  
+
   belongs_to :tenant
 
   validates_associated :tenant

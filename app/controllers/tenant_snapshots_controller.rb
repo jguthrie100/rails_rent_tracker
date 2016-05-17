@@ -16,10 +16,7 @@ class TenantSnapshotsController < ApplicationController
       ts.rent_paid_by = Tenant.find(p[:rent_paid_by])
     end
 
-    if tenant_snapshot.save
-      redirect_to tenant_path(params[:tenant_id]), notice: "Added Tenant Snapshot: <b><i>(#{tenant_snapshot.start_date_str} - #{tenant_snapshot.end_date_str})</b></i> to the database"
-    else
-      redirect_to tenant_path(params[:tenant_id]), notice: "Failed to add Tenant Snapshot: <b><i>(#{tenant_snapshot.start_date_str} - #{tenant_snapshot.end_date_str})</i></b> to the database: #{tenant_snapshot.errors.full_messages.to_sentence}"
-    end
+    tenant_snapshot.save
+    redirect_to tenant_path(params[:tenant_id]), notice: return_notice(tenant_snapshot, "create")
   end
 end

@@ -17,5 +17,5 @@ class TenantSnapshot < ActiveRecord::Base
   validates :weekly_rent, numericality: { greater_than_or_equal_to: 0.00,
                                           allow_blank: true }
 
-  validates_with ValidDateRangeValidator, model: "tenant"
+  validates_with SnapshotDateRangeValidator, model: "tenant"
 end

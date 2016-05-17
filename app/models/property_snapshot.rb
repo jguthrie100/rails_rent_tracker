@@ -7,5 +7,5 @@ class PropertySnapshot < ActiveRecord::Base
 
   validates :property, :start_date, presence: true
 
-  validates_with ValidDateRangeValidator, model: "property"
+  validates_with SnapshotDateRangeValidator, model: "property"
 end

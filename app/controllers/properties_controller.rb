@@ -23,11 +23,8 @@ class PropertiesController < ApplicationController
   def destroy
     property = Property.find(params[:id])
 
-    if property.destroy
-      redirect_to back_address(""), notice: "Deleted property: <strong>'#{property.name}'</strong> from the database"
-    else
-      redirect_to back_address(""), notice: "<strong>Error:</strong> Failed to delete property: <strong>'#{property.name}'</strong> from the database: #{property.errors.full_messages.to_sentence}"
-    end
+    property.destroy
+    redirect_to back_address(""), notice: return_notice(property, "destroy")
   end
 
   def archive
@@ -35,11 +32,8 @@ class PropertiesController < ApplicationController
 
     property.archived = true
 
-    if property.save
-      redirect_to back_address(""), notice: "Archived property: <strong>'#{property.name}'</strong>."
-    else
-      redirect_to back_address(""), notice: "<strong>Error:</strong> Failed to archive property: <strong>'#{property.name}'</strong>: #{property.errors.full_messages.to_sentence}"
-    end
+    property.save
+    redirect_to back_address(""), notice: return_notice(property, "archive")
   end
 
   def unarchive
@@ -47,11 +41,8 @@ class PropertiesController < ApplicationController
 
     property.archived = false
 
-    if property.save
-      redirect_to back_address(""), notice: "Restored property: <strong>'#{property.name}'</strong> to the main properties list."
-    else
-      redirect_to back_address(""), notice: "<strong>Error:</strong> Failed to restore property: <strong>'#{property.name}'</strong> to the main properties list: #{property.errors.full_messages.to_sentence}"
-    end
+    property.save
+    redirect_to back_address(""), notice: return_notice(property, "unarchive")
   end
 
   # Add new Property to DB
@@ -62,14 +53,14 @@ class PropertiesController < ApplicationController
       h.address = p[:address]
     end
     if property.save
-      redirect_to back_address(""), notice: "Added property: <strong>'#{property.name}'</strong> to the database"
+      redirect_to back_address(""), notice: return_notice(property, "create")
     else
       # Create 'failed_edits' hash which stores all the values from the records that failed to get saved
       failed_edits = Hash.new
       failed_edits['new'] = params[:property]
       failed_edits['new']['errors'] = property.errors.keys.map(&:to_s)
 
-      redirect_to back_address(failed_edits.to_param), notice: "<strong>Error:</strong> Failed to add property: <strong>'#{property.name}'</strong> to the database: #{property.errors.full_messages.to_sentence}"
+      redirect_to back_address(failed_edits.to_param), notice: return_notice(property, "create")
     end
   end
 
@@ -77,14 +68,17 @@ class PropertiesController < ApplicationController
   def update_multiple
     update_hash = params[:properties]
     failed_edits = Hash.new
+    property = ""
 
     updated_rows = 0
+    attempted_rows = 0
     error_str = ""
 
     # Loop through hash of properties
     update_hash.each do |p_id, values|
       # If the property has been tagged as being updated, then find the relevant property object and update it
       if values[:is_updated] == "true"
+        attempted_rows += 1
         property = Property.find(p_id)
 
         if property.update_attributes(allowed_params(p_id))
@@ -96,8 +90,12 @@ class PropertiesController < ApplicationController
         end
       end
     end
-    updated_rows == 0 && !error_str.blank? ? (is_error = "<strong>Error:</strong> ") : ""
-    redirect_to back_address(failed_edits.to_param), :notice => "#{is_error}Updated <strong>#{updated_rows}</strong> row(s)" + error_str
+    if attempted_rows == 1
+      redirect_to back_address(failed_edits.to_param), notice: return_notice(property, "update")
+    else
+      !error_str.blank? ? (pre_string = "<strong>Error:</strong> U") : (pre_string = "Successfully u")
+      redirect_to back_address(failed_edits.to_param), notice: "#{pre_string}pdated <strong>#{updated_rows}/#{attempted_rows}</strong> row(s)" + error_str
+    end
   end
 
   # Private method that sets Strong Parameter permissions

@@ -39,11 +39,11 @@ a {
 	background-color: rgba(255,0,0,0.5);
 }
 .alert {
+	z-index: 100;
 	width: 500px;
 	position: fixed;
 	text-align: center;
 	margin: 0 0 0 -250px;
 	top: 30px;
 	left: 50%;
-	opacity: 0.9;
 }
