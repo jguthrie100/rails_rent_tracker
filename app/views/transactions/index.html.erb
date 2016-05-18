@@ -21,9 +21,12 @@
   </thead>
   <tbody>
     <%# Create rows of Transactions %>
+    <% tenants = Tenant.all %>
     <%= form_for :transaction, :url => update_multiple_transactions_path, :method => "put" do |form| %>
       <% @transactions.each do |transaction| %>
         <%= fields_for "transactions[]", transaction do |transaction_form| %>
+
+          <%# Build row to display transaction details %>
           <tr id="transaction_row_<%= transaction.id %>" class="transaction_row">
             <% is_updated_id = "transactions_" + transaction.id.to_s + "_is_updated" %>
             <td>
@@ -34,7 +37,7 @@
             <td>
               <%# Tenant name (w/ link) / Tenant drop down box %>
               <%= transaction.tenant.nil? ? "" : link_to(transaction.tenant.name, tenant_path(transaction.tenant), class: "display") %><br />
-              <%= transaction_form.collection_select(:tenant_id, Tenant.all, :id, :name, { include_blank: true}, class: "edit", :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %>
+              <%= transaction_form.collection_select(:tenant_id, tenants, :id, :name, { include_blank: true}, class: "edit", :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %>
 
             </td>
             <td><%= transaction.bank_account_id %></td>
@@ -45,7 +48,7 @@
             <td><%= transaction.memo %></td>
             <td><%= transaction.amount_str %></td>
             <td>
-              <%# Hidden 'is_updated' field and Save button %>
+              <%# is_updated flag gets set to true when a row is updated %>
               <%= transaction_form.hidden_field(:is_updated, :value => 'false') %>
               <button id="save_btn_<%= transaction.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" title="Save changes" disabled></button>
             </td>

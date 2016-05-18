@@ -1,14 +1,16 @@
 class PropertiesController < ApplicationController
   def index
+
+    # Determines whether user selected "current", "all", or "archived" properties list
     if params[:view].nil?
       @properties = Property.current
-      @desc = "Current"
+      @list_desc = "Current"
     elsif params[:view] == "archived"
       @properties = Property.archived
-      @desc = "Archived"
+      @list_desc = "Archived"
     else
       @properties = Property.all
-      @desc = "All"
+      @list_desc = "All"
     end
   end
 
@@ -47,14 +49,18 @@ class PropertiesController < ApplicationController
 
   # Add new Property to DB
   def create
+    # Build a new Property object and set the values based on user input
     property = Property.new do |h|
       p = params[:property]
       h.name = p[:name]
       h.address = p[:address]
     end
-    if property.save
+
+    # Attempt to save the property
+    if property.save  # success
       redirect_to back_address(""), notice: return_notice(property, "create")
-    else
+
+    else  # fail
       # Create 'failed_edits' hash which stores all the values from the records that failed to get saved
       failed_edits = Hash.new
       failed_edits['new'] = params[:property]
@@ -66,35 +72,37 @@ class PropertiesController < ApplicationController
 
   # Update multiple property attributes
   def update_multiple
-    update_hash = params[:properties]
+    transaction_ids = params[:properties]
     failed_edits = Hash.new
     property = ""
 
     updated_rows = 0
-    attempted_rows = 0
+    attempted_updates = 0
     error_str = ""
 
     # Loop through hash of properties
-    update_hash.each do |p_id, values|
+    transaction_ids.each do |p_id, values|
       # If the property has been tagged as being updated, then find the relevant property object and update it
       if values[:is_updated] == "true"
-        attempted_rows += 1
+        attempted_updates += 1
         property = Property.find(p_id)
 
-        if property.update_attributes(allowed_params(p_id))
+        # Attempt to save the updates
+        if property.update_attributes(allowed_params(p_id))  # success
           updated_rows += 1
-        else
+
+        else  # fail
           error_str += ": " + property.name + " - " + property.errors.full_messages.to_sentence
           failed_edits[p_id] = values
           failed_edits[p_id]['errors'] = property.errors.keys.map(&:to_s)
         end
       end
     end
-    if attempted_rows == 1
+    if attempted_updates == 1
       redirect_to back_address(failed_edits.to_param), notice: return_notice(property, "update")
     else
       error_str.blank? ? (pre_string = "Successfully u") : (pre_string = "<strong>Error:</strong> U")
-      redirect_to back_address(failed_edits.to_param), notice: "#{pre_string}pdated <strong>#{updated_rows}/#{attempted_rows}</strong> row(s)" + error_str
+      redirect_to back_address(failed_edits.to_param), notice: "#{pre_string}pdated <strong>#{updated_rows}/#{attempted_updates}</strong> row(s)" + error_str
     end
   end
 

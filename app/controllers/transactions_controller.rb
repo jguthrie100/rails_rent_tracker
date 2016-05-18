@@ -1,10 +1,10 @@
 class TransactionsController < ApplicationController
   def index
-    @transactions = Transaction.all.reverse
+    @transactions = Transaction.includes(:tenant).all.reverse
   end
 
   def edit
-    @transactions = Transaction.all.reverse
+    @transactions = Transaction.includes(:tenant).all.reverse
   end
 
   # Import CSV file to the DB
@@ -28,35 +28,37 @@ class TransactionsController < ApplicationController
 
   # Update multiple transaction attributes
   def update_multiple
-    update_hash = params[:transactions]
+    transaction_ids = params[:transactions]
     failed_edits = Hash.new
     transaction = ""
 
     updated_rows = 0
-    attempted_rows = 0
+    attempted_updates = 0
     error_str = ""
 
     # Loop through hash of transactions
-    update_hash.each do |tr_id, values|
+    transaction_ids.each do |tr_id, values|
       # If the transaction has been tagged as being updated, then find the relevant Transaction and update it
       if values[:is_updated] == "true"
-        attempted_rows += 1
+        attempted_updates += 1
         transaction = Transaction.find(tr_id)
 
-        if transaction.update_attributes(allowed_params(tr_id))
+        # Attempt to save the updates
+        if transaction.update_attributes(allowed_params(tr_id))  # success
           updated_rows += 1
-        else
+
+        else  # fail
           error_str += ": " + transaction.transaction_id + " - " + transaction.errors.full_messages.to_sentence
           failed_edits[tr_id] = values
           failed_edits[tr_id]['errors'] = transaction.errors.keys.map(&:to_s)
         end
       end
     end
-    if attempted_rows == 1
+    if attempted_updates == 1
       redirect_to back_address(failed_edits.to_param), notice: return_notice(transaction, "update")
     else
       error_str.blank? ? (pre_string = "Successfully u") : (pre_string = "<strong>Error:</strong> U")
-      redirect_to back_address(failed_edits.to_param), notice: "#{pre_string}pdated <strong>#{updated_rows}/#{attempted_rows}</strong> row(s)" + error_str
+      redirect_to back_address(failed_edits.to_param), notice: "#{pre_string}pdated <strong>#{updated_rows}/#{attempted_updates}</strong> row(s)" + error_str
     end
   end
 

@@ -15,10 +15,10 @@ class Tenant < ActiveRecord::Base
   validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, allow_blank: true
 
   def self.archived
-    return Tenant.all.where(archived: true)
+    return Tenant.includes(:property).where(archived: true).all
   end
 
   def self.current
-    return Tenant.all.where(archived: false)
+    return Tenant.includes(:property).where(archived: false).all
   end
 end

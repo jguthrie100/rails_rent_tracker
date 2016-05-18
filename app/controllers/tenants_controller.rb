@@ -2,13 +2,13 @@ class TenantsController < ApplicationController
   def index
     if params[:view].nil?
       @tenants = Tenant.current
-      @desc = "Current"
+      @list_desc = "Current"
     elsif params[:view] == "archived"
       @tenants = Tenant.archived
-      @desc = "Archived"
+      @list_desc = "Archived"
     else
-      @tenants = Tenant.all
-      @desc = "All"
+      @tenants = Tenant.includes(:property).all
+      @list_desc = "All"
     end
   end
 
@@ -17,7 +17,7 @@ class TenantsController < ApplicationController
   end
 
   def show
-    @tenant = Tenant.find(params[:id])
+    @tenant = Tenant.includes(:tenant_snapshots).find(params[:id])
     @payments = Transaction.where({tenant: @tenant}).order(date: :desc)
     @sorted_snapshots = Array.new
 
@@ -53,6 +53,7 @@ class TenantsController < ApplicationController
 
   # Add new Tenant to DB
   def create
+    # Build a new Tenant object and set the values based on user input
     tenant = Tenant.new do |t|
       p = params[:tenant]
       t.name = p[:name]
@@ -61,9 +62,12 @@ class TenantsController < ApplicationController
       t.email = p[:email]
       t.property_id = p[:property_id]
     end
-    if tenant.save
+
+    # Attempt to save the tenant
+    if tenant.save  # success
       redirect_to back_address(""), notice: return_notice(tenant, "create")
-    else
+
+    else  # fail
       # Create 'failed_edits' hash which stores all the values from the records that failed to get saved
       failed_edits = Hash.new
       failed_edits['new'] = params[:tenant]
@@ -73,37 +77,39 @@ class TenantsController < ApplicationController
     end
   end
 
-  # Update multiple tenant attributes
+  # Update multiple tenants
   def update_multiple
-    update_hash = params[:tenants]
+    transaction_ids = params[:tenants]
     failed_edits = Hash.new
     tenant = ""
 
     updated_rows = 0
-    attempted_rows = 0
+    attempted_updates = 0
     error_str = ""
 
     # Loop through hash of tenants
-    update_hash.each do |t_id, values|
+    transaction_ids.each do |t_id, values|
       # If the tenant has been tagged as being updated, then find the relevant Tenant object and update it
       if values[:is_updated] == "true"
-        attempted_rows += 1
+        attempted_updates += 1
         tenant = Tenant.find(t_id)
 
-        if tenant.update_attributes(allowed_params(t_id))
+        # Attempt to save the updates
+        if tenant.update_attributes(allowed_params(t_id))  # success
           updated_rows += 1
-        else
+
+        else  # fail
           error_str += ": " + tenant.name + " - " + tenant.errors.full_messages.to_sentence
           failed_edits[t_id] = values
           failed_edits[t_id]['errors'] = tenant.errors.keys.map(&:to_s)
         end
       end
     end
-    if attempted_rows == 1
+    if attempted_updates == 1
       redirect_to back_address(failed_edits.to_param), notice: return_notice(tenant, "update")
     else
       error_str.blank? ? (pre_string = "Successfully u") : (pre_string = "<strong>Error:</strong> U")
-      redirect_to back_address(failed_edits.to_param), notice: "#{pre_string}pdated <strong>#{updated_rows}/#{attempted_rows}</strong> row(s)" + error_str
+      redirect_to back_address(failed_edits.to_param), notice: "#{pre_string}pdated <strong>#{updated_rows}/#{attempted_updates}</strong> row(s)" + error_str
     end
   end
 

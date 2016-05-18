@@ -1,7 +1,7 @@
 class TenantSnapshotsController < ApplicationController
 
   def new
-    @tenant = Tenant.find(params[:tenant_id])
+    @tenant = Tenant.includes(:property).find(params[:tenant_id])
   end
 
   def create

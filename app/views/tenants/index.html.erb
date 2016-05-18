@@ -1,5 +1,5 @@
 <% failed_edits = Hash.new %>
-<h3 class="text-primary">List of <%= @desc %> Tenants&nbsp;&nbsp;
+<h3 class="text-primary">List of <%= @list_desc %> Tenants&nbsp;&nbsp;
   <span style="font-size: 12px;">&bull; view: <%= link_to("all", all_tenants_path) %> | <%= link_to("current", tenants_path) %> | <%= link_to("archived", archived_tenants_path) %></span></h3>
 <table class="table table-hover table-condensed table-striped">
   <thead>
@@ -15,15 +15,16 @@
     </tr>
   </thead>
   <tbody>
-    <%# Create rows of Tenants %>
+    <%# Build form %>
     <%= form_for :tenant, :url => update_multiple_tenants_path, :method => "put" do |form| %>
       <% @tenants.each do |tenant| %>
-
-        <%# Populate failed_edits hash with list of errors if applicable %>
-        <% (!params.nil? && params[tenant.id.to_s]) ? (failed_edits[tenant.id] = params[tenant.id.to_s]) : "" %>
-
         <%= fields_for "tenants[]", tenant do |tenant_form| %>
-          <% archived = " archived" if tenant.archived && @desc == "All" %>
+
+          <%# Copy list of validation errors to failed_edits hash %>
+          <% (!params.nil? && params[tenant.id.to_s]) ? (failed_edits[tenant.id] = params[tenant.id.to_s]) : "" %>
+          <% archived = " archived" if tenant.archived && @list_desc == "All" %>
+
+          <%# Build row to display tenant details %>
           <tr id="tenant_row_<%= tenant.id %>" class="tenant_row<%= archived %>">
             <td>
               <%# Checkbox %>
@@ -56,20 +57,21 @@
               %>
             </td>
             <td>
-              <%= tenant.archived ? "<b>- ARCHIVED -</b>".html_safe : "" %>
+              <%= tenant.archived ? "<strong>- ARCHIVED -</strong>".html_safe : "" %>
             </td>
             <td>
+              <%# is_updated flag gets set to true when a row is updated %>
               <% is_updated_id = "tenants_" + tenant.id.to_s + "_is_updated" %>
               <%= tenant_form.hidden_field(:is_updated, :value => 'false') %>
 
               <%# Save button %>
               <button id="save_btn_<%= tenant.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" title="Save changes" disabled></button>
 
-              <%# Archive/Unarchive button, with confirmation %>
-              <% if !tenant.archived %>
-                <%= link_to "", {:controller => :tenants, :action => 'archive', :id => tenant.id }, :method => :patch, class: "fa fa-minus-square btn btn-danger", title: "Archive tenant", data: { confirm: "Are you sure you want to archive tenant '#{tenant.name.upcase}' and remove them from your list of current Tenants? (This change can be reversed later..)" } %>
-              <% else %>
+              <%# Depending on archived flag, display Archive or Unarchive button, with confirmation %>
+              <% if tenant.archived %>
                 <%= link_to "", {:controller => :tenants, :action => 'unarchive', :id => tenant.id }, :method => :patch, class: "fa fa-plus-square btn btn-warning", title: "Restore tenant", data: { confirm: "Are you sure you want to restore tenant '#{tenant.name.upcase}' and add them to your list of current tenants? (This change can be reversed later..)" } %>
+              <% else %>
+                <%= link_to "", {:controller => :tenants, :action => 'archive', :id => tenant.id }, :method => :patch, class: "fa fa-minus-square btn btn-danger", title: "Archive tenant", data: { confirm: "Are you sure you want to archive tenant '#{tenant.name.upcase}' and remove them from your list of current Tenants? (This change can be reversed later..)" } %>
               <% end %>
             </td>
           </tr>
@@ -78,7 +80,11 @@
     <% end %>
         <%# Create final row with a form to add a new Tenant to the inventory %>
         <%= form_tag(tenants_path) do %>
+
+          <%# Copy any validation errors %>
           <% (!params.nil? && params['new']) ? (failed_edits['new'] = params['new']) : "" %>
+
+          <%# Build table row %>
           <tr id="tenant_row_new" class="tenant_row">
             <td>
               <%# Checkbox %>
@@ -115,7 +121,6 @@
 </table>
 
 <script>
-
+// Copies in jQuery code that handles the highlighting of validation errors
 <%= on_ready_jquery "tenant", failed_edits %>
-
 </script>
