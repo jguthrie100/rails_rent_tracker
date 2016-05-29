@@ -1,9 +1,5 @@
 class Tenant < ActiveRecord::Base
   has_many :tenant_snapshots, inverse_of: :tenant
-  has_many :transactions
-  belongs_to :property
-
-  validates_presence_of :property, :if => :property_id
 
   validates_length_of :name, minimum: 4, allow_blank: false
   validates_uniqueness_of :name
@@ -15,10 +11,21 @@ class Tenant < ActiveRecord::Base
   validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, allow_blank: true
 
   def self.archived
-    return Tenant.includes(:property).where(archived: true).all
+    return Tenant.where(archived: true).all
   end
 
   def self.current
-    return Tenant.includes(:property).where(archived: false).all
+    return Tenant.where(archived: false).all
+  end
+
+  # Return current property that tenant is staying in
+  def property
+    if self.tenant_snapshots.last.nil? # no tenant snapshots
+      return nil
+    elsif self.tenant_snapshots.last.property_snapshot.nil? # no associated property snapshots
+      return nil
+    else
+      return self.tenant_snapshots.last.property_snapshot.property
+    end
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160514215008) do
+ActiveRecord::Schema.define(version: 20160528184553) do
 
   create_table "properties", force: :cascade do |t|
     t.string   "name",                       null: false
@@ -35,18 +35,18 @@ ActiveRecord::Schema.define(version: 20160514215008) do
   add_index "property_snapshots", ["property_id"], name: "index_property_snapshots_on_property_id"
 
   create_table "tenant_snapshots", force: :cascade do |t|
-    t.date     "start_date",                               null: false
+    t.date     "start_date",                                    null: false
     t.date     "end_date"
-    t.integer  "property_id",                              null: false
-    t.decimal  "weekly_rent",     precision: 10, scale: 2, null: false
-    t.integer  "rent_frequency",                           null: false
-    t.integer  "tenant_id",                                null: false
+    t.integer  "property_snapshot_id",                          null: false
+    t.decimal  "weekly_rent",          precision: 10, scale: 2, null: false
+    t.integer  "rent_frequency",                                null: false
+    t.integer  "tenant_id",                                     null: false
     t.integer  "rent_paid_by_id"
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
   end
 
-  add_index "tenant_snapshots", ["property_id"], name: "index_tenant_snapshots_on_property_id"
+  add_index "tenant_snapshots", ["property_snapshot_id"], name: "index_tenant_snapshots_on_property_snapshot_id"
   add_index "tenant_snapshots", ["rent_paid_by_id"], name: "index_tenant_snapshots_on_rent_paid_by_id"
   add_index "tenant_snapshots", ["tenant_id"], name: "index_tenant_snapshots_on_tenant_id"
 
@@ -55,30 +55,27 @@ ActiveRecord::Schema.define(version: 20160514215008) do
     t.string   "payment_handle"
     t.string   "phone_num"
     t.string   "email"
-    t.integer  "property_id"
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
     t.boolean  "archived",       default: false, null: false
   end
 
-  add_index "tenants", ["property_id"], name: "index_tenants_on_property_id"
-
   create_table "transactions", force: :cascade do |t|
-    t.string   "bank_account_id",                           null: false
-    t.date     "date",                                      null: false
-    t.string   "transaction_id",                            null: false
+    t.string   "bank_account_id",                             null: false
+    t.date     "date",                                        null: false
+    t.string   "transaction_id",                              null: false
     t.string   "transaction_type"
     t.string   "cheque_num"
     t.string   "payee"
     t.string   "memo"
-    t.decimal  "amount",           precision: 10, scale: 2, null: false
-    t.integer  "tenant_id"
-    t.datetime "created_at",                                null: false
-    t.datetime "updated_at",                                null: false
+    t.decimal  "amount",             precision: 10, scale: 2, null: false
+    t.integer  "tenant_snapshot_id"
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
   end
 
   add_index "transactions", ["bank_account_id"], name: "index_transactions_on_bank_account_id"
-  add_index "transactions", ["tenant_id"], name: "index_transactions_on_tenant_id"
+  add_index "transactions", ["tenant_snapshot_id"], name: "index_transactions_on_tenant_snapshot_id"
   add_index "transactions", ["transaction_id"], name: "index_transactions_on_transaction_id"
 
 end

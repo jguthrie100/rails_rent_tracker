@@ -4,7 +4,9 @@ require 'spec_helper'
 describe "Tests for TenantSnapshot model" do
   context "Checking Factory" do
     it "has a valid factory" do
-      expect(FactoryGirl.create(:tenant_snapshot)).to be_valid
+      ts = FactoryGirl.build(:tenant_snapshot)
+      byebug
+      expect(ts).to be_valid
     end
   end
 

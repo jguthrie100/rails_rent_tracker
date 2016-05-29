@@ -13,8 +13,8 @@
         <td><%= date_field(:tenant_snapshot, :end_date) %></td>
       </tr>
       <tr>
-        <td>Property: </td>
-        <td><%= collection_select(:tenant_snapshot, :property_id, Property.all, :id, :name) %></td>
+        <td>Property Snapshot: </td>
+        <td><%= collection_select(:tenant_snapshot, :property_snapshot_id, PropertySnapshot.all, :id, :name) %></td>
       </tr>
       <tr>
         <td>Weekly Rent (NZD$): </td>

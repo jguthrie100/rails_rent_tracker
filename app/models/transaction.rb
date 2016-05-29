@@ -3,9 +3,9 @@ require 'csv'
 class Transaction < ActiveRecord::Base
   include ModelHelpers
 
-  belongs_to :tenant
+  belongs_to :tenant_snapshot
 
-  validates_associated :tenant
+  validates_associated :tenant_snapshot
 
   validates :bank_account_id, :date, :transaction_id, :amount, presence: true
   validates_uniqueness_of :transaction_id
@@ -61,7 +61,11 @@ class Transaction < ActiveRecord::Base
             # If it does, then tag the transaction as belonging to the tenant
             tenants.each do |t|
               if transaction.payee.include?(t.payment_handle) || transaction.memo.include?(t.payment_handle)
-                transaction.tenant = t
+
+                # TODO: Needs logic to work out a specific tenant_Snapshot the transaction belongs to - i.e. needs to look at date of transaction and date of tenant snapshot etc etc
+                tenant_snapshots = TenantSnapshot.where({ tenant_id: t.id})
+                ts = tenant_snapshots.last
+                transaction.tenant_snapshot = ts
                 break
               end
             end

@@ -21,7 +21,7 @@
   </thead>
   <tbody>
     <%# Create rows of Transactions %>
-    <% tenants = Tenant.all %>
+    <% tenant_snapshots = TenantSnapshot.includes(:tenant).all %>
     <%= form_for :transaction, :url => update_multiple_transactions_path, :method => "put" do |form| %>
       <% @transactions.each do |transaction| %>
         <%= fields_for "transactions[]", transaction do |transaction_form| %>
@@ -36,8 +36,10 @@
             <td><%= transaction.date_str %></td>
             <td>
               <%# Tenant name (w/ link) / Tenant drop down box %>
-              <%= transaction.tenant.nil? ? "" : link_to(transaction.tenant.name, tenant_path(transaction.tenant), class: "display") %><br />
-              <%= transaction_form.collection_select(:tenant_id, tenants, :id, :name, { include_blank: true}, class: "edit", :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %>
+              <%= transaction.tenant_snapshot.nil? ? "" : link_to(transaction.tenant_snapshot.name, tenant_tenant_snapshot_path(transaction.tenant_snapshot, transaction.tenant_snapshot.tenant), class: "display") %><br />
+
+              <%# NEEDS CHANGING SO THAT TENANT_SNAPSHOTS ARE SELECTED!! %>
+              <%= transaction_form.collection_select(:tenant_snapshot_id, tenant_snapshots, :id, :name, { include_blank: true}, class: "edit", :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %>
 
             </td>
             <td><%= transaction.bank_account_id %></td>

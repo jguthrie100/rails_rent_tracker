@@ -16,6 +16,11 @@ class PropertiesController < ApplicationController
 
   def show
     @property = Property.find(params[:id])
+    @sorted_snapshots = Array.new
+
+    @property.property_snapshots.sort { |a,b| b.start_date <=> a.start_date }.each do |ss|
+      @sorted_snapshots.push(ss)
+    end
   end
 
   def edit

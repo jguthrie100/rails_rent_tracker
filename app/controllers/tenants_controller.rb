@@ -7,7 +7,7 @@ class TenantsController < ApplicationController
       @tenants = Tenant.archived
       @list_desc = "Archived"
     else
-      @tenants = Tenant.includes(:property).all
+      @tenants = Tenant.includes(:property_snapshots).all
       @list_desc = "All"
     end
   end
@@ -18,7 +18,7 @@ class TenantsController < ApplicationController
 
   def show
     @tenant = Tenant.includes(:tenant_snapshots).find(params[:id])
-    @payments = Transaction.where({tenant: @tenant}).order(date: :desc)
+    @payments = Transaction.joins(:tenant_snapshot).where(tenant_snapshots: {tenant_id: @tenant}).order(date: :desc)
     @sorted_snapshots = Array.new
 
     @tenant.tenant_snapshots.sort { |a,b| b.start_date <=> a.start_date }.each do |s|
@@ -60,7 +60,6 @@ class TenantsController < ApplicationController
       t.payment_handle = p[:payment_handle]
       t.phone_num = p[:phone_num]
       t.email = p[:email]
-      t.property_id = p[:property_id]
     end
 
     # Attempt to save the tenant
@@ -116,6 +115,6 @@ class TenantsController < ApplicationController
   # Private method that sets Strong Parameter permissions
   private
   def allowed_params(t_id)
-    params.require(:tenants).require(t_id).permit(:name, :payment_handle, :phone_num, :email, :property_id)
+    params.require(:tenants).require(t_id).permit(:name, :payment_handle, :phone_num, :email)
   end
 end

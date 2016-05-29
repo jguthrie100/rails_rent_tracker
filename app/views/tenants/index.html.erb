@@ -22,7 +22,7 @@
 
           <%# Copy list of validation errors to failed_edits hash %>
           <% (!params.nil? && params[tenant.id.to_s]) ? (failed_edits[tenant.id] = params[tenant.id.to_s]) : "" %>
-          <% archived = " archived" if tenant.archived && @list_desc == "All" %>
+          <% archived = " archived" if tenant.archived %>
 
           <%# Build row to display tenant details %>
           <tr id="tenant_row_<%= tenant.id %>" class="tenant_row<%= archived %>">
@@ -52,8 +52,10 @@
             </td>
             <td>
               <%# Tenant's rental property (w/ link) / Rental property dropdown box %>
+              <%# NEEDS A LOT OF TESTING!! %>
               <%= tenant.property.nil? ? "" : link_to(tenant.property.name, property_path(tenant.property), class: "display property_id") %><br />
-              <%= tenant_form.collection_select(:property_id, Property.all, :id, :name, { include_blank: true, selected: (failed_edits[tenant.id] ? failed_edits[tenant.id][:property_id].to_i : tenant.property_id)}, class: "edit property_id")
+              <% tenant.property.nil? ? t_property = 0 : t_property = tenant.property.id %>
+              <%= tenant_form.collection_select(:property_id, Property.all, :id, :name, { include_blank: true, selected: (failed_edits[tenant.id] ? failed_edits[tenant.id][:property_id].to_i : t_property)}, class: "edit property_id")
               %>
             </td>
             <td>
@@ -122,5 +124,5 @@
 
 <script>
 // Copies in jQuery code that handles the highlighting of validation errors
-<%= on_ready_jquery "tenant", failed_edits %>
+<%= highlight_validation_errors "tenant", failed_edits %>
 </script>
