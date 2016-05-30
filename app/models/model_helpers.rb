@@ -46,9 +46,9 @@ module ModelHelpers
     when "Transaction"
       return self[:transaction_id]
     when "PropertySnapshot"
-      property.nil? ? (return "") : (return "#{property.name} (#{start_date_str} - #{end_date_str})")
+      return "#{property.name} (#{start_date_str} - #{end_date_str})"
     when "TenantSnapshot"
-      tenant.nil? ? (return "") : (return "#{tenant.name} (#{start_date_str} - #{end_date_str})")
+      return "#{tenant.name} (#{start_date_str} - #{end_date_str})"
     end
   end
 end
