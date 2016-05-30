@@ -1,11 +1,3 @@
-<style type="text/css">
-  .snapshot_content, .payment_content {
-    display: none;
-  }
-  .snapshot, .payment {
-    padding: 10px;
-  }
-</style>
 <h1 class="text-primary"><%= @tenant.name %></h1>
 
 <h3 class="text-primary">Rental Periods&nbsp;&nbsp;
@@ -33,7 +25,7 @@
     </p>
   </div>
 
-  <script>$(".snapshot_content_button", "#snapshot_<%= snapshot.id %>").click(function() {display_item("snapshot", <%= snapshot.id %>)});</script>
+  <script>$(".snapshot_content_button", "#snapshot_<%= snapshot.id %>").click(function() {toggle_info("snapshot", <%= snapshot.id %>)});</script>
 <!-- snapshot <%= snapshot.id %> end -->
 
 <% end %>
@@ -55,7 +47,7 @@
     </p>
   </div>
 
-  <script>$(".payment_content_button", "#payment_<%= payment.id %>").click(function() {display_item("payment", <%= payment.id %>)});</script>
+  <script>$(".payment_content_button", "#payment_<%= payment.id %>").click(function() {toggle_info("payment", <%= payment.id %>)});</script>
 <!-- payment <%= payment.id %> end -->
 <% end %>
 
@@ -63,18 +55,3 @@
   Total Rent Expected: <b><%= number_to_currency(total_rent, :unit => "$") %></b><br/>
   Total rent paid: <b><%= number_to_currency(@payments.sum(:amount), :unit => "$") %></b>
 </p>
-
-<script>
-function display_item(prefix, id) {
-  var content_class = "." + prefix + "_content";
-  var main = "#" + prefix + "_" + id;
-
-  if ($(content_class, main).is(":hidden") ) {
-    $(content_class, main).slideDown("slow");
-    $(content_class + "_button", main).text("[hide]");
-  } else {
-    $(content_class, main).slideUp("slow");
-    $(content_class + "_button", main).text("[display]");
-  }
-}
-</script>

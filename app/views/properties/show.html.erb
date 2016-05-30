@@ -1,5 +1,9 @@
 <h1 class="text-primary"><%= @property.name %></h1>
 
+<h3 class="text-primary">Rental Periods&nbsp;&nbsp;
+  <span style="font-size: 12px;">&bull; <%= link_to("Add new rental snapshot", new_property_property_snapshot_path(@property)) %></span>
+</h3>
+
 <% @sorted_snapshots.each do |snapshot| %>
 
 <!-- snapshot <%= snapshot.id %> start -->
@@ -15,7 +19,7 @@
     </p>
   </div>
 
-  <script>$(".snapshot_content_button", "#snapshot_<%= snapshot.id %>").click(function() {display_item("snapshot", <%= snapshot.id %>)});</script>
+  <script>$(".snapshot_content_button", "#snapshot_<%= snapshot.id %>").click(function() {toggle_info("snapshot", <%= snapshot.id %>)});</script>
 <!-- snapshot <%= snapshot.id %> end -->
 
 <% end %>

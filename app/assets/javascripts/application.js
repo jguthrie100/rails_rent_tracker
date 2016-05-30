@@ -71,3 +71,56 @@ function toggle_edit(id) {
     $(".archived").css("opacity", 0.7);
   }
 }
+
+function toggle_info(prefix, id) {
+  var content_class = "." + prefix + "_content";
+  var main = "#" + prefix + "_" + id;
+
+  if ($(content_class, main).is(":hidden") ) {
+    $(content_class, main).slideDown("fast");
+    $(content_class + "_button", main).text("[hide]");
+  } else {
+    $(content_class, main).slideUp("fast");
+    $(content_class + "_button", main).text("[display]");
+  }
+}
+
+// Function to determine whether a specific date on the datepicker should be greyed out
+function is_date_available(cal_date) {
+
+  // Array of existing Snapshot dates
+  var existing_snapshot_dates = $('.snapshot_dates').data('dates');
+
+  // Loop through each existing snapshot
+  for(i = 0; i < existing_snapshot_dates.length; i++) {
+
+    // Convert text dates to Date objects
+    ss_range = []
+    for(j = 0; j < 2; j++) {
+      y = parseInt(existing_snapshot_dates[i][j].substring(0, 4));
+      m = parseInt(existing_snapshot_dates[i][j].substring(5, 7))-1;
+      d = parseInt(existing_snapshot_dates[i][j].substring(8, 10));
+      ss_range[j] = new Date(y, m, d, 0, 0, 0, 0);
+    }
+
+    // If datepicker cal date clashes with existing snapshot, grey it out
+    if(cal_date >= ss_range[0] && cal_date <= ss_range[1]) {
+      return [false, "disabled_date", "Existing rental period: " + existing_snapshot_dates[i][2]];
+    }
+  }
+  return [true, "enabled_date", "Available date"];
+}
+
+$(function() {
+  // Build datepicker object
+  $('.snapshot_datepicker').datepicker({
+    dateFormat: "dd/mm/yy",
+    beforeShowDay: is_date_available,
+    numberOfMonths: 2,
+    changeMonth: true,
+    changeYear: true,
+    onClose: function(dateText) {
+      $('.snapshot_datepicker').datepicker("option", "defaultDate", dateText);
+    }
+  });
+});

@@ -1,3 +1,6 @@
+<%= content_tag :div, class: "snapshot_dates", data: {dates: @snapshot_dates} do %>
+<% end %>
+
 <h1 class="text-primary">New Rental Snapshot for <%= link_to(@property.name, property_path(@property), style: "text-decoration: underline;") %></h1>
 
 <h3 class="text-primary">Add new Snapshot</h3>
@@ -6,11 +9,11 @@
     <tbody>
       <tr>
         <td>Start date: </td>
-        <td><%= date_field(:property_snapshot, :start_date) %></td>
+        <td><%= text_field(:property_snapshot, :start_date, class: "snapshot_datepicker") %></td>
       </tr>
       <tr>
         <td>End Date: </td>
-        <td><%= date_field(:property_snapshot, :end_date) %></td>
+        <td><%= text_field(:property_snapshot, :end_date, class: "snapshot_datepicker") %></td>
       </tr>
       <tr>
         <td>Num Bedrooms: </td>
@@ -18,11 +21,11 @@
       </tr>
       <tr>
         <td>Weekly Rent (NZD$): </td>
-        <td><%= number_field(:property_snapshot, :weekly_rent, step: 5) %></td>
+        <td><%= number_field(:property_snapshot, :weekly_rent) %></td>
       </tr>
       <tr>
         <td>Agency Fees (NZD$): </td>
-        <td><%= number_field(:property_snapshot, :agency_fees, step: 5) %></td>
+        <td><%= number_field(:property_snapshot, :agency_fees) %></td>
       </tr>
       <tr>
         <td colspan="2"><%= submit_tag("Create New Snapshot") %></td>

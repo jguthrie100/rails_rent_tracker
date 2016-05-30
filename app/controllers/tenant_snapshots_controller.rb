@@ -2,6 +2,12 @@ class TenantSnapshotsController < ApplicationController
 
   def new
     @tenant = Tenant.find(params[:tenant_id])
+    snapshots = TenantSnapshot.where(:tenant_id => params[:tenant_id])
+
+    @snapshot_dates = Array.new
+    snapshots.each do |ss|
+      @snapshot_dates.push([ss.start_date, ss.end_date, ss.name])
+    end
   end
 
   def create
@@ -15,7 +21,7 @@ class TenantSnapshotsController < ApplicationController
       ts.tenant_id = params[:tenant_id]
       ts.rent_paid_by = Tenant.find(p[:rent_paid_by])
     end
-byebug
+
     tenant_snapshot.save
     redirect_to tenant_path(params[:tenant_id]), notice: return_notice(tenant_snapshot, "create")
   end

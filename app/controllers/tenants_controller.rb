@@ -7,7 +7,7 @@ class TenantsController < ApplicationController
       @tenants = Tenant.archived
       @list_desc = "Archived"
     else
-      @tenants = Tenant.includes(:property_snapshots).all
+      @tenants = Tenant.all
       @list_desc = "All"
     end
   end
