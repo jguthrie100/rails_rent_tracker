@@ -1,8 +1,9 @@
 class TenantSnapshot < ActiveRecord::Base
   include ModelHelpers
 
-  belongs_to :property_snapshot
   belongs_to :tenant
+  belongs_to :property_snapshot
+  has_one :property, through: :property_snapshot
   has_many :transactions
 
   # Custom foreign key for linking to the other Tenant that pays the rent for this tenant

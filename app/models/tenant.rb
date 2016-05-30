@@ -1,5 +1,6 @@
 class Tenant < ActiveRecord::Base
-  has_many :tenant_snapshots, inverse_of: :tenant
+  has_many :tenant_snapshots
+  has_many :transactions, through: :tenant_snapshots
 
   validates_length_of :name, minimum: 4, allow_blank: false
   validates_uniqueness_of :name

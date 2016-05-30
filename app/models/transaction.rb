@@ -4,11 +4,12 @@ class Transaction < ActiveRecord::Base
   include ModelHelpers
 
   belongs_to :tenant_snapshot
-
-  validates_associated :tenant_snapshot
+  has_one :tenant, through: :tenant_snapshot
+  has_one :property, through: :tenant_snapshot
 
   validates :bank_account_id, :date, :transaction_id, :amount, presence: true
   validates_uniqueness_of :transaction_id
+  validates_presence_of :tenant_snapshot, :if => :tenant_snapshot_id
 
   # Imports a CSV of banking transactions to the DB
   def self.import(file)
