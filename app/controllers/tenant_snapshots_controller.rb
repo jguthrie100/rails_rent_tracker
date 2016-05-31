@@ -35,7 +35,7 @@ class TenantSnapshotsController < ApplicationController
       end
     else
       # Add error string
-      tenant_snapshot.errors[:date_range] << " doesn't match up to an existing Property snapshot"
+      tenant_snapshot.errors[:base] << "Snapshot dates don't match up to an existing Property snapshot"
     end
 
     # Create 'failed_edits' hash which stores all the values from the records that failed to get saved

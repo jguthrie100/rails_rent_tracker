@@ -21,4 +21,11 @@ class TenantSnapshot < ActiveRecord::Base
                                           allow_blank: true }
 
   validates_with SnapshotDateRangeValidator, model: "tenant"
+
+  def property
+    properties = self.properties.uniq
+
+    return properties.first if properties.length == 1
+    raise StandardError "Only expected one property associated with TenantSnapshot"
+  end
 end
