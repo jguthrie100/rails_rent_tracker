@@ -53,8 +53,8 @@
             <td>
               <%# Tenant's rental property (w/ link) / Rental property dropdown box %>
               <%# NEEDS A LOT OF TESTING!! %>
-              <%= tenant.property.nil? ? "" : link_to(tenant.property.name, property_path(tenant.property), class: "display property_id") %><br />
-              <% tenant.property.nil? ? t_property = 0 : t_property = tenant.property.id %>
+              <%= tenant.current_property.nil? ? "" : link_to(tenant.current_property.name, property_path(tenant.current_property), class: "display property_id") %><br />
+              <% tenant.current_property.nil? ? t_property = 0 : t_property = tenant.current_property.id %>
               <%= tenant_form.collection_select(:property_id, Property.all, :id, :name, { include_blank: true, selected: (failed_edits[tenant.id] ? failed_edits[tenant.id][:property_id].to_i : t_property)}, class: "edit property_id")
               %>
             </td>

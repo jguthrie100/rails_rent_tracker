@@ -16,7 +16,7 @@ class ChangeSnapshotAssociations < ActiveRecord::Migration
   end
 
   def down
-    add_column :tenants, :property_id
+    add_column :tenants, :property_id, :integer
     add_index "tenants", ["property_id"], name: "index_tenants_on_property_id"
 
     remove_index :transactions, name: "index_transactions_on_tenant_snapshot_id"

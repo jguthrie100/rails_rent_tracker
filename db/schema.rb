@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160528184553) do
+ActiveRecord::Schema.define(version: 20160531123204) do
 
   create_table "properties", force: :cascade do |t|
     t.string   "name",                       null: false
@@ -34,19 +34,27 @@ ActiveRecord::Schema.define(version: 20160528184553) do
 
   add_index "property_snapshots", ["property_id"], name: "index_property_snapshots_on_property_id"
 
-  create_table "tenant_snapshots", force: :cascade do |t|
-    t.date     "start_date",                                    null: false
-    t.date     "end_date"
-    t.integer  "property_snapshot_id",                          null: false
-    t.decimal  "weekly_rent",          precision: 10, scale: 2, null: false
-    t.integer  "rent_frequency",                                null: false
-    t.integer  "tenant_id",                                     null: false
-    t.integer  "rent_paid_by_id"
-    t.datetime "created_at",                                    null: false
-    t.datetime "updated_at",                                    null: false
+  create_table "snapshot_joins", force: :cascade do |t|
+    t.integer  "property_snapshot_id", null: false
+    t.integer  "tenant_snapshot_id",   null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
   end
 
-  add_index "tenant_snapshots", ["property_snapshot_id"], name: "index_tenant_snapshots_on_property_snapshot_id"
+  add_index "snapshot_joins", ["property_snapshot_id"], name: "index_snapshot_joins_on_property_snapshot_id"
+  add_index "snapshot_joins", ["tenant_snapshot_id"], name: "index_snapshot_joins_on_tenant_snapshot_id"
+
+  create_table "tenant_snapshots", force: :cascade do |t|
+    t.date     "start_date",                               null: false
+    t.date     "end_date"
+    t.decimal  "weekly_rent",     precision: 10, scale: 2, null: false
+    t.integer  "rent_frequency",                           null: false
+    t.integer  "tenant_id",                                null: false
+    t.integer  "rent_paid_by_id"
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+  end
+
   add_index "tenant_snapshots", ["rent_paid_by_id"], name: "index_tenant_snapshots_on_rent_paid_by_id"
   add_index "tenant_snapshots", ["tenant_id"], name: "index_tenant_snapshots_on_tenant_id"
 

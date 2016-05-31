@@ -5,7 +5,6 @@ class Transaction < ActiveRecord::Base
 
   belongs_to :tenant_snapshot
   has_one :tenant, through: :tenant_snapshot
-  has_one :property, through: :tenant_snapshot
 
   validates :bank_account_id, :date, :transaction_id, :amount, presence: true
   validates_uniqueness_of :transaction_id

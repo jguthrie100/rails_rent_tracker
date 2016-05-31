@@ -1,5 +1,6 @@
 class Tenant < ActiveRecord::Base
   has_many :tenant_snapshots
+  has_many :properties, through: :tenant_snapshots
   has_many :transactions, through: :tenant_snapshots
 
   validates_length_of :name, minimum: 4, allow_blank: false
@@ -20,13 +21,14 @@ class Tenant < ActiveRecord::Base
   end
 
   # Return current property that tenant is staying in
-  def property
-    if self.tenant_snapshots.last.nil? # no tenant snapshots
+  def current_property
+    latest_t_snapshot = self.tenant_snapshots.order(:start_date).last
+    if latest_t_snapshot.nil? # no tenant snapshots
       return nil
-    elsif self.tenant_snapshots.last.property_snapshot.nil? # no associated property snapshots
+    elsif latest_t_snapshot.end_date < Date.today # old tenant snapshots
       return nil
     else
-      return self.tenant_snapshots.last.property_snapshot.property
+      return latest_t_snapshot.properties.first
     end
   end
 end

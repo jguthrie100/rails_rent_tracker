@@ -2,8 +2,9 @@ class TenantSnapshot < ActiveRecord::Base
   include ModelHelpers
 
   belongs_to :tenant
-  belongs_to :property_snapshot
-  has_one :property, through: :property_snapshot
+  has_many :snapshot_joins
+  has_many :property_snapshots, through: :snapshot_joins
+  has_many :properties, through: :property_snapshots
   has_many :transactions
 
   # Custom foreign key for linking to the other Tenant that pays the rent for this tenant
@@ -11,7 +12,7 @@ class TenantSnapshot < ActiveRecord::Base
 
   validates_presence_of :rent_paid_by, :if => :rent_paid_by
 
-  validates :property_snapshot, :tenant, :start_date, :rent_frequency, :weekly_rent, presence: true
+  validates :tenant, :start_date, :rent_frequency, :weekly_rent, presence: true
 
   validates :rent_frequency, numericality: { only_integer: true,
                                              greater_than_or_equal_to: 1,

@@ -1,9 +1,9 @@
 <%= content_tag :div, class: "snapshot_dates", data: {dates: @snapshot_dates} do %>
 <% end %>
 
-<h1 class="text-primary">New Rental Snapshot for <%= link_to(@tenant.name, tenant_path(@tenant), style: "text-decoration: underline;") %></h1>
+<h1 class="text-primary">New Rental period for <%= link_to(@tenant.name, tenant_path(@tenant), style: "text-decoration: underline;") %></h1>
 
-<h3 class="text-primary">Add new Snapshot</h3>
+<h3 class="text-primary">Add new Rental period</h3>
 <%= form_tag(tenant_tenant_snapshots_path) do %>
   <table class="table table-hover table-condensed table-striped">
     <tbody>
@@ -16,8 +16,8 @@
         <td><%= text_field(:tenant_snapshot, :end_date, class: "snapshot_datepicker") %></td>
       </tr>
       <tr>
-        <td>Property Snapshot: </td>
-        <td><%= collection_select(:tenant_snapshot, :property_snapshot_id, PropertySnapshot.all, :id, :name) %></td>
+        <td>Property: </td>
+        <td><%= collection_select(:tenant_snapshot, :property_id, Property.all, :id, :name) %></td>
       </tr>
       <tr>
         <td>Weekly Rent (NZD$): </td>

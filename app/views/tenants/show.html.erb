@@ -19,7 +19,7 @@
     </div>
 
     <p class="snapshot_content">
-      Property: <b><%= snapshot.property_snapshot.name %></b><br />
+      Property: <b><%= snapshot.tenant.current_property.name %></b><br />
       Weekly Rent: <b><%= number_to_currency(snapshot.weekly_rent, :unit => "$") %></b><br />
       Total Rent Expected: <b><%= number_to_currency(rent_expected, :unit => "$") %></b>
     </p>
