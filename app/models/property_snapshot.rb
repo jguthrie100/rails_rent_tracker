@@ -18,15 +18,18 @@ class PropertySnapshot < ActiveRecord::Base
   def self.date_range_exists?(model, model_id, start_date, end_date)
     id_field = model.downcase + "_id"
     snapshot_model = model.capitalize + "Snapshot"
-    snapshots = snapshot_model.constantize.where("#{id_field} = ?", model_id)
-                                .where('start_date <= ?', end_date)
-                                .where('end_date >= ?', start_date)
-                                .order(:start_date)
 
-    if snapshots.length == 0
+    # Get a list of snapshots that match the passed snapshot
+    # i.e. A snapshot from 10th May - 15th May will match an existing snapshot going from 1st May - 31st May
+    matching_snapshots = snapshot_model.constantize.where("#{id_field} = ?", model_id)
+                                                   .where('start_date <= ?', end_date)
+                                                   .where('end_date >= ? OR end_date IS NULL', start_date)
+                                                   .order(:start_date)
+
+    if matching_snapshots.length == 0
       return false
-    elsif self.snapshots_continuous?(snapshots)
-      return snapshots
+    elsif self.snapshots_continuous?(matching_snapshots)
+      return matching_snapshots
     else
       return false
     end

@@ -65,6 +65,6 @@ class TransactionsController < ApplicationController
   # Private method that sets Strong Parameter permissions
   private
   def allowed_params(tr_id)
-    params.require(:transactions).require(tr_id).permit(:tenant_id)
+    params.require(:transactions).require(tr_id).permit(:tenant_snapshot_id)
   end
 end
