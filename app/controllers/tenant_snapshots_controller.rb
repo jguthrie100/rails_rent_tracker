@@ -22,16 +22,16 @@ class TenantSnapshotsController < ApplicationController
     end
 
     # Ensure property_snapshot exists for the specified property and timeframe
-    date_range = PropertySnapshot.date_range_exists?("Property", params[:tenant_snapshot][:property_id], tenant_snapshot.start_date, tenant_snapshot.end_date)
+    existing_date_range = PropertySnapshot.date_range_exists?(model: "Property", model_id: params[:tenant_snapshot][:property_id], start_date: tenant_snapshot.start_date, end_date: tenant_snapshot.end_date)
 
     # Save tenant snapshot and update join table
-    if date_range
+    if existing_date_range
       if tenant_snapshot.save
-        date_range.each do |ss|
+        existing_date_range.each do |ss|
           # Create join records/associations in snapshot_join table
           ss.snapshot_joins.create(tenant_snapshot: tenant_snapshot)
         end
-        redirect_to tenant_path(params[:tenant_id]), notice: return_notice(tenant_snapshot, "create") and return
+        redirect_to tenant_path(params[:tenant_id]), notice: return_message(record: tenant_snapshot, action: "create") and return
       end
     else
       # Add error string
@@ -43,6 +43,6 @@ class TenantSnapshotsController < ApplicationController
     failed_edits['new'] = params[:tenant_snapshot]
     failed_edits['new']['errors'] = tenant_snapshot.errors.keys.map(&:to_s)
 
-    redirect_to back_address(failed_edits.to_param), notice: return_notice(tenant_snapshot, "create")
+    redirect_to back_address(failed_edits.to_param), notice: return_message(record: tenant_snapshot, action: "create")
   end
 end

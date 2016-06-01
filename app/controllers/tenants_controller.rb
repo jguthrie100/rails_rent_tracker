@@ -30,7 +30,7 @@ class TenantsController < ApplicationController
     tenant = Tenant.find(params[:id])
     tenant.destroy
 
-    redirect_to back_address(""), notice: return_notice(tenant, "destroy")
+    redirect_to back_address(""), notice: return_message(record: tenant, action: "destroy")
   end
 
   def archive
@@ -39,7 +39,7 @@ class TenantsController < ApplicationController
     tenant.archived = true
 
     tenant.save
-    redirect_to back_address(""), notice: return_notice(tenant, "archive")
+    redirect_to back_address(""), notice: return_message(record: tenant, action: "archive")
   end
 
   def unarchive
@@ -48,7 +48,7 @@ class TenantsController < ApplicationController
     tenant.archived = false
 
     tenant.save
-    redirect_to back_address(""), notice: return_notice(tenant, "unarchive")
+    redirect_to back_address(""), notice: return_message(record: tenant, action: "unarchive")
   end
 
   # Add new Tenant to DB
@@ -64,7 +64,7 @@ class TenantsController < ApplicationController
 
     # Attempt to save the tenant
     if tenant.save  # success
-      redirect_to back_address(""), notice: return_notice(tenant, "create")
+      redirect_to back_address(""), notice: return_message(record: tenant, action: "create")
 
     else  # fail
       # Create 'failed_edits' hash which stores all the values from the records that failed to get saved
@@ -72,7 +72,7 @@ class TenantsController < ApplicationController
       failed_edits['new'] = params[:tenant]
       failed_edits['new']['errors'] = tenant.errors.keys.map(&:to_s)
 
-      redirect_to back_address(failed_edits.to_param), notice: return_notice(tenant, "create")
+      redirect_to back_address(failed_edits.to_param), notice: return_message(record: tenant, action: "create")
     end
   end
 
@@ -105,7 +105,7 @@ class TenantsController < ApplicationController
       end
     end
     if attempted_updates == 1
-      redirect_to back_address(failed_edits.to_param), notice: return_notice(tenant, "update")
+      redirect_to back_address(failed_edits.to_param), notice: return_message(record: tenant, action: "update")
     else
       error_str.blank? ? (pre_string = "Successfully u") : (pre_string = "<strong>Error:</strong> U")
       redirect_to back_address(failed_edits.to_param), notice: "#{pre_string}pdated <strong>#{updated_rows}/#{attempted_updates}</strong> row(s)" + error_str

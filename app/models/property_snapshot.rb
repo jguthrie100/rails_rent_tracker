@@ -15,7 +15,7 @@ class PropertySnapshot < ActiveRecord::Base
   # This method looks to see if there is a continuous unbroken flow of dates over one of more
   #  snapshots
   # If there is, then it returns the id's of the snapshots that the date range covers
-  def self.date_range_exists?(model, model_id, start_date, end_date)
+  def self.date_range_exists?(model: model, model_id: model_id, start_date: start_date, end_date: end_date)
     id_field = model.downcase + "_id"
     snapshot_model = model.capitalize + "Snapshot"
 

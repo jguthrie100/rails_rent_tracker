@@ -22,6 +22,6 @@ class PropertySnapshotsController < ApplicationController
     end
 
     property_snapshot.save
-    redirect_to property_path(params[:property_id]), notice: return_notice(property_snapshot, "create")
+    redirect_to property_path(params[:property_id]), notice: return_message(record: property_snapshot, action: "create")
   end
 end

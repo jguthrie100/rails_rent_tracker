@@ -8,7 +8,7 @@ module ControllerHelpers
     return "#{request.env['HTTP_REFERER'].split('?')[0]}?#{param_string}"
   end
 
-  def return_notice record, action
+  def return_message record:, action:
     model_name = record.class.name.titleize.downcase # -> "TenantSnapshot -> tenant snapshot"
     is_error = !record.errors.messages.blank?
 
