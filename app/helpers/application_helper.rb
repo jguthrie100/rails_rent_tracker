@@ -1,5 +1,5 @@
 module ApplicationHelper
-  def highlight_validation_errors model_name, failed_edits
+  def highlight_validation_errors model:, failed_edits:
     output = ""
 
     # On load we want to select the error'd rows and highlight the fields that raised an error
@@ -18,7 +18,7 @@ module ApplicationHelper
       # Highlight the attributes that were the reason for the error
       failed_edits[record_id].keys.each do |attr|
         next unless failed_edits[record_id][:errors].include? attr
-        output << '  $(".' << attr.to_s << '.edit", ' << '"#' << model_name << '_row_" + ' << record_id_s << ').addClass("error");' << "\n"
+        output << '  $(".' << attr.to_s << '.edit", ' << '"#' << model << '_row_" + ' << record_id_s << ').addClass("error");' << "\n"
       end
     end
     output << '});' << "\n"

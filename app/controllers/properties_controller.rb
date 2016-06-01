@@ -31,7 +31,7 @@ class PropertiesController < ApplicationController
     property = Property.find(params[:id])
 
     property.destroy
-    redirect_to back_address(""), notice: return_notice(property, "destroy")
+    redirect_to back_address(""), notice: return_message(record: property, action: "destroy")
   end
 
   def archive
@@ -40,7 +40,7 @@ class PropertiesController < ApplicationController
     property.archived = true
 
     property.save
-    redirect_to back_address(""), notice: return_notice(property, "archive")
+    redirect_to back_address(""), notice: return_message(record: property, action: "archive")
   end
 
   def unarchive
@@ -49,7 +49,7 @@ class PropertiesController < ApplicationController
     property.archived = false
 
     property.save
-    redirect_to back_address(""), notice: return_notice(property, "unarchive")
+    redirect_to back_address(""), notice: return_message(record: property, action: "unarchive")
   end
 
   # Add new Property to DB
@@ -63,7 +63,7 @@ class PropertiesController < ApplicationController
 
     # Attempt to save the property
     if property.save  # success
-      redirect_to back_address(""), notice: return_notice(property, "create")
+      redirect_to back_address(""), notice: return_message(record: property, action: "create")
 
     else  # fail
       # Create 'failed_edits' hash which stores all the values from the records that failed to get saved
@@ -71,7 +71,7 @@ class PropertiesController < ApplicationController
       failed_edits['new'] = params[:property]
       failed_edits['new']['errors'] = property.errors.keys.map(&:to_s)
 
-      redirect_to back_address(failed_edits.to_param), notice: return_notice(property, "create")
+      redirect_to back_address(failed_edits.to_param), notice: return_message(record: property, action: "create")
     end
   end
 
@@ -104,7 +104,7 @@ class PropertiesController < ApplicationController
       end
     end
     if attempted_updates == 1
-      redirect_to back_address(failed_edits.to_param), notice: return_notice(property, "update")
+      redirect_to back_address(failed_edits.to_param), notice: return_message(record: property, action: "update")
     else
       error_str.blank? ? (pre_string = "Successfully u") : (pre_string = "<strong>Error:</strong> U")
       redirect_to back_address(failed_edits.to_param), notice: "#{pre_string}pdated <strong>#{updated_rows}/#{attempted_updates}</strong> row(s)" + error_str
