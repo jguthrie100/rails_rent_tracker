@@ -1,5 +1,5 @@
 module ApplicationHelper
-  def on_ready_jquery model_name, failed_edits
+  def highlight_validation_errors model_name, failed_edits
     output = ""
 
     # On load we want to select the error'd rows and highlight the fields that raised an error

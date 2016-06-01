@@ -2,6 +2,12 @@ class PropertySnapshotsController < ApplicationController
 
   def new
     @property = Property.find(params[:property_id])
+    snapshots = PropertySnapshot.where(:property_id => params[:property_id])
+
+    @snapshot_dates = Array.new
+    snapshots.each do |ss|
+      @snapshot_dates.push([ss.start_date, ss.end_date, ss.name])
+    end
   end
 
   def create

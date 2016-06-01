@@ -1,10 +1,10 @@
 class TransactionsController < ApplicationController
   def index
-    @transactions = Transaction.includes(:tenant).all.reverse
+    @transactions = Transaction.includes(:tenant_snapshot).all.reverse
   end
 
   def edit
-    @transactions = Transaction.includes(:tenant).all.reverse
+    @transactions = Transaction.includes(:tenant_snapshot).all.reverse
   end
 
   # Import CSV file to the DB
@@ -65,6 +65,6 @@ class TransactionsController < ApplicationController
   # Private method that sets Strong Parameter permissions
   private
   def allowed_params(tr_id)
-    params.require(:transactions).require(tr_id).permit(:tenant_id)
+    params.require(:transactions).require(tr_id).permit(:tenant_snapshot_id)
   end
 end

@@ -5,7 +5,7 @@ class SnapshotDateRangeValidator < ActiveModel::Validator
     #  rather than all tenants or properties (i.e. different tenants can have overlapping date ranges)
     if options[:model]
       id = ss.send("#{options[:model]}_id")
-      snapshots = ss.class.name.constantize.send("all").where("#{options[:model]}_id = #{id}")
+      snapshots = ss.class.name.constantize.send("all").where("#{options[:model]}_id = ?", id)
     else
       snapshots = ss.class.name.constantize.send("all")
     end

@@ -47,3 +47,9 @@ a {
 	top: 30px;
 	left: 50%;
 }
+.snapshot_content, .payment_content {
+	display: none;
+}
+.snapshot, .payment {
+	padding: 10px;
+}

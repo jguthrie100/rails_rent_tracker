@@ -1,27 +1,30 @@
-<h1 class="text-primary">New Rental Snapshot for <%= link_to(@tenant.name, tenant_path(@tenant), style: "text-decoration: underline;") %></h1>
+<%= content_tag :div, class: "snapshot_dates", data: {dates: @snapshot_dates} do %>
+<% end %>
 
-<h3 class="text-primary">Add new Snapshot</h3>
+<h1 class="text-primary">New Rental period for <%= link_to(@tenant.name, tenant_path(@tenant), style: "text-decoration: underline;") %></h1>
+
+<h3 class="text-primary">Add new Rental period</h3>
 <%= form_tag(tenant_tenant_snapshots_path) do %>
   <table class="table table-hover table-condensed table-striped">
     <tbody>
-      <tr>
-        <td>Start date: </td>
-        <td><%= date_field(:tenant_snapshot, :start_date) %></td>
-      </tr>
-      <tr>
-        <td>End Date: </td>
-        <td><%= date_field(:tenant_snapshot, :end_date) %></td>
-      </tr>
       <tr>
         <td>Property: </td>
         <td><%= collection_select(:tenant_snapshot, :property_id, Property.all, :id, :name) %></td>
       </tr>
       <tr>
-        <td>Weekly Rent (NZD$): </td>
+        <td>Start date: </td>
+        <td><%= text_field(:tenant_snapshot, :start_date, class: "snapshot_datepicker") %></td>
+      </tr>
+      <tr>
+        <td>End Date: </td>
+        <td><%= text_field(:tenant_snapshot, :end_date, class: "snapshot_datepicker") %></td>
+      </tr>
+      <tr>
+        <td>Weekly Rent <span style="font-size:12px;">(NZD$)</span>: </td>
         <td><%= number_field(:tenant_snapshot, :weekly_rent, step: 5) %></td>
       </tr>
       <tr>
-        <td>Rent Frequency: </td>
+        <td>Rent Frequency <span style="font-size:12px;">(payment made every <em>x</em> weeks)</span>: </td>
         <td><%= number_field(:tenant_snapshot, :rent_frequency, in: 1..20, step: 1) %></td>
       </tr>
       <tr>

@@ -19,7 +19,7 @@
 
           <%# Copy list of validation errors to failed_edits hash %>
           <% (!params.nil? && params[property.id.to_s]) ? (failed_edits[property.id] = params[property.id.to_s]) : "" %>
-          <% archived = " archived" if property.archived && @list_desc == "All" %>
+          <% archived = " archived" if property.archived %>
 
           <%# Build row to display property details %>
           <tr id="property_row_<%= property.id %>" class="property_row<%= archived %>">
@@ -91,5 +91,5 @@
 
 <script>
 // Copies in jQuery code that handles the highlighting of validation errors
-<%= on_ready_jquery "property", failed_edits %>
+<%= highlight_validation_errors "property", failed_edits %>
 </script>
