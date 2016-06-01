@@ -28,4 +28,12 @@ class TenantSnapshot < ActiveRecord::Base
     return properties.first if properties.length == 1
     raise StandardError "Only expected one property associated with TenantSnapshot"
   end
+
+  def total_income
+    return self.transactions.where('amount > 0.0').map(&:amount).inject(0, :+)
+  end
+
+  def total_rent_expected
+    return (self.weekly_rent/7)*self.length_in_days
+  end
 end

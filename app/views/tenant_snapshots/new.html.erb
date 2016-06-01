@@ -8,6 +8,10 @@
   <table class="table table-hover table-condensed table-striped">
     <tbody>
       <tr>
+        <td>Property: </td>
+        <td><%= collection_select(:tenant_snapshot, :property_id, Property.all, :id, :name) %></td>
+      </tr>
+      <tr>
         <td>Start date: </td>
         <td><%= text_field(:tenant_snapshot, :start_date, class: "snapshot_datepicker") %></td>
       </tr>
@@ -16,15 +20,11 @@
         <td><%= text_field(:tenant_snapshot, :end_date, class: "snapshot_datepicker") %></td>
       </tr>
       <tr>
-        <td>Property: </td>
-        <td><%= collection_select(:tenant_snapshot, :property_id, Property.all, :id, :name) %></td>
-      </tr>
-      <tr>
-        <td>Weekly Rent (NZD$): </td>
+        <td>Weekly Rent <span style="font-size:12px;">(NZD$)</span>: </td>
         <td><%= number_field(:tenant_snapshot, :weekly_rent, step: 5) %></td>
       </tr>
       <tr>
-        <td>Rent Frequency: </td>
+        <td>Rent Frequency <span style="font-size:12px;">(payment made every <em>x</em> weeks)</span>: </td>
         <td><%= number_field(:tenant_snapshot, :rent_frequency, in: 1..20, step: 1) %></td>
       </tr>
       <tr>

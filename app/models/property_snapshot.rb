@@ -49,4 +49,8 @@ class PropertySnapshot < ActiveRecord::Base
     end
     return true
   end
+
+  def total_rent_expected
+    return (self.weekly_rent/7)*self.length_in_days
+  end
 end

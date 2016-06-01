@@ -19,10 +19,10 @@ class TenantsController < ApplicationController
   def show
     @tenant = Tenant.includes(:tenant_snapshots).find(params[:id])
     @payments = Transaction.joins(:tenant_snapshot).where(tenant_snapshots: {tenant_id: @tenant}).order(date: :desc)
-    @sorted_snapshots = Array.new
+    @tenant_snapshots = Array.new
 
     @tenant.tenant_snapshots.sort { |a,b| b.start_date <=> a.start_date }.each do |s|
-      @sorted_snapshots.push(s)
+      @tenant_snapshots.push(s)
     end
   end
 

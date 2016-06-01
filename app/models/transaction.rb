@@ -63,9 +63,8 @@ class Transaction < ActiveRecord::Base
               if transaction.payee.include?(t.payment_handle) || transaction.memo.include?(t.payment_handle)
 
                 # TODO: Needs logic to work out a specific tenant_Snapshot the transaction belongs to - i.e. needs to look at date of transaction and date of tenant snapshot etc etc
-                tenant_snapshots = TenantSnapshot.where({ tenant_id: t.id})
-                ts = tenant_snapshots.last
-                transaction.tenant_snapshot = ts
+                transaction.tenant_snapshot = TenantSnapshot.where('tenant_id == ? AND start_date <= ? AND (end_date >= ? OR end_date IS NULL)', t.id, transaction.date, transaction.date)
+                                                            .first # redundant as above date logic dictates only 1 snapshot can be returned, but keep it in for posterity and to get TenantSnapshot object rather than 'ActiveRelationship'
                 break
               end
             end
