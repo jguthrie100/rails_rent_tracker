@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160531123204) do
+ActiveRecord::Schema.define(version: 20160607133539) do
 
   create_table "properties", force: :cascade do |t|
     t.string   "name",                       null: false
@@ -82,8 +82,8 @@ ActiveRecord::Schema.define(version: 20160531123204) do
     t.datetime "updated_at",                                  null: false
   end
 
+  add_index "transactions", ["bank_account_id", "transaction_id"], name: "index_unique_transactions", unique: true
   add_index "transactions", ["bank_account_id"], name: "index_transactions_on_bank_account_id"
   add_index "transactions", ["tenant_snapshot_id"], name: "index_transactions_on_tenant_snapshot_id"
-  add_index "transactions", ["transaction_id"], name: "index_transactions_on_transaction_id"
 
 end
