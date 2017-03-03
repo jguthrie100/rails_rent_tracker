@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -30,19 +29,17 @@ ActiveRecord::Schema.define(version: 20160607133539) do
     t.integer  "property_id"
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
+    t.index ["property_id"], name: "index_property_snapshots_on_property_id"
   end
-
-  add_index "property_snapshots", ["property_id"], name: "index_property_snapshots_on_property_id"
 
   create_table "snapshot_joins", force: :cascade do |t|
     t.integer  "property_snapshot_id", null: false
     t.integer  "tenant_snapshot_id",   null: false
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
+    t.index ["property_snapshot_id"], name: "index_snapshot_joins_on_property_snapshot_id"
+    t.index ["tenant_snapshot_id"], name: "index_snapshot_joins_on_tenant_snapshot_id"
   end
-
-  add_index "snapshot_joins", ["property_snapshot_id"], name: "index_snapshot_joins_on_property_snapshot_id"
-  add_index "snapshot_joins", ["tenant_snapshot_id"], name: "index_snapshot_joins_on_tenant_snapshot_id"
 
   create_table "tenant_snapshots", force: :cascade do |t|
     t.date     "start_date",                               null: false
@@ -53,10 +50,9 @@ ActiveRecord::Schema.define(version: 20160607133539) do
     t.integer  "rent_paid_by_id"
     t.datetime "created_at",                               null: false
     t.datetime "updated_at",                               null: false
+    t.index ["rent_paid_by_id"], name: "index_tenant_snapshots_on_rent_paid_by_id"
+    t.index ["tenant_id"], name: "index_tenant_snapshots_on_tenant_id"
   end
-
-  add_index "tenant_snapshots", ["rent_paid_by_id"], name: "index_tenant_snapshots_on_rent_paid_by_id"
-  add_index "tenant_snapshots", ["tenant_id"], name: "index_tenant_snapshots_on_tenant_id"
 
   create_table "tenants", force: :cascade do |t|
     t.string   "name",                           null: false
@@ -80,10 +76,9 @@ ActiveRecord::Schema.define(version: 20160607133539) do
     t.integer  "tenant_snapshot_id"
     t.datetime "created_at",                                  null: false
     t.datetime "updated_at",                                  null: false
+    t.index ["bank_account_id", "transaction_id"], name: "index_unique_transactions", unique: true
+    t.index ["bank_account_id"], name: "index_transactions_on_bank_account_id"
+    t.index ["tenant_snapshot_id"], name: "index_transactions_on_tenant_snapshot_id"
   end
-
-  add_index "transactions", ["bank_account_id", "transaction_id"], name: "index_unique_transactions", unique: true
-  add_index "transactions", ["bank_account_id"], name: "index_transactions_on_bank_account_id"
-  add_index "transactions", ["tenant_snapshot_id"], name: "index_transactions_on_tenant_snapshot_id"
 
 end
