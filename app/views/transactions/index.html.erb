@@ -36,7 +36,7 @@
             <td><%= transaction.date_str %></td>
             <td>
               <%# Tenant name (w/ link) / Tenant drop down box %>
-              <%= transaction.tenant_snapshot.nil? ? "" : link_to(transaction.tenant_snapshot.name, tenant_tenant_snapshot_path(transaction.tenant_snapshot, transaction.tenant_snapshot.tenant), class: "display") %><br />
+              <%= transaction.tenant_snapshot.nil? ? "" : link_to(transaction.tenant_snapshot.name, tenant_tenant_snapshot_path(transaction.tenant_snapshot.tenant, transaction.tenant_snapshot), class: "display") %><br />
 
               <%# NEEDS CHANGING SO THAT TENANT_SNAPSHOTS ARE SELECTED!! %>
               <%= transaction_form.collection_select(:tenant_snapshot_id, tenant_snapshots, :id, :name, { include_blank: true}, class: "edit", :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %>

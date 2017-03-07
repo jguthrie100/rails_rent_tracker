@@ -94,7 +94,7 @@ $.fn.bic_calendar = function(options) {
          */
         function showCalendar() {
 
-            var newSnapshotPane = $('<div id="new_snapshot_pane" class="row" style="display:none;"></div>');
+            var newEventPane = $('<div id="new_event_pane" class="row" style="display:none;"></div>');
 
             //layer with the days of the month (literals)
             daysMonthsLayer = $('<div id="monthsLayer" class="row" style="height:300px;overflow-y:auto;"></div>');
@@ -144,7 +144,7 @@ $.fn.bic_calendar = function(options) {
             //calendar.append(capaDiasSemana);
             //daysMonthLayer.prepend(capaDiasSemana);
             calendar.append(daysMonthsLayer);
-            calendar.append(newSnapshotPane);
+            calendar.append(newEventPane);
 
             //insert calendar in the document
             elem.append(calendar);
@@ -185,8 +185,6 @@ $.fn.bic_calendar = function(options) {
                 }
 
                 codigoInsertar += '</tr>';
-
-                console.log(codigoInsertar);
                 capaDiasSemana.append(codigoInsertar);
 
                 layoutMonth.append(capaDiasSemana);
@@ -230,7 +228,6 @@ $.fn.bic_calendar = function(options) {
 
             //print the days in the month
             for (var i = 0; i < 38; i++) {
-              console.log(i);
               if(i === 0) {
                 var dayCode = "<tr>";
 
@@ -615,7 +612,7 @@ $.fn.bic_calendar = function(options) {
         function addNewSnapshot(date_from, date_to) {
           $('#new_snapshot_pane [id$="start_date"]').val(`${date_from.getFullYear()}-${date_from.getMonth()+1}-${date_from.getDate()}`);
           $('#new_snapshot_pane [id$="end_date"]').val(`${date_to.getFullYear()}-${date_to.getMonth()+1}-${date_to.getDate()}`);
-          $('#new_snapshot_pane').slideDown();
+          $('#new_snapshot_pane').slideDown('slow');
         }
 
         /*** --functions-- ***/
