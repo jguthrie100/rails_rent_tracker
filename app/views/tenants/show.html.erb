@@ -4,6 +4,8 @@
   <span style="font-size: 12px;">&bull; <%= link_to("Add new rental snapshot", new_tenant_tenant_snapshot_path(@tenant)) %></span>
 </h3>
 
+<%= render 'snapshot_calendar' %>
+
 <% total_rent = 0 %>
 <% @tenant_snapshots.each do |snapshot| %>
   <% total_rent += snapshot.total_rent_expected %>

@@ -1,0 +1,77 @@
+<%#= javascript_include_tag 'https://raw.githubusercontent.com/jguthrie100/bic_calendar_full/master/js/bic_calendar.js' %>
+
+<div id="calendar"></div>
+
+<div id="new_snapshot_pane" style="display:none">
+  <%= form_tag(property_property_snapshots_path(@property)) do %>
+    <table class="table table-hover table-condensed table-striped">
+      <tbody>
+        <tr>
+          <td>Start date: </td>
+          <td><%= text_field(:property_snapshot, :start_date, class: "form-control", readonly: "readonly") %></td>
+        </tr>
+        <tr>
+          <td>End Date: </td>
+          <td><%= text_field(:property_snapshot, :end_date, class: "form-control", readonly: "readonly") %></td>
+        </tr>
+        <tr>
+          <td>Num Bedrooms: </td>
+          <td><%= number_field(:property_snapshot, :num_bedrooms, in: 1..10, step: 1, class: "form-control") %></td>
+        </tr>
+        <tr>
+          <td>Weekly Rent <span style="font-size:12px;">(NZD$)</span>: </td>
+          <td><%= number_field(:property_snapshot, :weekly_rent, class: "form-control") %></td>
+        </tr>
+        <tr>
+          <td>Agency Fees <span style="font-size:12px;">(NZD$)</span>: </td>
+          <td><%= number_field(:property_snapshot, :agency_fees, class: "form-control") %></td>
+        </tr>
+        <tr>
+          <td colspan="2"><%= submit_tag("Create New Snapshot", class: "btn btn-default") %></td>
+        </tr>
+      </tbody>
+    </table>
+  <% end %>
+</div>
+
+<script>
+
+var events = [];
+
+<% @sorted_snapshots.each do |p| %>
+  var event = {
+    date: "<%= p.start_date %>",
+    date_to: "<%= p.end_date %>",
+    type: "snapshot",
+    title: "property_snapshot-<%= p.id %>",
+    color: "#ffff00",
+  };
+  events.push(event);
+<% end %>
+
+  $(document).on('turbolinks:load', function() {
+    $('#calendar').bic_calendar({
+      //list of events in array
+      events: events,
+      //enable select
+      enableSelect: true,
+      //enable multi-select
+      multiSelect: true,
+      //set day names
+    //  dayNames: dayNames,
+      //set month names
+    //  monthNames: monthNames,
+      //show dayNames
+      showDays: true,
+      //set ajax call
+  //    reqAjax: {
+    //      type: 'get',
+    //      url: 'http://bic.cat/bic_calendar/index.php'
+    //  }
+      //set popover options
+      //popoverOptions: {}
+      //set tooltip options
+      //tooltipOptions: {}
+    });
+  });
+</script>
