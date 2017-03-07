@@ -620,6 +620,7 @@ $.fn.bic_calendar = function(options) {
 
 
         //fire calendar!
+        elem.empty();
         showCalendar();
 
 
