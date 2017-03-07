@@ -69,3 +69,7 @@
   <%= submit_tag "Import CSV file" %>
 <% end %>
 <br />
+
+<script>
+  $(/#transaction_row_\d+/.exec(document.location.toString())[0]).css('background', 'rgba(255,220,100,200)');
+</script>

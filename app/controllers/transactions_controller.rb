@@ -1,10 +1,10 @@
 class TransactionsController < ApplicationController
   def index
-    @transactions = Transaction.includes(:tenant_snapshot).all.reverse
+    @transactions = Transaction.includes(:tenant_snapshot).order(date: :desc)
   end
 
   def edit
-    @transactions = Transaction.includes(:tenant_snapshot).all.reverse
+    @transactions = Transaction.includes(:tenant_snapshot).order(date: :desc)
   end
 
   # Import CSV file to the DB

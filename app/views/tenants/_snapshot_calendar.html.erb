@@ -42,12 +42,24 @@
 
 var events = [];
 
+<% @payments.each do |p| %>
+  var event = {
+    date: "<%= p.date %>",
+    type: "rent_payment",
+    title: "rent_payment-<%= p.id %>",
+    content: "<%= p.transaction_id + " - " + p.transaction_type + " - " + p.payee + " - " + p.memo + " - " + p.amount_str %>",
+    link: "<%= "/transactions/#transaction_row_#{p.id}" %>",
+    amount: <%= p.amount %>,
+  };
+  events.push(event);
+<% end %>
+
 <% @tenant_snapshots.each do |t| %>
   var event = {
     date: "<%= t.start_date %>",
     date_to: "<%= t.end_date %>",
     type: "snapshot",
-    title: "rent-<%= t.id %>",
+    title: "snapshot-<%= t.id %>",
     color: "#ffff00",
   };
   events.push(event);

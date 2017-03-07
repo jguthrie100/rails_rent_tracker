@@ -144,7 +144,7 @@ $.fn.bic_calendar = function(options) {
             //calendar.append(capaDiasSemana);
             //daysMonthLayer.prepend(capaDiasSemana);
             calendar.append(daysMonthsLayer);
-          //  calendar.append(newSnapshotPane);
+            calendar.append(newSnapshotPane);
 
             //insert calendar in the document
             elem.append(calendar);
@@ -377,7 +377,11 @@ $.fn.bic_calendar = function(options) {
             for (var i = 0; i < events.length; i++) {
               if(events[i].type == "rent_payment") {
                 var eventDate = new Date(events[i].date);
-                $('#bic_calendar_' + eventDate.getFullYear() + '_' + (parseInt(eventDate.getMonth()) + 1) + '_' + eventDate.getDate() + ' div').addClass('payment');
+                var eventDiv = $('#bic_calendar_' + eventDate.getFullYear() + '_' + (parseInt(eventDate.getMonth()) + 1) + '_' + eventDate.getDate() + ' div');
+                eventDiv.addClass('payment event_popover');
+                eventDiv.find('a').attr('href', events[i].link);
+                eventDiv.find('a').attr('rel', 'popover');
+                eventDiv.find('a').attr('data-content', events[i].content);
               } else {
 
                 if(!events[i].date_to) {
@@ -418,8 +422,6 @@ $.fn.bic_calendar = function(options) {
 
                     loopDayDiv.addClass('event');
 
-                    loopDayA.attr('data-original-title', events[i].title);
-
                     //bg color
                     if (events[i].color) {
                         var r = parseInt(events[i].color.slice(1,3), 16);
@@ -438,13 +440,17 @@ $.fn.bic_calendar = function(options) {
                         loopDayDiv.addClass(events[i].class);
 
                     //tooltip vs popover
-                    if (events[i].content) {
-                        loopDayDiv.addClass('event_popover');
-                        loopDayA.attr('rel', 'popover');
-                        loopDayA.attr('data-content', events[i].content);
-                    } else {
-                        loopDayDiv.addClass('event_tooltip');
-                        loopDayA.attr('rel', 'tooltip');
+                    if(!loopDayDiv.hasClass('event_popover') && !loopDayDiv.hasClass('event_tooltip')) {
+                      loopDayA.attr('data-original-title', events[i].title);
+
+                      if (events[i].content) {
+                          loopDayDiv.addClass('event_popover');
+                          loopDayA.attr('rel', 'popover');
+                          loopDayA.attr('data-content', events[i].content);
+                      } else {
+                          loopDayDiv.addClass('event_tooltip');
+                          loopDayA.attr('rel', 'tooltip');
+                      }
                     }
 
                     oldSelectedDate.setDate(oldSelectedDate.getDate() + 1);
