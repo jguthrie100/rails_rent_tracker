@@ -388,36 +388,40 @@ $.fn.bic_calendar = function(options) {
                 if (events[i].date.split(/\D/)[0] == year || events[i].date_to.split(/\D/)[0] == year) {
 
                   //create date object from dates
-                  var oldSelectedDate = new Date(events[i].date);
-                  var newSelectedDate = new Date(events[i].date_to);
+                  var fromDate = new Date(events[i].date);
+                  var toDate = new Date(events[i].date_to);
 
 
                   //create a loop adding day per loop to set days
                   //turn dates if >
-                  if (oldSelectedDate >= newSelectedDate) {
+                  if (fromDate > toDate) {
                       //turn vars date
-                      var tempSelectedDate = oldSelectedDate;
-                      oldSelectedDate = newSelectedDate;
-                      newSelectedDate = tempSelectedDate;
+                      var tempDate = fromDate;
+                      fromDate = toDate;
+                      toDate = tempDate;
                   }
+
+                  currDate = new Date(fromDate);
+
                   //set first selection
-                  while (oldSelectedDate <= newSelectedDate) {
-                    if(oldSelectedDate.toString() == new Date(events[i].date).toString()) {
+                  while (currDate <= toDate) {
+                    if(currDate.toString().slice(0, 15) == fromDate.toString().slice(0, 15)) {
 
                       // Set first selection
-                      $('#bic_calendar_' + oldSelectedDate.getFullYear() + '_' + (parseInt(oldSelectedDate.getMonth()) + 1) + '_' + oldSelectedDate.getDate() + ' div').addClass('snapshot first-selection');
-                    } else if(oldSelectedDate.toString() == newSelectedDate.toString()) {
+                      $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate() + ' div').addClass('snapshot first-selection');
+                    }
+                    if(currDate.toString().slice(0, 15) == toDate.toString().slice(0, 15)) {
                       // Set last selection
-                      $('#bic_calendar_' + oldSelectedDate.getFullYear() + '_' + (parseInt(oldSelectedDate.getMonth()) + 1) + '_' + oldSelectedDate.getDate() + ' div').addClass('snapshot last-selection');
-                    } else {
-                      //set middle-selection
-                      $('#bic_calendar_' + oldSelectedDate.getFullYear() + '_' + (parseInt(oldSelectedDate.getMonth()) + 1) + '_' + oldSelectedDate.getDate() + ' div').addClass('snapshot middle-selection');
+                      $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate() + ' div').addClass('snapshot last-selection');
                     }
 
-                    var loopDayDiv = $('#bic_calendar_' + oldSelectedDate.getFullYear() + '_' + (parseInt(oldSelectedDate.getMonth()) + 1) + '_' + oldSelectedDate.getDate() + ' div');
-                    var loopDayA = $('#bic_calendar_' + oldSelectedDate.getFullYear() + '_' + (parseInt(oldSelectedDate.getMonth()) + 1) + '_' + oldSelectedDate.getDate() + ' a');
+                    if(currDate.toString().slice(0, 15) != fromDate.toString().slice(0, 15) && currDate.toString().slice(0, 15) != toDate.toString().slice(0, 15)) {
+                      //set middle-selection
+                      $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate() + ' div').addClass('snapshot middle-selection');
+                    }
 
-                    loopDayDiv.addClass('event');
+                    var loopDayDiv = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate() + ' div');
+                    var loopDayA = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate() + ' a');
 
                     //bg color
                     if (events[i].color) {
@@ -450,7 +454,7 @@ $.fn.bic_calendar = function(options) {
                       }
                     }
 
-                    oldSelectedDate.setDate(oldSelectedDate.getDate() + 1);
+                    currDate.setDate(currDate.getDate() + 1);
                   }
                 }
               }
@@ -568,7 +572,7 @@ $.fn.bic_calendar = function(options) {
                     removeClass = 'middle-selection';
                   }
 
-                  if(currDate.toString() == firstSelectedDate.toString()) {
+                  if(currDate.toString().slice(0, 15) == firstSelectedDate.toString().slice(0, 15)) {
                     if(!backwards) {
                       addClass += ' first-selection';
                     } else {
@@ -577,7 +581,7 @@ $.fn.bic_calendar = function(options) {
 
                   }
 
-                  if(currDate.toString() == lastSelectedDate.toString()) {
+                  if(currDate.toString().slice(0, 15) == lastSelectedDate.toString().slice(0, 15)) {
                     if(!backwards) {
                       addClass += ' last-selection';
                     } else {
@@ -585,7 +589,7 @@ $.fn.bic_calendar = function(options) {
                     }
                   }
 
-                  if(currDate.toString() != firstSelectedDate.toString() && currDate.toString() != lastSelectedDate.toString()) {
+                  if(currDate.toString().slice(0, 15) != firstSelectedDate.toString().slice(0, 15) && currDate.toString().slice(0, 15) != lastSelectedDate.toString().slice(0, 15)) {
                     addClass += ' middle-selection';
                     //set middle-selection
                   }
