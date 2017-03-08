@@ -21,7 +21,7 @@
         <%= fields_for "tenants[]", tenant do |tenant_form| %>
 
           <%# Copy list of validation errors to failed_edits hash %>
-          <% (!params.nil? && params[tenant.id.to_s]) ? (failed_edits[tenant.id] = params[tenant.id.to_s]) : "" %>
+          <% (!params.nil? && params[tenant.id.to_s]) ? (failed_edits[tenant.id] = Rack::Utils.parse_nested_query(params[tenant.id.to_s])) : "" %>
           <% archived = " archived" if tenant.archived %>
 
           <%# Build row to display tenant details %>
@@ -33,22 +33,22 @@
             <td>
               <%# Tenant name (w/ link) / Tenant name edit field %>
               <%= link_to(tenant.name, tenant_path(tenant), class: "display name") %><br />
-              <%= tenant_form.text_field(:name, class: "edit name", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id][:name] : tenant.name}") %>
+              <%= tenant_form.text_field(:name, class: "edit name", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id]['name'] : tenant.name}") %>
             </td>
             <td>
               <%# Payment handle / Payment handle edit field %>
               <span class="display payment_handle"><%= tenant.payment_handle %></span><br />
-              <%= tenant_form.text_field(:payment_handle, class: "edit payment_handle", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id][:payment_handle] : tenant.payment_handle}") %>
+              <%= tenant_form.text_field(:payment_handle, class: "edit payment_handle", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id]['payment_handle'] : tenant.payment_handle}") %>
             </td>
             <td>
               <%# Phone number / Phone number edit field %>
               <span class="display phone_num"><%= tenant.phone_num %></span><br />
-              <%= tenant_form.text_field(:phone_num, class: "edit phone_num", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id][:phone_num] : tenant.phone_num}") %>
+              <%= tenant_form.text_field(:phone_num, class: "edit phone_num", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id]['phone_num'] : tenant.phone_num}") %>
             </td>
             <td>
               <%# Email address / Email address edit field %>
               <span class="display email"><%= tenant.email %></span><br />
-              <%= tenant_form.text_field(:email, class: "edit email", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id][:email] : tenant.email}") %>
+              <%= tenant_form.text_field(:email, class: "edit email", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id]['email'] : tenant.email}") %>
             </td>
             <td>
               <%# Tenant's rental property (w/ link) / Rental property dropdown box %>
@@ -84,7 +84,7 @@
         <%= form_tag(tenants_path) do %>
 
           <%# Copy any validation errors %>
-          <% (!params.nil? && params['new']) ? (failed_edits['new'] = params['new']) : "" %>
+          <% (!params.nil? && params['new']) ? (failed_edits['new'] = Rack::Utils.parse_nested_query(params['new'])) : "" %>
 
           <%# Build table row %>
           <tr id="tenant_row_new" class="tenant_row">
@@ -94,23 +94,23 @@
             </td>
             <td>
               <%# Tenant name edit field %>
-              <%= text_field(:tenant, :name, class: "display edit name", value: "#{failed_edits['new'] ? failed_edits['new'][:name] : ''}") %>
+              <%= text_field(:tenant, :name, class: "display edit name", value: "#{failed_edits['new'] ? failed_edits['new']['name'] : ''}") %>
             </td>
             <td>
               <%# Payment handle edit field %>
-              <%= text_field(:tenant, :payment_handle, class: "display edit payment_handle", value: "#{failed_edits['new'] ? failed_edits['new'][:payment_handle] : ''}") %>
+              <%= text_field(:tenant, :payment_handle, class: "display edit payment_handle", value: "#{failed_edits['new'] ? failed_edits['new']['payment_handle'] : ''}") %>
             </td>
             <td>
               <%# Phone number edit field %>
-              <%= text_field(:tenant, :phone_num, class: "display edit phone_num", value: "#{failed_edits['new'] ? failed_edits['new'][:phone_num] : ''}") %>
+              <%= text_field(:tenant, :phone_num, class: "display edit phone_num", value: "#{failed_edits['new'] ? failed_edits['new']['phone_num'] : ''}") %>
             </td>
             <td>
               <%# Email address edit field %>
-              <%= text_field(:tenant, :email, class: "display edit email", value: "#{failed_edits['new'] ? failed_edits['new'][:email] : ''}") %>
+              <%= text_field(:tenant, :email, class: "display edit email", value: "#{failed_edits['new'] ? failed_edits['new']['email'] : ''}") %>
             </td>
             <td>
               <%# Tenant's rental property dropdown selection box' %>
-              <%= collection_select(:tenant, :property_id, Property.all, :id, :name, {include_blank: true, selected: (failed_edits['new'] ? failed_edits['new'][:property_id].to_i : '')}, class: "display edit property_id") %>
+              <%= collection_select(:tenant, :property_id, Property.all, :id, :name, {include_blank: true, selected: (failed_edits['new'] ? failed_edits['new']['property_id'].to_i : '')}, class: "display edit property_id") %>
             </td>
             <td></td>
             <td>

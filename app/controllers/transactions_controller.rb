@@ -55,7 +55,7 @@ class TransactionsController < ApplicationController
       end
     end
     if attempted_updates == 1
-      redirect_to back_address(failed_edits.to_param), notice: return_message(record: transaction, action: "update")
+      redirect_to back_address(failed_edits.to_param + "#transaction_row_#{transaction.id}"), notice: return_message(record: transaction, action: "update")
     else
       error_str.blank? ? (pre_string = "Successfully u") : (pre_string = "<strong>Error:</strong> U")
       redirect_to back_address(failed_edits.to_param), notice: "#{pre_string}pdated <strong>#{updated_rows}/#{attempted_updates}</strong> row(s)" + error_str

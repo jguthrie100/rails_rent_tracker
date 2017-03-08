@@ -18,7 +18,7 @@
         <%= fields_for "properties[]", property do |property_form| %>
 
           <%# Copy list of validation errors to failed_edits hash %>
-          <% (!params.nil? && params[property.id.to_s]) ? (failed_edits[property.id] = params[property.id.to_s]) : "" %>
+          <% (!params.nil? && params[property.id.to_s]) ? (failed_edits[property.id] = Rack::Utils.parse_nested_query(params[property.id.to_s])) : "" %>
           <% archived = " archived" if property.archived %>
 
           <%# Build row to display property details %>
@@ -30,12 +30,12 @@
             <td>
               <%# Property name (w/ link) / Property name edit field %>
               <%= link_to(property.name, property_path(property), class: "display name") %><br />
-              <%= property_form.text_field(:name, class: "edit name", value: "#{failed_edits[property.id] ? failed_edits[property.id][:name] : property.name}") %>
+              <%= property_form.text_field(:name, class: "edit name", value: "#{failed_edits[property.id] ? failed_edits[property.id]['name'] : property.name}") %>
             </td>
             <td>
               <%# Property address (w/ map link) / Property address edit field %>
               <span class="display address"><%= property.address %> - <%= link_to("[map]", "http://www.google.com/maps/search/#{property.address}", :target => "_blank") %></span><br />
-              <%= property_form.text_field(:address, class: "edit address", size: 100, value: "#{failed_edits[property.id] ? failed_edits[property.id][:address] : property.address}") %>
+              <%= property_form.text_field(:address, class: "edit address", size: 100, value: "#{failed_edits[property.id] ? failed_edits[property.id]['address'] : property.address}") %>
             </td>
             <td>
               <%= property.archived ? "<strong>- ARCHIVED -</strong>".html_safe : "" %>
@@ -63,7 +63,7 @@
         <%= form_tag(properties_path) do %>
 
           <%# Copy any validation errors %>
-          <% (!params.nil? && params['new']) ? (failed_edits['new'] = params['new']) : "" %>
+          <% (!params.nil? && params['new']) ? (failed_edits['new'] = Rack::Utils.parse_nested_query(params['new'])) : "" %>
 
           <%# Build table row %>
           <tr id="property_row_new" class="property_row">
@@ -73,11 +73,11 @@
             </td>
             <td>
               <%# Property name edit field %>
-              <%= text_field(:property, :name, disabled: "true", class: "display edit name", value: "#{failed_edits['new'] ? failed_edits['new'][:name] : ''}") %>
+              <%= text_field(:property, :name, disabled: "true", class: "display edit name", value: "#{failed_edits['new'] ? failed_edits['new']['name'] : ''}") %>
             </td>
             <td>
               <%# Property address edit field %>
-              <%= text_field(:property, :address, :size => 100, disabled: "true", class: "display edit address", value: "#{failed_edits['new'] ? failed_edits['new'][:address] : ''}") %>
+              <%= text_field(:property, :address, :size => 100, disabled: "true", class: "display edit address", value: "#{failed_edits['new'] ? failed_edits['new']['address'] : ''}") %>
             </td>
             <td></td>
             <td>

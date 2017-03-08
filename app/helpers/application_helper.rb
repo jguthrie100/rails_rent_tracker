@@ -17,7 +17,7 @@ module ApplicationHelper
 
       # Highlight the attributes that were the reason for the error
       failed_edits[record_id].keys.each do |attr|
-        next unless failed_edits[record_id][:errors].include? attr
+        next unless failed_edits[record_id]['errors'].include? attr
         output << '  $(".' << attr.to_s << '.edit", ' << '"#' << model << '_row_" + ' << record_id_s << ').addClass("error");' << "\n"
       end
     end
