@@ -1,4 +1,4 @@
-class SnapshotJoin < ActiveRecord::Base
+class SnapshotJoin < ApplicationRecord
   belongs_to :property_snapshot
   belongs_to :tenant_snapshot
 

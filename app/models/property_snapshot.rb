@@ -1,4 +1,4 @@
-class PropertySnapshot < ActiveRecord::Base
+class PropertySnapshot < ApplicationRecord
   include ModelHelpers
 
   belongs_to :property

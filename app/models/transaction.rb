@@ -1,6 +1,6 @@
 require 'csv'
 
-class Transaction < ActiveRecord::Base
+class Transaction < ApplicationRecord
   include ModelHelpers
 
   belongs_to :tenant_snapshot

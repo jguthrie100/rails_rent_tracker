@@ -1,4 +1,4 @@
-class Tenant < ActiveRecord::Base
+class Tenant < ApplicationRecord
   has_many :tenant_snapshots
   has_many :properties, through: :tenant_snapshots
   has_many :transactions, through: :tenant_snapshots

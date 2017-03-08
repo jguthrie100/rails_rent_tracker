@@ -1,4 +1,4 @@
-class TenantSnapshot < ActiveRecord::Base
+class TenantSnapshot < ApplicationRecord
   include ModelHelpers
 
   belongs_to :tenant
