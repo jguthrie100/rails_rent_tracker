@@ -55,7 +55,7 @@ var colors = ['#ff0000', '#33cc33', '#ffff00', '#0000ff', '#339999'];
   events.push(event);
 <% end %>
 
-<% @tenant_snapshots.each_with_index do |t, i| %>
+<% @tenant_snapshots.reverse.each_with_index do |t, i| %>
   var event = {
     date: "<%= t.start_date %>",
     date_to: "<%= t.end_date %>",

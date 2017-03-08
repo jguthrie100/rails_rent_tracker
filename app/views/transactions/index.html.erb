@@ -71,11 +71,12 @@
 <br />
 
 <script>
-  var background_color = 'rgba(255,220,100,200)';
+  //var highlight_color = 'rgba(255,220,100,200)';
+  var highlight_color = 'rgba(100,220,100,200)';
 
   if($('.alert').hasClass('alert-success')) {
-    background_color = 'rgba(100,220,100,200)';
+    highlight_color = 'rgba(100,220,100,200)';
   }
 
-  $(/#transaction_row_\d+/.exec(document.location.toString())[0]).css('background', background_color);
+  $(/#transaction_row_\d+/.exec(document.location.toString())[0]).css('background', highlight_color);
 </script>

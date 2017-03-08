@@ -169,10 +169,13 @@ $.fn.bic_calendar = function(options) {
         /**
          * show literals of the week
          */
-        function listListeralsWeek() {
+        function listListeralsWeek(month, year) {
             if (showDays != false) {
                 var capaDiasSemana = $('<tr class="days-month">');
                 var codigoInsertar = '';
+                var firstDayMonth = calcNumberDayWeek(1, month, year);
+                var lastDayMonth = lastDay(month, year);
+
                 for(var i=0; i<38; i++) {
                   codigoInsertar += '<td';
                   if (i == 0) {
@@ -181,7 +184,12 @@ $.fn.bic_calendar = function(options) {
                   if (i == 6) {
                       codigoInsertar += ' class="domingo ultimo"';
                   }
-                  codigoInsertar += ">" + dayNames[i%7] + '</td>';
+
+                  if(i < firstDayMonth || i-firstDayMonth >= lastDayMonth) {
+                    codigoInsertar += '>&nbsp;</td>';
+                  } else {
+                    codigoInsertar += ">" + dayNames[i%7] + '</td>';
+                  }
                 }
 
                 codigoInsertar += '</tr>';
@@ -229,14 +237,14 @@ $.fn.bic_calendar = function(options) {
             //print the days in the month
             for (var i = 0; i < 38; i++) {
               if(i === 0) {
-                var dayCode = "<tr>";
+                var dayCode = '<tr id="' + calendarId + '_' + year + '_' + nMonth + '">';
 
               }
               if (i < firstDay || i-firstDay >= lastDayMonth) {
-
+                  var month_pos = (i < firstDay ? (i-firstDay) : (100+i));
                   //add weekDay
-                  dayCode += '<td class="invalid-day week-day-'+ i +'"';
-                  dayCode += '"><div>&nbsp</div></td>';
+                  dayCode += '<td id="' + calendarId + '_' + year + '_' + nMonth + '_' + month_pos + '" class="invalid-day week-day-'+ i +'"';
+                  dayCode += '><div>&nbsp;</div></td>';
               } else {
                   dayCode += '<td id="' + calendarId + '_' + year + "_" + nMonth + "_" + daysCounter + '" data-date="' + year + "/" + nMonth + "/" + daysCounter + '" ';
                   //add weekDay
@@ -250,41 +258,8 @@ $.fn.bic_calendar = function(options) {
 
             }
             daysMonthLayerString += dayCode
-/*
-            //check all the other days until end of the month
-            var currentWeekDay = 1;
-            while (daysCounter <= lastDayMonth) {
-                var dayCode = "";
-                if (currentWeekDay % 7 == 1)
-                    dayCode += "<tr>";
-                dayCode += '<td id="' + calendarId + '_' + year + "_" + nMonth + "_" + daysCounter + '" data-date="' + year + "/" + nMonth + "/" + daysCounter + '" ';
-                //add weekDay
-                dayCode += ' class="week-day-'+ ((currentWeekDay-1)%7) +'"';
-                dayCode += '><div><a>' + daysCounter + '</a></div></td>';
-                if (currentWeekDay % 7 == 0)
-                    dayCode += "</tr>";
-                daysCounter++;
-                currentWeekDay++;
-                daysMonthLayerString += dayCode
-            }
 
-            //check if the empty cells it have yet to write of the last week of the month
-            currentWeekDay--;
-            if (currentWeekDay % 7 != 0) {
-                dayCode = "";
-                for (var i = (currentWeekDay % 7) + 1; i <= 7; i++) {
-                    var dayCode = "";
-                    dayCode += '<td ';
-                    //add weekDay
-                    dayCode += ' class="invalid-day week-day-'+ (i-1) +'"';
-                    dayCode += '"></td>';
-                    if (i == 7)
-                        dayCode += '</tr>'
-                    daysMonthLayerString += dayCode
-                }
-            }
-*/
-            listListeralsWeek();
+            listListeralsWeek(month, year);
 
             layoutMonth.append(daysMonthLayerString);
 
@@ -293,7 +268,6 @@ $.fn.bic_calendar = function(options) {
             layoutMonth.prepend($('<div class="month">' + monthNames[month] + '</div>'));
 
             layoutMonth = $('<div class="col-md-12" style="padding:0px"></div>').append(layoutMonth);
-
 
             daysMonthsLayer.append(layoutMonth);
         }
@@ -337,6 +311,10 @@ $.fn.bic_calendar = function(options) {
             if (arrayFecha.length != 3)
                 return false;
             return checkDate(arrayFecha[1], arrayFecha[0], arrayFecha[2]);
+        }
+
+        function isLastDay(date) {
+          return new Date(date.getTime() + 86400000).getDate() === 1;
         }
 
         /**
@@ -405,23 +383,42 @@ $.fn.bic_calendar = function(options) {
 
                   //set first selection
                   while (currDate <= toDate) {
+
+                    var loopDayDiv = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate() + ' div');
+                    var loopDayA = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate() + ' a');
+
                     if(currDate.toString().slice(0, 15) == fromDate.toString().slice(0, 15)) {
 
                       // Set first selection
-                      $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate() + ' div').addClass('snapshot first-selection');
+                      loopDayDiv.addClass('snapshot first-selection');
                     }
                     if(currDate.toString().slice(0, 15) == toDate.toString().slice(0, 15)) {
                       // Set last selection
-                      $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate() + ' div').addClass('snapshot last-selection');
+                      loopDayDiv.addClass('snapshot last-selection');
                     }
 
                     if(currDate.toString().slice(0, 15) != fromDate.toString().slice(0, 15) && currDate.toString().slice(0, 15) != toDate.toString().slice(0, 15)) {
                       //set middle-selection
-                      $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate() + ' div').addClass('snapshot middle-selection');
-                    }
+                      loopDayDiv.addClass('snapshot middle-selection');
 
-                    var loopDayDiv = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate() + ' div');
-                    var loopDayA = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate() + ' a');
+                      if(currDate.getDate() === 1) {
+                        loopDayDiv.removeClass('middle-selection');
+                        loopDayDiv.addClass('first-selection');
+                    //    var firstIndex = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate()).index();
+                    //    $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + ' td:lt(' + (firstIndex) + ') div').addClass('snapshot middle-selection');
+                    //    loopDayDiv = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + ' td:lt(' + (firstIndex+1) + ') div');
+                    //    loopDayA = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + ' td:lt(' + (firstIndex+1) + ') a');
+                      }
+
+                      if(isLastDay(currDate)) {
+                        loopDayDiv.removeClass('middle-selection');
+                        loopDayDiv.addClass('last-selection');
+                    //    var lastIndex = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate()).index();
+                    //    $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + ' td:gt(' + (lastIndex) + ') div').addClass('snapshot middle-selection');
+                    //    loopDayDiv = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + ' td:gt(' + (lastIndex-1) + ') div');
+                    //    loopDayA = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + ' td:gt(' + (lastIndex-1) + ') a');
+                      }
+                    }
 
                     //bg color
                     if (events[i].color) {
