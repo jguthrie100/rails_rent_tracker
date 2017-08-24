@@ -1,10 +1,10 @@
 <h1 class="text-primary"><%= @property.name %></h1>
 
+<%= render 'snapshot_calendar' %>
+
 <h3 class="text-primary">Rental Periods&nbsp;&nbsp;
   <span style="font-size: 12px;">&bull; <%= link_to("Add new rental snapshot", new_property_property_snapshot_path(@property)) %></span>
 </h3>
-
-<%= render 'snapshot_calendar' %>
 
 <% @sorted_snapshots.each do |snapshot| %>
 

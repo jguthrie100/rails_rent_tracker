@@ -1,17 +1,19 @@
-page = window.location['pathname'].split('/')[1]
-if(page === "tenants") {
-  row_name = "#tenant_row_";
-  row_class = ".tenant_row";
-} else if (page === "properties") {
-  row_name = "#property_row_";
-  row_class = ".property_row";
-} else if (page === "transactions") {
-  row_name = "#transaction_row_";
-  row_class = ".transaction_row";
-} else {
-  row_name = "#record_row_";
-  row_class = ".record_row";
-}
+$(document).on('turbolinks:load', function() {
+  page = window.location['pathname'].split('/')[1]
+  if(page === "tenants") {
+    row_name = "#tenant_row_";
+    row_class = ".tenant_row";
+  } else if (page === "properties") {
+    row_name = "#property_row_";
+    row_class = ".property_row";
+  } else if (page === "transactions") {
+    row_name = "#transaction_row_";
+    row_class = ".transaction_row";
+  } else {
+    row_name = "#record_row_";
+    row_class = ".record_row";
+  }
+});
 
 // Method that gets called everytime a checkbox is selected
 function toggle_edit(id) {
