@@ -1,58 +1,64 @@
-$(document).on('turbolinks:load', function() {
+$(document).on('ready turbolinks:load', function() {
+  get_row_type();
+});
+
+function get_row_type() {
   page = window.location['pathname'].split('/')[1]
-  if(page === "tenants") {
+  if(/^tenants/.test(page)) {
     row_name = "#tenant_row_";
     row_class = ".tenant_row";
-  } else if (page === "properties") {
+  } else if (/^properties/.test(page)) {
     row_name = "#property_row_";
     row_class = ".property_row";
-  } else if (page === "transactions") {
+  } else if (/^transactions/.test(page)) {
     row_name = "#transaction_row_";
     row_class = ".transaction_row";
   } else {
     row_name = "#record_row_";
     row_class = ".record_row";
   }
-});
+}
 
-// Method that gets called everytime a checkbox is selected
+// Method called everytime a checkbox is selected
 function toggle_edit(id) {
-  if ( $("#checkbox_" + id).prop("checked") ) {
-    // WHEN A ROW IS SELECTED..
+  get_row_type();
 
-    // Enable the Save button
+  // WHEN A ROW SELECTED..
+  if ( $("#checkbox_" + id).prop("checked") ) {
+
+    // Enable save button
     $("#save_btn_" + id).removeClass("disabled")
                         .prop("disabled", false);
 
-    // Hide all the display fields and show and enable all the edit fields
+    // Hide all display fields and show and enable all edit fields
     $(".display", row_name + id).css("visibility", "hidden");
     $(".edit", row_name + id).prop("disabled", false);
     $(".edit", row_name + id).css("visibility", "visible");
 
-    // Fade out the unselected rows and disable the checkboxes on them
+    // Fade out unselected rows and disable checkboxes on them
     $(row_class + ":not(" + row_name + id + ")").css("opacity", "0.5");
     $(".checkbox:not(#checkbox_" + id + ")").prop("disabled", true);
 
-    // Handles archived rows to remove special formatting when editing
+    // Handle archived rows to remove special formatting when editing
     $(row_name + id).css("opacity", 1);
 
+  // WHEN A ROW DESELECTED..
   } else {
-    // WHEN A ROW IS DESELECTED..
 
     // Disable save button
     $("#save_btn_" + id).addClass("disabled")
                         .prop("disabled", true);
 
-    // Hide and disable all the edit fields and display the display fields
+    // Hide and disable edit fields and enable display fields
     $(".edit", row_name + id).prop("disabled", true);
     $(".edit", row_name + id).css("visibility", "hidden");
     $(".display", row_name + id).css("visibility", "visible");
 
-    // Fade all the other rows back in and enable all the checkboxes
+    // Fade other rows back in and enable checkboxes
     $(row_class).css("opacity", "1");
     $(".checkbox").prop("disabled", false);
 
-    // Handles archived rows to return special formatting once editing is finished
+    // Handle archived rows to return special formatting once editing is finished
     $(".archived").css("opacity", 0.7);
   }
 }
@@ -70,13 +76,13 @@ function toggle_info(prefix, id) {
   }
 }
 
-// Function to determine whether a specific date on the datepicker should be greyed out
+// Determine whether a specific date on the datepicker should be greyed out
 function is_date_available(cal_date) {
 
   // Array of existing Snapshot dates
   var existing_snapshot_dates = $('.snapshot_dates').data('dates');
 
-  // Loop through each existing snapshot
+  // Loop through existing snapshots
   for(i = 0; i < existing_snapshot_dates.length; i++) {
 
     // Convert text dates to Date objects
@@ -96,7 +102,7 @@ function is_date_available(cal_date) {
   return [true, "enabled_date", "Available date"];
 }
 
-$(document).on('turbolinks:load', function() {
+$(document).on('ready turbolinks:load', function() {
   // Build datepicker object
   $('.snapshot_datepicker').datepicker({
     dateFormat: "dd/mm/yy",

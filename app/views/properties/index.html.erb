@@ -1,6 +1,12 @@
 <% failed_edits = Hash.new %>
 <h3 class="text-primary">List of <%= @list_desc %> Properties&nbsp;&nbsp;
-  <span style="font-size: 12px;">&bull; view: <%= link_to("all", all_properties_path) %> | <%= link_to("current", properties_path) %> | <%= link_to("archived", archived_properties_path) %></span></h3>
+  <span style="font-size: 12px;">&bull; view: <%= link_to("all", all_properties_path) %> | <%= link_to("current", properties_path) %> | <%= link_to("archived", archived_properties_path) %></span>
+</h3>
+
+<%# Build forms %>
+<%= form_for :properties, :url => update_multiple_properties_path, :method => :put, :html => { :id => "update_property_form" } do |form| %><% end %>
+<%= form_tag(properties_path, :id => "new_property_form") do %><% end %>
+
 <table class="table table-hover table-condensed table-striped">
   <thead>
     <tr>
@@ -12,80 +18,74 @@
     </tr>
   </thead>
   <tbody>
-    <%# Build form %>
-    <%= form_for :properties, :url => update_multiple_properties_path, :method => "put" do |form| %>
-      <% @properties.each do |property| %>
-        <%= fields_for "properties[]", property do |property_form| %>
+    <% @properties.each do |property| %>
+      <%= fields_for "properties[]", property do |property_form| %>
 
-          <%# Copy list of validation errors to failed_edits hash %>
-          <% (!params.nil? && params[property.id.to_s]) ? (failed_edits[property.id] = Rack::Utils.parse_nested_query(params[property.id.to_s])) : "" %>
-          <% archived = " archived" if property.archived %>
+        <%# Copy list of validation errors to failed_edits hash %>
+        <% (!params.nil? && params[property.id.to_s]) ? (failed_edits[property.id] = Rack::Utils.parse_nested_query(params[property.id.to_s])) : "" %>
+        <% archived = " archived" if property.archived %>
 
-          <%# Build row to display property details %>
-          <tr id="property_row_<%= property.id %>" class="property_row<%= archived %>">
-            <td>
-              <%# Checkbox %>
-              <input id="checkbox_<%= property.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= property.id %>)" />
-            </td>
-            <td>
-              <%# Property name (w/ link) / Property name edit field %>
-              <%= link_to(property.name, property_path(property), class: "display name") %><br />
-              <%= property_form.text_field(:name, class: "edit name", value: "#{failed_edits[property.id] ? failed_edits[property.id]['name'] : property.name}") %>
-            </td>
-            <td>
-              <%# Property address (w/ map link) / Property address edit field %>
-              <span class="display address"><%= property.address %> - <%= link_to("[map]", "http://www.google.com/maps/search/#{property.address}", :target => "_blank") %></span><br />
-              <%= property_form.text_field(:address, class: "edit address", size: 100, value: "#{failed_edits[property.id] ? failed_edits[property.id]['address'] : property.address}") %>
-            </td>
-            <td>
-              <%= property.archived ? "<strong>- ARCHIVED -</strong>".html_safe : "" %>
-            </td>
-            <td>
-              <%# is_updated flag gets set to true when a row is updated %>
-              <% is_updated_id = "properties_" + property.id.to_s + "_is_updated" %>
-              <%= property_form.hidden_field(:is_updated, :value => 'false') %>
+        <%# Build row to display property details %>
+        <tr id="property_row_<%= property.id %>" class="property_row<%= archived %>">
+          <td>
+            <%# Checkbox %>
+            <input form="update_property_form" id="checkbox_<%= property.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= property.id %>)" />
+          </td>
+          <td>
+            <%# Property name (w/ link) / Property name edit field %>
+            <%= link_to(property.name, property_path(property), class: "display name") %><br />
+            <%= property_form.text_field(:name, class: "edit name", value: "#{failed_edits[property.id] ? failed_edits[property.id]['name'] : property.name}", form: "update_property_form") %>
+          </td>
+          <td>
+            <%# Property address (w/ map link) / Property address edit field %>
+            <span class="display address"><%= property.address %> - <%= link_to("[map]", "http://www.google.com/maps/search/#{property.address}", :target => "_blank") %></span><br />
+            <%= property_form.text_field(:address, class: "edit address", size: 100, value: "#{failed_edits[property.id] ? failed_edits[property.id]['address'] : property.address}", form: "update_property_form") %>
+          </td>
+          <td>
+            <%= property.archived ? "<strong>- ARCHIVED -</strong>".html_safe : "" %>
+          </td>
+          <td>
+            <%# is_updated flag gets set to true when a row is updated %>
+            <% is_updated_id = "properties_" + property.id.to_s + "_is_updated" %>
+            <%= property_form.hidden_field(:is_updated, :value => 'false') %>
 
-              <%# Save button %>
-              <button id="save_btn_<%= property.id %>" class="fa fa-floppy-o btn btn-primary disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" title="Save changes" disabled></button>
+            <%# Save button %>
+            <button form="update_property_form" type="submit" id="save_btn_<%= property.id %>" class="fa fa-floppy-o btn btn-primary disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" title="Save changes" disabled></button>
 
-              <%# Depending on archived flag, display Archive or Unarchive button (w/ confirm message) %>
-              <% if property.archived %>
-                <%= link_to "", {:controller => :properties, :action => 'unarchive', :id => property.id }, :method => :patch, class: "fa fa-plus-square btn btn-warning", title: "Restore property", data: { confirm: "Are you sure you want to restore property '#{property.name.upcase}' and add it to your list of current properties? (This change can be reversed later..)" } %>
-              <% else %>
-                <%= link_to "", {:controller => :properties, :action => 'archive', :id => property.id }, :method => :patch, class: "fa fa-minus-square btn btn-danger", title: "Archive property", data: { confirm: "Are you sure you want to archive property '#{property.name.upcase}' and remove it from your current list of properties? (This change can be reversed later..)" } %>
-              <% end %>
-            </td>
-          </tr>
-        <% end %>
+            <%# Depending on archived flag, display Archive or Unarchive button (w/ confirm message) %>
+            <% if property.archived %>
+              <%= link_to "", {:controller => :properties, :action => 'unarchive', :id => property.id }, :method => :patch, class: "fa fa-plus-square btn btn-warning", title: "Restore property", data: { confirm: "Are you sure you want to restore property '#{property.name.upcase}' and add it to your list of current properties? (This change can be reversed later..)" } %>
+            <% else %>
+              <%= link_to "", {:controller => :properties, :action => 'archive', :id => property.id }, :method => :patch, class: "fa fa-minus-square btn btn-danger", title: "Archive property", data: { confirm: "Are you sure you want to archive property '#{property.name.upcase}' and remove it from your current list of properties? (This change can be reversed later..)" } %>
+            <% end %>
+          </td>
+        </tr>
       <% end %>
     <% end %>
-        <%# Create final row with a form to add a new Property to the inventory %>
-        <%= form_tag(properties_path) do %>
 
-          <%# Copy any validation errors %>
-          <% (!params.nil? && params['new']) ? (failed_edits['new'] = Rack::Utils.parse_nested_query(params['new'])) : "" %>
+    <%# Copy any validation errors %>
+    <% (!params.nil? && params['new']) ? (failed_edits['new'] = Rack::Utils.parse_nested_query(params['new'])) : "" %>
 
-          <%# Build table row %>
-          <tr id="property_row_new" class="property_row">
-            <td>
-              <%# Checkbox %>
-              <input id="checkbox_new" class="checkbox new_property" type="checkbox" onchange="toggle_edit('new')" />
-            </td>
-            <td>
-              <%# Property name edit field %>
-              <%= text_field(:property, :name, disabled: "true", class: "display edit name", value: "#{failed_edits['new'] ? failed_edits['new']['name'] : ''}") %>
-            </td>
-            <td>
-              <%# Property address edit field %>
-              <%= text_field(:property, :address, :size => 100, disabled: "true", class: "display edit address", value: "#{failed_edits['new'] ? failed_edits['new']['address'] : ''}") %>
-            </td>
-            <td></td>
-            <td>
-              <%# Save button %>
-              <button id="save_btn_new" class="fa fa-floppy-o btn btn-primary disabled new_property" title="Save new property" disabled></button>
-            </td>
-          </tr>
-        <% end %>
+    <%# Build table row %>
+    <tr id="property_row_new" class="property_row">
+      <td>
+        <%# Checkbox %>
+        <input form="new_property_form" id="checkbox_new" class="checkbox new_property" type="checkbox" onchange="toggle_edit('new')" />
+      </td>
+      <td>
+        <%# Property name edit field %>
+        <%= text_field(:property, :name, disabled: "true", class: "display edit name", value: "#{failed_edits['new'] ? failed_edits['new']['name'] : ''}", form: "new_property_form") %>
+      </td>
+      <td>
+        <%# Property address edit field %>
+        <%= text_field(:property, :address, :size => 100, disabled: "true", class: "display edit address", value: "#{failed_edits['new'] ? failed_edits['new']['address'] : ''}", form: "new_property_form") %>
+      </td>
+      <td></td>
+      <td>
+        <%# Save button %>
+        <button form="new_property_form" type="submit" id="save_btn_new" class="fa fa-floppy-o btn btn-primary disabled new_property" title="Save new property" disabled></button>
+      </td>
+    </tr>
   </tbody>
 </table>
 

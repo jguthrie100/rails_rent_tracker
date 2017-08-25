@@ -1,6 +1,12 @@
 <% failed_edits = Hash.new %>
 <h3 class="text-primary">List of <%= @list_desc %> Tenants&nbsp;&nbsp;
-  <span style="font-size: 12px;">&bull; view: <%= link_to("all", all_tenants_path) %> | <%= link_to("current", tenants_path) %> | <%= link_to("archived", archived_tenants_path) %></span></h3>
+  <span style="font-size: 12px;">&bull; view: <%= link_to("all", all_tenants_path) %> | <%= link_to("current", tenants_path) %> | <%= link_to("archived", archived_tenants_path) %></span>
+</h3>
+
+<%# Build forms %>
+<%= form_for :tenant, :url => update_multiple_tenants_path, :method => :put, :html => { :id => "update_tenant_form" } do |form| %><% end %>
+<%= form_tag(tenants_path, :id => "new_tenant_form") do %><% end %>
+
 <table class="table table-hover table-condensed table-striped">
   <thead>
     <tr>
@@ -15,110 +21,104 @@
     </tr>
   </thead>
   <tbody>
-    <%# Build form %>
-    <%= form_for :tenant, :url => update_multiple_tenants_path, :method => "put" do |form| %>
-      <% @tenants.each do |tenant| %>
-        <%= fields_for "tenants[]", tenant do |tenant_form| %>
+    <% @tenants.each do |tenant| %>
+      <%= fields_for "tenants[]", tenant do |tenant_form| %>
 
-          <%# Copy list of validation errors to failed_edits hash %>
-          <% (!params.nil? && params[tenant.id.to_s]) ? (failed_edits[tenant.id] = Rack::Utils.parse_nested_query(params[tenant.id.to_s])) : "" %>
-          <% archived = " archived" if tenant.archived %>
+        <%# Copy list of validation errors to failed_edits hash %>
+        <% (!params.nil? && params[tenant.id.to_s]) ? (failed_edits[tenant.id] = Rack::Utils.parse_nested_query(params[tenant.id.to_s])) : "" %>
+        <% archived = " archived" if tenant.archived %>
 
-          <%# Build row to display tenant details %>
-          <tr id="tenant_row_<%= tenant.id %>" class="tenant_row<%= archived %>">
-            <td>
-              <%# Checkbox %>
-              <input id="checkbox_<%= tenant.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= tenant.id %>)">
-            </td>
-            <td>
-              <%# Tenant name (w/ link) / Tenant name edit field %>
-              <%= link_to(tenant.name, tenant_path(tenant), class: "display name") %><br />
-              <%= tenant_form.text_field(:name, class: "edit name", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id]['name'] : tenant.name}") %>
-            </td>
-            <td>
-              <%# Payment handle / Payment handle edit field %>
-              <span class="display payment_handle"><%= tenant.payment_handle %></span><br />
-              <%= tenant_form.text_field(:payment_handle, class: "edit payment_handle", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id]['payment_handle'] : tenant.payment_handle}") %>
-            </td>
-            <td>
-              <%# Phone number / Phone number edit field %>
-              <span class="display phone_num"><%= tenant.phone_num %></span><br />
-              <%= tenant_form.text_field(:phone_num, class: "edit phone_num", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id]['phone_num'] : tenant.phone_num}") %>
-            </td>
-            <td>
-              <%# Email address / Email address edit field %>
-              <span class="display email"><%= tenant.email %></span><br />
-              <%= tenant_form.text_field(:email, class: "edit email", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id]['email'] : tenant.email}") %>
-            </td>
-            <td>
-              <%# Tenant's rental property (w/ link) / Rental property dropdown box %>
-              <%# NEEDS A LOT OF TESTING!! %>
-              <%= tenant.current_property.nil? ? "" : link_to(tenant.current_property.name, property_path(tenant.current_property), class: "display property_id") %><br />
-              <%# tenant.current_property.nil? ? t_property = 0 : t_property = tenant.current_property.id %>
-              <%#= tenant_form.collection_select(:property_id, Property.all, :id, :name, { include_blank: true, selected: (failed_edits[tenant.id] ? failed_edits[tenant.id][:property_id].to_i : t_property)}, class: "edit property_id")
-              %>
-            </td>
-            <td>
-              <%= tenant.archived ? "<strong>- ARCHIVED -</strong>".html_safe : "" %>
-            </td>
-            <td>
-              <%# is_updated flag gets set to true when a row is updated %>
-              <% is_updated_id = "tenants_" + tenant.id.to_s + "_is_updated" %>
-              <%= tenant_form.hidden_field(:is_updated, :value => 'false') %>
+        <%# Build row to display tenant details %>
+        <tr id="tenant_row_<%= tenant.id %>" class="tenant_row<%= archived %>">
+          <td>
+            <%# Checkbox %>
+            <input form="update_tenant_form" id="checkbox_<%= tenant.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= tenant.id %>)">
+          </td>
+          <td>
+            <%# Tenant name (w/ link) / Tenant name edit field %>
+            <%= link_to(tenant.name, tenant_path(tenant), class: "display name") %><br />
+            <%= tenant_form.text_field(:name, class: "edit name", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id]['name'] : tenant.name}", form: "update_tenant_form") %>
+          </td>
+          <td>
+            <%# Payment handle / Payment handle edit field %>
+            <span class="display payment_handle"><%= tenant.payment_handle %></span><br />
+            <%= tenant_form.text_field(:payment_handle, class: "edit payment_handle", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id]['payment_handle'] : tenant.payment_handle}", form: "update_tenant_form") %>
+          </td>
+          <td>
+            <%# Phone number / Phone number edit field %>
+            <span class="display phone_num"><%= tenant.phone_num %></span><br />
+            <%= tenant_form.text_field(:phone_num, class: "edit phone_num", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id]['phone_num'] : tenant.phone_num}", form: "update_tenant_form") %>
+          </td>
+          <td>
+            <%# Email address / Email address edit field %>
+            <span class="display email"><%= tenant.email %></span><br />
+            <%= tenant_form.text_field(:email, class: "edit email", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id]['email'] : tenant.email}", form: "update_tenant_form") %>
+          </td>
+          <td>
+            <%# Tenant's rental property (w/ link) / Rental property dropdown box %>
+            <%# NEEDS A LOT OF TESTING!! %>
+            <%= tenant.current_property.nil? ? "" : link_to(tenant.current_property.name, property_path(tenant.current_property), class: "display property_id") %><br />
+            <%# tenant.current_property.nil? ? t_property = 0 : t_property = tenant.current_property.id %>
+            <%#= tenant_form.collection_select(:property_id, Property.all, :id, :name, { include_blank: true, selected: (failed_edits[tenant.id] ? failed_edits[tenant.id][:property_id].to_i : t_property)}, class: "edit property_id")
+            %>
+          </td>
+          <td>
+            <%= tenant.archived ? "<strong>- ARCHIVED -</strong>".html_safe : "" %>
+          </td>
+          <td>
+            <%# is_updated flag gets set to true when a row is updated %>
+            <% is_updated_id = "tenants_" + tenant.id.to_s + "_is_updated" %>
+            <%= tenant_form.hidden_field(:is_updated, :value => 'false', form: "update_tenant_form") %>
 
-              <%# Save button %>
-              <button id="save_btn_<%= tenant.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" title="Save changes" disabled></button>
+            <%# Save button %>
+            <button form="update_tenant_form" type="submit" id="save_btn_<%= tenant.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" title="Save changes" disabled></button>
 
-              <%# Depending on archived flag, display Archive or Unarchive button, with confirmation %>
-              <% if tenant.archived %>
-                <%= link_to "", {:controller => :tenants, :action => 'unarchive', :id => tenant.id }, :method => :patch, class: "fa fa-plus-square btn btn-warning", title: "Restore tenant", data: { confirm: "Are you sure you want to restore tenant '#{tenant.name.upcase}' and add them to your list of current tenants? (This change can be reversed later..)" } %>
-              <% else %>
-                <%= link_to "", {:controller => :tenants, :action => 'archive', :id => tenant.id }, :method => :patch, class: "fa fa-minus-square btn btn-danger", title: "Archive tenant", data: { confirm: "Are you sure you want to archive tenant '#{tenant.name.upcase}' and remove them from your list of current Tenants? (This change can be reversed later..)" } %>
-              <% end %>
-            </td>
-          </tr>
-        <% end %>
+            <%# Depending on archived flag, display Archive or Unarchive button, with confirmation %>
+            <% if tenant.archived %>
+              <%= link_to "", {:controller => :tenants, :action => 'unarchive', :id => tenant.id }, :method => :patch, class: "fa fa-plus-square btn btn-warning", title: "Restore tenant", data: { confirm: "Are you sure you want to restore tenant '#{tenant.name.upcase}' and add them to your list of current tenants? (This change can be reversed later..)" } %>
+            <% else %>
+              <%= link_to "", {:controller => :tenants, :action => 'archive', :id => tenant.id }, :method => :patch, class: "fa fa-minus-square btn btn-danger", title: "Archive tenant", data: { confirm: "Are you sure you want to archive tenant '#{tenant.name.upcase}' and remove them from your list of current Tenants? (This change can be reversed later..)" } %>
+            <% end %>
+          </td>
+        </tr>
       <% end %>
     <% end %>
-        <%# Create final row with a form to add a new Tenant to the inventory %>
-        <%= form_tag(tenants_path) do %>
 
-          <%# Copy any validation errors %>
-          <% (!params.nil? && params['new']) ? (failed_edits['new'] = Rack::Utils.parse_nested_query(params['new'])) : "" %>
+    <%# Copy any validation errors %>
+    <% (!params.nil? && params['new']) ? (failed_edits['new'] = Rack::Utils.parse_nested_query(params['new'])) : "" %>
 
-          <%# Build table row %>
-          <tr id="tenant_row_new" class="tenant_row">
-            <td>
-              <%# Checkbox %>
-              <input id="checkbox_new" class="checkbox" type="checkbox" onchange="toggle_edit('new')" />
-            </td>
-            <td>
-              <%# Tenant name edit field %>
-              <%= text_field(:tenant, :name, class: "display edit name", value: "#{failed_edits['new'] ? failed_edits['new']['name'] : ''}") %>
-            </td>
-            <td>
-              <%# Payment handle edit field %>
-              <%= text_field(:tenant, :payment_handle, class: "display edit payment_handle", value: "#{failed_edits['new'] ? failed_edits['new']['payment_handle'] : ''}") %>
-            </td>
-            <td>
-              <%# Phone number edit field %>
-              <%= text_field(:tenant, :phone_num, class: "display edit phone_num", value: "#{failed_edits['new'] ? failed_edits['new']['phone_num'] : ''}") %>
-            </td>
-            <td>
-              <%# Email address edit field %>
-              <%= text_field(:tenant, :email, class: "display edit email", value: "#{failed_edits['new'] ? failed_edits['new']['email'] : ''}") %>
-            </td>
-            <td>
-              <%# Tenant's rental property dropdown selection box' %>
-              <%= collection_select(:tenant, :property_id, Property.all, :id, :name, {include_blank: true, selected: (failed_edits['new'] ? failed_edits['new']['property_id'].to_i : '')}, class: "display edit property_id") %>
-            </td>
-            <td></td>
-            <td>
-              <%# Save button %>
-              <button id="save_btn_new" class="fa fa-floppy-o btn btn-sm btn-primary disabled" title="Save new tenant" disabled></button>
-            </td>
-          </tr>
-        <% end %>
+    <%# Build table row %>
+    <tr id="tenant_row_new" class="tenant_row">
+      <td>
+        <%# Checkbox %>
+        <input form="new_tenant_form" id="checkbox_new" class="checkbox" type="checkbox" onchange="toggle_edit('new')" />
+      </td>
+      <td>
+        <%# Tenant name edit field %>
+        <%= text_field(:tenant, :name, class: "display edit name", value: "#{failed_edits['new'] ? failed_edits['new']['name'] : ''}", form: "new_tenant_form") %>
+      </td>
+      <td>
+        <%# Payment handle edit field %>
+        <%= text_field(:tenant, :payment_handle, class: "display edit payment_handle", value: "#{failed_edits['new'] ? failed_edits['new']['payment_handle'] : ''}", form: "new_tenant_form") %>
+      </td>
+      <td>
+        <%# Phone number edit field %>
+        <%= text_field(:tenant, :phone_num, class: "display edit phone_num", value: "#{failed_edits['new'] ? failed_edits['new']['phone_num'] : ''}", form: "new_tenant_form") %>
+      </td>
+      <td>
+        <%# Email address edit field %>
+        <%= text_field(:tenant, :email, class: "display edit email", value: "#{failed_edits['new'] ? failed_edits['new']['email'] : ''}", form: "new_tenant_form") %>
+      </td>
+      <td>
+        <%# Tenant's rental property dropdown selection box' %>
+        <%= collection_select(:tenant, :property_id, Property.all, :id, :name, {include_blank: true, selected: (failed_edits['new'] ? failed_edits['new']['property_id'].to_i : '')}, class: "display edit property_id", form: "new_tenant_form") %>
+      </td>
+      <td></td>
+      <td>
+        <%# Save button %>
+        <button form="new_tenant_form" type="submit" id="save_btn_new" class="fa fa-floppy-o btn btn-sm btn-primary disabled" title="Save new tenant" disabled></button>
+      </td>
+    </tr>
   </tbody>
 </table>
 
