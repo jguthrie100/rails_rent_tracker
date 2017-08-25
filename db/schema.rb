@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160607133539) do
+ActiveRecord::Schema.define(version: 20170825205343) do
 
   create_table "properties", force: :cascade do |t|
     t.string   "name",                       null: false
@@ -18,6 +18,8 @@ ActiveRecord::Schema.define(version: 20160607133539) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
     t.boolean  "archived",   default: false, null: false
+    t.decimal  "lat"
+    t.decimal  "lng"
   end
 
   create_table "property_snapshots", force: :cascade do |t|
