@@ -42,17 +42,6 @@
 </div>
 
 <script>
-  $( "#calendar_button" ).click(function() {
-    if($("#calendar_tab").is(":hidden")) {
-      $( "#calendar_tab" ).slideDown( "slow", function() {
-        $("#calendar_button").html('Hide Calendar <span class="caret"></span>');
-      });
-    } else {
-      $( "#calendar_tab" ).slideUp( "slow", function() {
-        $("#calendar_button").html('Show Calendar <span class="caret"></span>');
-      });
-    }
-  });
 
 var events = [];
 

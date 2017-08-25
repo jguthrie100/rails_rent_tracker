@@ -1,5 +1,6 @@
 $(document).on('ready turbolinks:load', function() {
   get_row_type();
+  calendar_button_init();
 });
 
 function get_row_type() {
@@ -115,3 +116,18 @@ $(document).on('ready turbolinks:load', function() {
     }
   });
 });
+
+function calendar_button_init() {
+  $("#calendar_button").unbind("click");
+  $("#calendar_button").click(function() {
+    if($("#calendar_tab").is(":hidden")) {
+      $("#calendar_tab").slideDown("slow", function() {
+        $("#calendar_button").html('Hide Calendar <span class="caret"></span>');
+      });
+    } else {
+      $("#calendar_tab").slideUp( "slow", function() {
+        $("#calendar_button").html('Show Calendar <span class="caret"></span>');
+      });
+    }
+  });
+}
