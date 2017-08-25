@@ -21,7 +21,8 @@
     <p class="snapshot_content">
       Property: <b><%= snapshot.property.name %></b><br />
       Weekly Rent: <b><%= number_to_currency(snapshot.weekly_rent, :unit => "$") %></b><br />
-      Total Rent Expected: <b><%= number_to_currency(snapshot.total_rent_expected, :unit => "$") %></b>
+      Total Rent Expected: <b><%= number_to_currency(snapshot.total_rent_expected, :unit => "$") %></b><br />
+      Total Rent Paid: <b><%= number_to_currency(snapshot.total_rent_paid, :unit => "$") %></b>
     </p>
   </div>
 

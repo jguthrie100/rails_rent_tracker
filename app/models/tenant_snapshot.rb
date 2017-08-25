@@ -36,4 +36,8 @@ class TenantSnapshot < ApplicationRecord
   def total_rent_expected
     return (self.weekly_rent/7)*self.length_in_days
   end
+
+  def total_rent_paid
+    return Transaction.where(tenant_snapshot_id: self.id).reduce(0) { |total, t| total += t.amount }
+  end
 end
