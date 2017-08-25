@@ -3,6 +3,8 @@
 </h3>
 <br />
 
+<%= form_for :transaction, :url => update_multiple_transactions_path, :method => "put", :html => { :id => "update_transaction_form" } do |form| %><% end %>
+
 <table class="table table-hover table-condensed table-striped">
   <thead>
     <tr>
@@ -22,40 +24,38 @@
   <tbody>
     <%# Create rows of Transactions %>
     <% tenant_snapshots = TenantSnapshot.includes(:tenant).all %>
-    <%= form_for :transaction, :url => update_multiple_transactions_path, :method => "put" do |form| %>
-      <% @transactions.each do |transaction| %>
-        <%= fields_for "transactions[]", transaction do |transaction_form| %>
+    <% @transactions.each do |transaction| %>
+      <%= fields_for "transactions[]", transaction do |transaction_form| %>
 
-          <%# Build row to display transaction details %>
-          <tr id="transaction_row_<%= transaction.id %>" class="transaction_row">
-            <% is_updated_id = "transactions_" + transaction.id.to_s + "_is_updated" %>
-            <td>
-              <%# Checkbox %>
-              <input id="checkbox_<%= transaction.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= transaction.id %>)" />
-            </td>
-            <td><%= transaction.date_str %></td>
-            <td>
-              <%# Tenant name (w/ link) / Tenant drop down box %>
-              <%= transaction.tenant_snapshot.nil? ? "" : link_to(transaction.tenant_snapshot.name, tenant_tenant_snapshot_path(transaction.tenant_snapshot.tenant, transaction.tenant_snapshot), class: "display") %><br />
+        <%# Build row to display transaction details %>
+        <tr id="transaction_row_<%= transaction.id %>" class="transaction_row">
+          <% is_updated_id = "transactions_" + transaction.id.to_s + "_is_updated" %>
+          <td>
+            <%# Checkbox %>
+            <input form="update_transaction_form" id="checkbox_<%= transaction.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= transaction.id %>)" />
+          </td>
+          <td><%= transaction.date_str %></td>
+          <td>
+            <%# Tenant name (w/ link) / Tenant drop down box %>
+            <%= transaction.tenant_snapshot.nil? ? "" : link_to(transaction.tenant_snapshot.name, tenant_tenant_snapshot_path(transaction.tenant_snapshot.tenant, transaction.tenant_snapshot), class: "display") %><br />
 
-              <%# NEEDS CHANGING SO THAT TENANT_SNAPSHOTS ARE SELECTED!! %>
-              <%= transaction_form.collection_select(:tenant_snapshot_id, tenant_snapshots, :id, :name, { include_blank: true}, class: "edit", :onChange=>"javascript: document.getElementById('#{is_updated_id}').value='true'") %>
+            <%# NEEDS CHANGING SO THAT TENANT_SNAPSHOTS ARE SELECTED!! %>
+            <%= transaction_form.collection_select(:tenant_snapshot_id, tenant_snapshots, :id, :name, { include_blank: true}, class: "edit", :onchange=>"javascript: document.getElementById('#{is_updated_id}').value='true'".html_safe, form: "update_transaction_form") %>
 
-            </td>
-            <td><%= transaction.bank_account_id %></td>
-            <td><%= transaction.transaction_id %></td>
-            <td><%= transaction.transaction_type %></td>
-            <td><%= transaction.cheque_num %></td>
-            <td><%= transaction.payee %></td>
-            <td><%= transaction.memo %></td>
-            <td><%= transaction.amount_str %></td>
-            <td>
-              <%# is_updated flag gets set to true when a row is updated %>
-              <%= transaction_form.hidden_field(:is_updated, :value => 'false') %>
-              <button id="save_btn_<%= transaction.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" title="Save changes" disabled></button>
-            </td>
-          </tr>
-        <% end %>
+          </td>
+          <td><%= transaction.bank_account_id %></td>
+          <td><%= transaction.transaction_id %></td>
+          <td><%= transaction.transaction_type %></td>
+          <td><%= transaction.cheque_num %></td>
+          <td><%= transaction.payee %></td>
+          <td><%= transaction.memo %></td>
+          <td><%= transaction.amount_str %></td>
+          <td>
+            <%# is_updated flag gets set to true when a row is updated %>
+            <%= transaction_form.hidden_field(:is_updated, :value => 'false', form: "update_transaction_form") %>
+            <button form="update_transaction_form" type="submit" id="save_btn_<%= transaction.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" title="Save changes" disabled></button>
+          </td>
+        </tr>
       <% end %>
     <% end %>
   </tbody>
