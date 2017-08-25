@@ -4,7 +4,7 @@
 </h3>
 
 <%# Build forms %>
-<%= form_for :properties, :url => update_multiple_properties_path, :method => :put, :html => { :id => "update_property_form" } do |form| %><% end %>
+<%= form_for :property, :url => update_multiple_properties_path, :method => :put, :html => { :id => "update_property_form" } do |form| %><% end %>
 <%= form_tag(properties_path, :id => "new_property_form") do %><% end %>
 
 <table class="table table-hover table-condensed table-striped">
@@ -47,7 +47,7 @@
           <td>
             <%# is_updated flag gets set to true when a row is updated %>
             <% is_updated_id = "properties_" + property.id.to_s + "_is_updated" %>
-            <%= property_form.hidden_field(:is_updated, :value => 'false') %>
+            <%= property_form.hidden_field(:is_updated, :value => 'false', form: "update_property_form") %>
 
             <%# Save button %>
             <button form="update_property_form" type="submit" id="save_btn_<%= property.id %>" class="fa fa-floppy-o btn btn-primary disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" title="Save changes" disabled></button>
