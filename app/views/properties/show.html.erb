@@ -1,5 +1,7 @@
 <h1 class="text-primary"><%= @property.name %></h1>
 
+<div id="map" style="height:250px;width:50%;"></div>
+
 <%= render 'snapshot_calendar' %>
 
 <h3 class="text-primary">Rental Periods&nbsp;&nbsp;
@@ -21,7 +23,13 @@
     </p>
   </div>
 
-  <script>$(".snapshot_content_button", "#snapshot_<%= snapshot.id %>").click(function() {toggle_info("snapshot", <%= snapshot.id %>)});</script>
+  <script>
+    $(".snapshot_content_button", "#snapshot_<%= snapshot.id %>").click(function() {toggle_info("snapshot", <%= snapshot.id %>)});
+    addresses = <%= raw [[@property.id, @property.name, @property.address, @property.lat, @property.lng]] %>
+  </script>
 <!-- snapshot <%= snapshot.id %> end -->
 
 <% end %>
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpFkJVUwEVP6I4bx6fSCdM3naTlNh7voI&callback=showMap">
+</script>

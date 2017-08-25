@@ -131,3 +131,39 @@ function calendar_button_init() {
     }
   });
 }
+
+function showMap() {
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 4
+  });
+
+  var bound = new google.maps.LatLngBounds();
+
+  for(var i = 0; i < addresses.length; i++) {
+    var marker = new google.maps.Marker({
+        map: map,
+        position: {lat: addresses[i][3], lng: addresses[i][4]}
+    });
+    var url = $('#property_' + addresses[i][0] + '_url').prop("href");
+    var contentString = `<small><b>${addresses[i][1]}</b><br /><b>${addresses[i][2]}</b><br /><a href="${url}">Go to property</a>`;
+    var infowindow = new google.maps.InfoWindow({
+      content: contentString
+    });
+    bindInfoWindow(marker, map, infowindow, contentString);
+    bound.extend(marker.position);
+  }
+
+  if(addresses.length === 1) {
+    map.setCenter(new google.maps.LatLng(addresses[0][3], addresses[0][4]));
+    map.setZoom(12);
+  } else {
+    map.fitBounds(bound);
+  }
+}
+
+function bindInfoWindow(marker, map, infowindow, html) {
+  marker.addListener('click', function() {
+    infowindow.setContent(html);
+    infowindow.open(map, this);
+  });
+}

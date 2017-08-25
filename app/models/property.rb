@@ -6,6 +6,9 @@ class Property < ApplicationRecord
   validates_length_of :address, minimum: 10, allow_blank: false
   validates_uniqueness_of :name, :address
 
+  geocoded_by :address, :latitude  => :lat, :longitude => :lng
+  after_validation :geocode
+
   def self.archived
     return Property.all.where(archived: true)
   end

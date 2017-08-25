@@ -3,6 +3,8 @@
   <span style="font-size: 12px;">&bull; view: <%= link_to("all", all_properties_path) %> | <%= link_to("current", properties_path) %> | <%= link_to("archived", archived_properties_path) %></span>
 </h3>
 
+<div id="map" style="height:250px;width:50%;"></div>
+
 <%# Build forms %>
 <%= form_for :property, :url => update_multiple_properties_path, :method => :put, :html => { :id => "update_property_form" } do |form| %><% end %>
 <%= form_tag(properties_path, :id => "new_property_form") do %><% end %>
@@ -33,7 +35,7 @@
           </td>
           <td>
             <%# Property name (w/ link) / Property name edit field %>
-            <%= link_to(property.name, property_path(property), class: "display name") %><br />
+            <%= link_to(property.name, property_path(property), class: "display name", id: "property_" + property.id.to_s + "_url") %><br />
             <%= property_form.text_field(:name, class: "edit name", value: "#{failed_edits[property.id] ? failed_edits[property.id]['name'] : property.name}", form: "update_property_form") %>
           </td>
           <td>
@@ -90,6 +92,10 @@
 </table>
 
 <script>
-// Copies in jQuery code that handles the highlighting of validation errors
-<%= highlight_validation_errors(model: "property", failed_edits: failed_edits) %>
+  // Copies in jQuery code that handles the highlighting of validation errors
+  <%= highlight_validation_errors(model: "property", failed_edits: failed_edits) %>
+  addresses = <%= raw @properties.map { |p| [p.id, p.name, p.address, p.lat, p.lng] } %>
+</script>
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpFkJVUwEVP6I4bx6fSCdM3naTlNh7voI&callback=showMap">
 </script>
