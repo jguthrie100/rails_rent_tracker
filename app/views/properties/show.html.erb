@@ -1,4 +1,4 @@
-<h1 class="text-primary"><%= @property.name %></h1>
+<h1 class="text-primary"><%= link_to(@property.name, property_path(@property), id: "property_" + @property.id.to_s + "_url") %></h1>
 
 <div id="map" style="height:250px;width:50%;"></div>
 
@@ -25,11 +25,13 @@
 
   <script>
     $(".snapshot_content_button", "#snapshot_<%= snapshot.id %>").click(function() {toggle_info("snapshot", <%= snapshot.id %>)});
-    addresses = <%= raw [[@property.id, @property.name, @property.address, @property.lat, @property.lng]] %>
   </script>
 <!-- snapshot <%= snapshot.id %> end -->
 
 <% end %>
+<script>
+  addresses = <%= raw [[@property.id, @property.name, @property.address, @property.lat, @property.lng]] %>
+</script>
 <script async defer
 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpFkJVUwEVP6I4bx6fSCdM3naTlNh7voI&callback=showMap">
 </script>
