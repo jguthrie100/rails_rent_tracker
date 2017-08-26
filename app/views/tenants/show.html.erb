@@ -1,4 +1,4 @@
-<h1 class="text-primary"><%= @tenant.name %></h1>
+<h1 class="text-primary"><%= link_to(@tenant.name, tenant_path(@tenant), id: "tenant_" + @tenant.id.to_s + "_url") %></h1>
 
 <%= render 'snapshot_calendar' %>
 

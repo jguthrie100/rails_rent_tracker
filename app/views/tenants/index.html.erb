@@ -36,7 +36,7 @@
           </td>
           <td>
             <%# Tenant name (w/ link) / Tenant name edit field %>
-            <%= link_to(tenant.name, tenant_path(tenant), class: "display name") %><br />
+            <%= link_to(tenant.name, tenant_path(tenant), class: "display name", id: "tenant_" + tenant.id.to_s + "_url") %><br />
             <%= tenant_form.text_field(:name, class: "edit name", value: "#{failed_edits[tenant.id] ? failed_edits[tenant.id]['name'] : tenant.name}", form: "update_tenant_form") %>
           </td>
           <td>
