@@ -138,9 +138,10 @@ function showMap() {
   });
 
   var bound = new google.maps.LatLngBounds();
+  var markers = new Array();
 
   for(var i = 0; i < addresses.length; i++) {
-    var marker = new google.maps.Marker({
+    markers[i] = new google.maps.Marker({
         map: map,
         position: {lat: addresses[i][3], lng: addresses[i][4]}
     });
@@ -149,14 +150,16 @@ function showMap() {
     var infowindow = new google.maps.InfoWindow({
       content: contentString
     });
-    bindInfoWindow(marker, map, infowindow, contentString);
-    bound.extend(marker.position);
+    bindInfoWindow(markers[i], map, infowindow, contentString);
+    bound.extend(markers[i].position);
   }
 
   if(addresses.length === 1) {
     map.setCenter(new google.maps.LatLng(addresses[0][3], addresses[0][4]));
     map.setZoom(12);
   } else {
+    var markerCluster = new MarkerClusterer(map, markers,
+      {imagePath: '/assets/gmaps/m'});
     map.fitBounds(bound);
   }
 }

@@ -96,6 +96,7 @@
   <%= highlight_validation_errors(model: "property", failed_edits: failed_edits) %>
   addresses = <%= raw @properties.map { |p| [p.id, p.name, p.address, p.lat, p.lng] } %>
 </script>
+<script src="<%= javascript_path 'gmaps/markerclusterer.js' %>"></script>
 <script async defer
 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpFkJVUwEVP6I4bx6fSCdM3naTlNh7voI&callback=showMap">
 </script>
