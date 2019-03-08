@@ -384,26 +384,27 @@ $.fn.bic_calendar = function(options) {
                   //set first selection
                   while (currDate <= toDate) {
 
-                    var loopDayDiv = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate() + ' div');
-                    var loopDayA = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate() + ' a');
-
+                    var $currDay = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate());
+                    var $currDayDiv = $currDay.children('div');
+                    var $currDayA = $currDayDiv.children('a');
+debugger;
                     if(currDate.toString().slice(0, 15) == fromDate.toString().slice(0, 15)) {
 
                       // Set first selection
-                      loopDayDiv.addClass('snapshot first-selection');
+                      $currDayDiv.addClass('snapshot first-selection');
                     }
                     if(currDate.toString().slice(0, 15) == toDate.toString().slice(0, 15)) {
                       // Set last selection
-                      loopDayDiv.addClass('snapshot last-selection');
+                      $currDayDiv.addClass('snapshot last-selection');
                     }
 
                     if(currDate.toString().slice(0, 15) != fromDate.toString().slice(0, 15) && currDate.toString().slice(0, 15) != toDate.toString().slice(0, 15)) {
                       //set middle-selection
-                      loopDayDiv.addClass('snapshot middle-selection');
+                      $currDayDiv.addClass('snapshot middle-selection');
 
                       if(currDate.getDate() === 1) {
-                        loopDayDiv.removeClass('middle-selection');
-                        loopDayDiv.addClass('first-selection');
+                        $currDayDiv.removeClass('middle-selection');
+                        $currDayDiv.addClass('first-selection');
                     //    var firstIndex = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate()).index();
                     //    $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + ' td:lt(' + (firstIndex) + ') div').addClass('snapshot middle-selection');
                     //    loopDayDiv = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + ' td:lt(' + (firstIndex+1) + ') div');
@@ -411,8 +412,8 @@ $.fn.bic_calendar = function(options) {
                       }
 
                       if(isLastDay(currDate)) {
-                        loopDayDiv.removeClass('middle-selection');
-                        loopDayDiv.addClass('last-selection');
+                        $currDayDiv.removeClass('middle-selection');
+                        $currDayDiv.addClass('last-selection');
                     //    var lastIndex = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate()).index();
                     //    $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + ' td:gt(' + (lastIndex) + ') div').addClass('snapshot middle-selection');
                     //    loopDayDiv = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + ' td:gt(' + (lastIndex-1) + ') div');
@@ -425,29 +426,29 @@ $.fn.bic_calendar = function(options) {
                         var r = parseInt(events[i].color.slice(1,3), 16);
                         var g = parseInt(events[i].color.slice(3,5), 16);
                         var b = parseInt(events[i].color.slice(5,7), 16);
-                        loopDayDiv.css('background', `rgba(${r}, ${g}, ${b}, 0.5)`);
+                        $currDayDiv.css('background', `rgba(${r}, ${g}, ${b}, 0.5)`);
                     }
 
                     //link
-                    if (typeof events[i].link != 'undefined') {
-                        loopDayA.attr('href', events[i].link);
+                    if (events[i].link) {
+                        $currDayA.attr('href', events[i].link);
                     }
 
                     //class
                     if (events[i].class)
-                        loopDayDiv.addClass(events[i].class);
+                        $currDayDiv.addClass(events[i].class);
 
                     //tooltip vs popover
-                    if(!loopDayDiv.hasClass('event_popover') && !loopDayDiv.hasClass('event_tooltip')) {
-                      loopDayA.attr('data-original-title', events[i].title);
+                    if(!$currDayDiv.hasClass('event_popover') && !$currDayDiv.hasClass('event_tooltip')) {
+                      $currDayA.attr('data-original-title', events[i].title);
 
                       if (events[i].content) {
-                          loopDayDiv.addClass('event_popover');
-                          loopDayA.attr('rel', 'popover');
-                          loopDayA.attr('data-content', events[i].content);
+                          $currDayDiv.addClass('event_popover');
+                          $currDayA.attr('rel', 'popover');
+                          $currDayA.attr('data-content', events[i].content);
                       } else {
-                          loopDayDiv.addClass('event_tooltip');
-                          loopDayA.attr('rel', 'tooltip');
+                          $currDayDiv.addClass('event_tooltip');
+                          $currDayA.attr('rel', 'tooltip');
                       }
                     }
 
