@@ -24,7 +24,7 @@
   </div>
 
   <script>
-    $(".snapshot_content_button", "#snapshot_<%= snapshot.id %>").click(function() {toggle_info("snapshot", <%= snapshot.id %>)});
+    $(".snapshot_content_button", "#snapshot_<%= snapshot.id %>").click(function() {toggle_snapshot_info(<%= snapshot.id %>)});
   </script>
 <!-- snapshot <%= snapshot.id %> end -->
 

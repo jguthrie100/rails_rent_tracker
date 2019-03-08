@@ -64,6 +64,14 @@ function toggle_edit(id) {
   }
 }
 
+function toggle_snapshot_info(id) {
+  toggle_info("snapshot", id);
+}
+
+function toggle_payment_info(id) {
+  toggle_info("payment", id);
+}
+
 function toggle_info(prefix, id) {
   var content_class = "." + prefix + "_content";
   var main = "#" + prefix + "_" + id;
