@@ -387,7 +387,6 @@ $.fn.bic_calendar = function(options) {
                     var $currDay = $('#bic_calendar_' + currDate.getFullYear() + '_' + (parseInt(currDate.getMonth()) + 1) + '_' + currDate.getDate());
                     var $currDayDiv = $currDay.children('div');
                     var $currDayA = $currDayDiv.children('a');
-debugger;
                     if(currDate.toString().slice(0, 15) == fromDate.toString().slice(0, 15)) {
 
                       // Set first selection
