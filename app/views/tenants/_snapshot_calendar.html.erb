@@ -55,7 +55,7 @@ var colors = ['#ff0000', '#33cc33', '#ffff00', '#0000ff', '#339999'];
     date: "<%= p.date %>",
     type: "rent_payment",
     title: "rent_payment-<%= p.id %>",
-    content: "<%= p.transaction_id + " - " + p.transaction_type + " - " + p.payee + " - " + p.memo + " - " + p.amount_str %>",
+    content: "<%= p.formatted_s %>",
     link: "<%= "/transactions/#transaction_row_#{p.id}" %>",
     amount: <%= p.amount %>,
   };

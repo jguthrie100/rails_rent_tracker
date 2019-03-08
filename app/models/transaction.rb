@@ -10,16 +10,20 @@ class Transaction < ApplicationRecord
   validates_uniqueness_of :transaction_id
   validates_presence_of :tenant_snapshot, :if => :tenant_snapshot_id
 
+  def formatted_s
+    "#{self.transaction_id} - #{self.transaction_type} - #{self.payee} - #{self.memo} - #{self.amount_str}"
+  end
+
   # Imports a CSV of banking transactions to the DB
   def self.import(file)
+    return 0 if file.nil?
+    
     updates = Hash.new
     updates[:failed] = Array.new
     updates[:successful] = Array.new
     updates[:existing] = 0
 
     tenants = Tenant.all
-
-    return 0 if file.nil?
 
     # Open CSV file
     File.open(file.path) do |f|

@@ -44,7 +44,7 @@
     </div>
 
     <p class="payment_content">
-      &nbsp;&nbsp;<%= payment.transaction_id + " - " + payment.transaction_type + " - " + payment.payee + " - " + payment.memo + " - " + payment.amount_str %>
+      &nbsp;&nbsp;<%= link_to(payment.formatted_s, "/transactions/#transaction_row_#{payment.id}") %>
     </p>
   </div>
 
