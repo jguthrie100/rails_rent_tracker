@@ -6,18 +6,17 @@ $(document).on('ready turbolinks:load', function() {
 function get_row_type() {
   page = window.location['pathname'].split('/')[1]
   if(/^tenants/.test(page)) {
-    row_name = "#tenant_row_";
-    row_class = ".tenant_row";
+    model = "tenant";
   } else if (/^properties/.test(page)) {
-    row_name = "#property_row_";
-    row_class = ".property_row";
+    model = "property";
   } else if (/^transactions/.test(page)) {
-    row_name = "#transaction_row_";
-    row_class = ".transaction_row";
+    model = "transaction";
   } else {
-    row_name = "#record_row_";
-    row_class = ".record_row";
+    model = "record";
   }
+
+  row_name = `#${model}_row_`;
+  row_class = `.${model}_row`;
 }
 
 // Method called everytime a checkbox is selected
