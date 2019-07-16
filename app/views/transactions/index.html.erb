@@ -20,6 +20,21 @@
       <th>Amount</th>
       <th>&nbsp;</th>
     </tr>
+    <% if !@filters.empty? %>
+    <tr class="filters">
+      <th>&nbsp;</th>
+      <th><%= filter_link :date %></th>
+      <th>&nbsp;</th>
+      <th><%= filter_link :bank_acc_id %></th>
+      <th>&nbsp;</th>
+      <th><%= filter_link :transaction_type %></th>
+      <th>&nbsp;</th>
+      <th><%= filter_link :payee2 %></th>
+      <th>&nbsp;</th>
+      <th>&nbsp;</th>
+      <th>&nbsp;</th>
+    </tr>
+    <% end %>
   </thead>
   <tbody>
     <%# Create rows of Transactions %>
@@ -34,7 +49,7 @@
             <%# Checkbox %>
             <input form="update_transaction_form" id="checkbox_<%= transaction.id %>" class="checkbox" type="checkbox" onchange="toggle_edit(<%= transaction.id %>)" />
           </td>
-          <td><%= transaction.date_str %></td>
+          <td><%= link_to transaction.date_str, transactions_path(@filters.merge({date: transaction.date})) %></td>
           <td>
             <%# Tenant name (w/ link) / Tenant drop down box %>
             <%= transaction.tenant_snapshot.nil? ? "" : link_to(transaction.tenant_snapshot.name, tenant_tenant_snapshot_path(transaction.tenant_snapshot.tenant, transaction.tenant_snapshot), class: "display") %><br />
@@ -43,17 +58,17 @@
             <%= transaction_form.collection_select(:tenant_snapshot_id, tenant_snapshots, :id, :name, { include_blank: true}, class: "edit", :onchange=>"javascript: document.getElementById('#{is_updated_id}').value='true'".html_safe, form: "update_transaction_form") %>
 
           </td>
-          <td><%= transaction.bank_account_id %></td>
+          <td><%= link_to transaction.bank_account_id, transactions_path(@filters.merge({bank_acc_id: transaction.bank_account_id})) %></td>
           <td><%= transaction.transaction_id %></td>
-          <td><%= transaction.transaction_type %></td>
+          <td><%= link_to transaction.transaction_type, transactions_path(@filters.merge({transaction_type: transaction.transaction_type})) %></td>
           <td><%= transaction.cheque_num %></td>
-          <td><%= transaction.payee %></td>
+          <td><%= link_to transaction.payee, transactions_path(@filters.merge({payee2: transaction.payee})) %></td>
           <td><%= transaction.memo %></td>
           <td><%= transaction.amount_str %></td>
           <td>
             <%# is_updated flag gets set to true when a row is updated %>
             <%= transaction_form.hidden_field(:is_updated, :value => 'false', form: "update_transaction_form") %>
-            <button form="update_transaction_form" type="submit" id="save_btn_<%= transaction.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" title="Save changes" disabled></button>
+            <button form="update_transaction_form" type="submit" id="save_btn_<%= transaction.id %>" class="fas fa-save btn btn-sm btn-primary disabled" title="Save changes" disabled></button>
           </td>
         </tr>
       <% end %>

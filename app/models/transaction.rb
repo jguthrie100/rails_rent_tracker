@@ -3,6 +3,11 @@ require 'csv'
 class Transaction < ApplicationRecord
   include ModelHelpers
 
+  scope :date, ->(date) { where(date: date) }
+  scope :transaction_type, ->(transaction_type) { where(transaction_type: transaction_type) }
+  scope :payee2, ->(payee) { where(payee: payee) }
+  scope :bank_acc_id, ->(bank_acc_id) { where(bank_account_id: bank_acc_id) }
+
   belongs_to :tenant_snapshot
   has_one :tenant, through: :tenant_snapshot
 

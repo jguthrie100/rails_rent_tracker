@@ -53,3 +53,10 @@ a {
 .snapshot, .payment {
 	padding: 10px;
 }
+tr.filters th {
+	overflow:hidden;
+	white-space:nowrap;
+}
+tr.filters a {
+	color: #f00;
+}

@@ -1,6 +1,14 @@
 class TransactionsController < ApplicationController
   def index
+    @filters = {}
     @transactions = Transaction.includes(:tenant_snapshot).order(date: :desc)
+
+    params.each do |k, v|
+      next unless valid_filters.include? k.to_sym
+
+      @transactions = @transactions.send(k, v)
+      @filters[k.to_sym] = v
+    end
   end
 
   def edit
@@ -66,5 +74,9 @@ class TransactionsController < ApplicationController
   private
   def allowed_params(tr_id)
     params.require(:transactions).require(tr_id).permit(:tenant_snapshot_id)
+  end
+
+  def valid_filters
+    [:date, :transaction_type, :payee2, :bank_acc_id]
   end
 end

@@ -71,7 +71,7 @@
             <%= tenant_form.hidden_field(:is_updated, :value => 'false', form: "update_tenant_form") %>
 
             <%# Save button %>
-            <button form="update_tenant_form" type="submit" id="save_btn_<%= tenant.id %>" class="fa fa-floppy-o btn btn-sm btn-primary disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" title="Save changes" disabled></button>
+            <button form="update_tenant_form" type="submit" id="save_btn_<%= tenant.id %>" class="fas fa-save btn btn-primary disabled" onclick="document.getElementById('<%= is_updated_id %>').value='true'" title="Save changes" disabled></button>
 
             <%# Depending on archived flag, display Archive or Unarchive button, with confirmation %>
             <% if tenant.archived %>
@@ -116,7 +116,7 @@
       <td></td>
       <td>
         <%# Save button %>
-        <button form="new_tenant_form" type="submit" id="save_btn_new" class="fa fa-floppy-o btn btn-sm btn-primary disabled" title="Save new tenant" disabled></button>
+        <button form="new_tenant_form" type="submit" id="save_btn_new" class="fas fa-save btn btn-primary disabled" title="Save new tenant" disabled></button>
       </td>
     </tr>
   </tbody>
