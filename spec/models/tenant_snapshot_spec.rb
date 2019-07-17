@@ -4,13 +4,13 @@ require 'spec_helper'
 describe "Tests for TenantSnapshot model" do
   context "Checking Factory" do
     it "has a valid factory" do
-      ts = FactoryGirl.build(:tenant_snapshot)
-      byebug
+      ts = FactoryBot.build(:tenant_snapshot)
       expect(ts).to be_valid
     end
   end
 
   context "Testing Dates validation" do
-    it "is invalid without a start date"
+    it "is invalid without a start date" do
+    end
   end
 end

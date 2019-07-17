@@ -1,7 +1,7 @@
 # spec/factories/tenant.rb
 require 'faker'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :tenant do |f|
     f.name { Faker::Name.name }
   #  f.payment_handle { Faker::Lorem.characters(10).upcase }

@@ -1,10 +1,10 @@
 # spec/factories/tenant_snapshot.rb
 require 'faker'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :tenant_snapshot do |f|
-    #FactoryGirl.create(:property)
-    #FactoryGirl.create(:tenant)
+    property = FactoryBot.create(:property)
+    tenant = FactoryBot.create(:tenant)
     #property
     #tenant
 
@@ -12,9 +12,9 @@ FactoryGirl.define do
     tenant1 = Tenant.last
 
     f.start_date { 3.days.ago }
-    f.property_id { property1.id }
+    #f.property_id { property.id }
     f.weekly_rent { Faker::Number.decimal(3, 2) }
     f.rent_frequency { Faker::Number.between(1, 10) }
-    f.tenant_id { tenant1.id }
+    f.tenant { tenant }
   end
 end

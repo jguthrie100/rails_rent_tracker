@@ -23,7 +23,7 @@ module RentTracker
         :routing_specs => false,
         :controller_specs => true,
         :request_specs => true
-      g.fixture_replacement :factory_girl, :dir => "spec/factories"
+      g.fixture_replacement :factory_bot, :dir => "spec/factories"
     end
   end
 end

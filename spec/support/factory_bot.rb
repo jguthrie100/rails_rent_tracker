@@ -1,4 +1,4 @@
-# spec/support/factory_girl.rb
+# spec/support/factory_bot.rb
 RSpec.configure do |config|
 
   config.before(:suite) do
@@ -7,7 +7,7 @@ RSpec.configure do |config|
 
     begin
       DatabaseCleaner.start
-      FactoryGirl.lint
+      FactoryBot.lint
     ensure
       DatabaseCleaner.clean
     end
