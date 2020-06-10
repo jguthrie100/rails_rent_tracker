@@ -64,21 +64,23 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     concurrent-ruby (1.0.5)
+    daemons (1.3.1)
     database_cleaner (1.6.1)
     debug_inspector (0.0.3)
     diff-lcs (1.3)
     erubis (2.7.0)
+    eventmachine (1.2.7)
     execjs (2.7.0)
-    factory_girl (4.8.0)
-      activesupport (>= 3.0.0)
-    factory_girl_rails (4.8.0)
-      factory_girl (~> 4.8.0)
-      railties (>= 3.0.0)
+    factory_bot (5.2.0)
+      activesupport (>= 4.2.0)
+    factory_bot_rails (5.2.0)
+      factory_bot (~> 5.2.0)
+      railties (>= 4.2.0)
     faker (1.8.4)
       i18n (~> 0.5)
     ffi (1.9.18)
     formatador (0.2.5)
-    geocoder (1.4.4)
+    geocoder (1.6.1)
     globalid (0.4.0)
       activesupport (>= 4.2.0)
     guard (2.14.1)
@@ -214,6 +216,10 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     sqlite3 (1.3.13)
+    thin (1.7.2)
+      daemons (~> 1.0, >= 1.0.9)
+      eventmachine (~> 1.0, >= 1.0.4)
+      rack (>= 1, < 3)
     thor (0.20.0)
     thread_safe (0.3.6)
     tilt (2.0.8)
@@ -245,7 +251,7 @@ DEPENDENCIES
   capybara
   coffee-rails (~> 4.1.0)
   database_cleaner
-  factory_girl_rails
+  factory_bot_rails
   faker
   geocoder
   guard-rspec
@@ -257,7 +263,8 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   spring
-  sqlite3
+  sqlite3 (~> 1.3.6)
+  thin
   turbolinks
   uglifier (>= 1.3.0)
   web-console (~> 2.0)
